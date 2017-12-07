@@ -18,6 +18,8 @@
 	<link rel="stylesheet" href="{{url_for('static', filename='css/animate.min.css')}}" type="text/css">
 	<!-- Custom CSS -->
 	<link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}" type="text/css">
+	<!-- My CSS -->
+	<link rel="stylesheet" href="{{url_for('static', filename='css/mystyle.css')}}" type="text/css">
 	{% endblock %}
 </head>
 <body id="page-top">
@@ -33,7 +35,7 @@
 		<span class="icon-bar"></span>
 		<span class="icon-bar"></span>
 		</button>
-		<a class="navbar-brand page-scroll" href="#page-top"><img src="img/logo.png" alt="꼬마평화도서관"></a>
+		<a class="navbar-brand page-scroll" href="{{url_for('index')}}"><img src="img/logo.png" alt="꼬마평화도서관"></a>
 	</div>
 	<form class="navbar-form navbar-left" action="/action_page.php">
       <div class="input-group">
@@ -52,9 +54,9 @@
 			<a class="page-scroll" href="{{url_for('index')}}">Home</a>
 			</li>
 			<li class="dropdown">
-	        <a class="dropdown-toggle" data-toggle="dropdown" href="#">알림 마당
+	        <a class="dropbtn" data-toggle="dropdown" href="#">알림 마당
 	        <span class="caret"></span></a>
-	        <ul class="dropdown-menu">
+	        <ul class="dropdown-content">
 	          <li><a href="#">소식 마당</a></li>
 	          <li><a href="#">책 마당</a></li>
 	          <li><a href="#">영화 마당</a></li>
@@ -65,19 +67,19 @@
 			</li>
 		
 			<li class="dropdown">
-				<a class="dropdown-toggle" data-toggle="dropdown" href="#">정보 마당
+				<a class="dropbtn" data-toggle="dropdown" href="#">정보 마당
 				<span class="caret"></span></a>
-				<ul class="dropdown-menu">
-					<li><a href="#">영세 중립 마당</a></li>
+				<ul class="dropdown-content">
+					<li><a href="#">영세중립 마당</a></li>
 					<li><a href="#">살림 마당</a></li>
 				</ul>
 			</li>
 			
 			 
 			<li class="dropdown">
-				<a class="dropdown-toggle" data-toggle="dropdown" href="#">이야기 마당
+				<a class="dropbtn" data-toggle="dropdown" href="#">이야기 마당
 				<span class="caret"></span></a>
-				<ul class="dropdown-menu">
+				<ul class="dropdown-content">
 					<li><a href="#">회원 게시판</a></li>
 					<li><a href="#">자유 게시판</a></li>
 				</ul>
@@ -113,15 +115,15 @@
 		<div class="item active" style="background-image:url({{url_for('backgroundimg1')}})">
 			<div class="carousel-caption">
 				<h2 data-animation="animated bounceInDown">
-				Bootstrap HTML Template </h2>
+				꼬마 평화 도서관 </h2>
 				<h1 data-animation="animated bounceInUp">
-				This is Layana </h1>
+				Welcome </h1>
 				<a href="#" class="btn btn-ghost btn-lg" data-animation="animated fadeInLeft">Start Tour</a><a href="#" class="btn btn-primary btn-lg" data-animation="animated fadeInRight">Learn More</a>
 			</div>
 		</div>
 		<!-- /.item -->
 		<!-- Second slide -->
-		<div class="item" style="background-image:url(https://s3-eu-west-1.amazonaws.com/layanademo/s2-min.jpg)">
+		<div class="item" style="background-image:url({{url_for('backgroundimg2')}})">
 			<div class="carousel-caption">
 				<h2 data-animation="animated zoomInLeft">
 				Responsive HTML Template </h2>
@@ -132,7 +134,7 @@
 		</div>
 		<!-- /.item -->
 		<!-- Third slide -->
-		<div class="item" style="background-image:url(https://s3-eu-west-1.amazonaws.com/layanademo/s3-min.jpg)">
+		<div class="item" style="background-image:url({{url_for('backgroundimg3')}})">
 			<div class="carousel-caption">
 				<h2 data-animation="animated bounceInLeft">
 				Layana by WowThemesNet</h2>

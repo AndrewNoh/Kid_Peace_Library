@@ -20,5 +20,13 @@ def login_form():
 def backgroundimg1():
     return redirect(url_for('static', filename='img/Main_img1.jpg'))
 
+@app.route('/backgroundimg2')
+def backgroundimg2():
+    return redirect(url_for('static', filename='img/Main_img2.png'))
+
+@app.route('/backgroundimg3')
+def backgroundimg3():
+    return redirect(url_for('static', filename='img/Main_img3.jpg'))
+
 if __name__ == '__main__':
     app.run(debug=False)

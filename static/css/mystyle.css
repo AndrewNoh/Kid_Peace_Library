@@ -2,6 +2,15 @@
 .dropdown {
     position: relative;
     display: inline-block;
+
+}
+.dropdown li {
+  padding-left: 0px;
+  list-style-type: none;
+}
+
+.dropdown ul {
+  padding: 0px;
 }
 
 .dropdown-content {
@@ -28,4 +37,10 @@
 
 .dropdown:hover .dropbtn {
     background-color: #fcaf3e;
+
+}
+
+#main-logo {
+  weight : 100px;
+  height: 50px;
 }

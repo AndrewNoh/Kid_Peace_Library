@@ -16,6 +16,10 @@ def index():
 def login_form():
     return render_template('login.html')
 
+@app.route('/Sginup')
+def signup_form():
+    return render_template('signup.html')
+
 @app.route('/backgroundimg1')
 def backgroundimg1():
     return redirect(url_for('static', filename='img/Main_img1.jpg'))

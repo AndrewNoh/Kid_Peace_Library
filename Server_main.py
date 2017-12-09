@@ -33,4 +33,4 @@ def backgroundimg3():
     return redirect(url_for('static', filename='img/Main_img3.jpg'))
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)

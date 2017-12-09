@@ -1,4 +1,3 @@
-
 .dropdown {
     position: relative;
     display: inline-block;
@@ -43,4 +42,9 @@
 #main-logo {
   weight : 100px;
   height: 50px;
+}
+ 
+.panel-body button{
+	text-align : right;
+	display: inline-block;
 }

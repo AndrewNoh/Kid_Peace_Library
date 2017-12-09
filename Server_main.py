@@ -24,6 +24,10 @@ def signup_form():
 def board_form():
     return render_template('board.html')
 
+@app.route('/Write')
+def write_form():
+    return render_template('write.html')
+
 @app.route('/backgroundimg1')
 def backgroundimg1():
     return redirect(url_for('static', filename='img/Main_img1.jpg'))

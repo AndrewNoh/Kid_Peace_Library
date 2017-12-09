@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block head %}
+{% block title %}Index{% endblock %}
+	{{super()}}
+{% endblock %}
+{% block body %}
+	{% block Nav %}
+		{{super()}}
+	{% endblock %}
+<section id="Board" style="margin-top:50px;">
+<div class="container">
+    <div class="panel-heading">
+        <div class="panel-title" style="font-size:20px; text-align:center;">소식마당</div>
+    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th width="70%">제목</th>
+          <th width="10%">작성자</th>
+          <th width="10%">날짜</th>
+          <th width="10%">조회수</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>first title</td>
+          <td>Andrew</td>
+          <td>2017.12.12</td>
+          <td>2</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr/>
+    <a class="btn btn-default pull-right">글쓰기</a>
+
+    <div class="text-center">
+      <ul class="pagination">
+        <li><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#">4</a></li>
+      </ul>
+    </div>
+</div>
+</section>
+  {% block jquery %}
+    {{super()}}
+  {% endblock %}
+
+{% endblock %}

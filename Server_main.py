@@ -20,6 +20,10 @@ def login_form():
 def signup_form():
     return render_template('signup.html')
 
+@app.route('/Board')
+def board_form():
+    return render_template('board.html')
+
 @app.route('/backgroundimg1')
 def backgroundimg1():
     return redirect(url_for('static', filename='img/Main_img1.jpg'))

@@ -73,6 +73,11 @@
 	    </div>
 	</div>
 	</section>
+	
+	{% block Footer %}
+		{{super()}}
+	{% endblock %}
+	
 	{% block jquery %}
 		{{super()}}
 	{% endblock %}

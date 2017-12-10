@@ -8,11 +8,15 @@
 <meta name="author" content="">
 	<title>{% block title %}{% endblock %}-꼬마 평화 도서관</title>
 
-
+	<style>
+		@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+		@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+		@import url(http://fonts.googleapis.com/earlyaccess/nanummyeongjo.css);
+    </style>
 	<!-- <!-- Bootstrap Core CSS --> -->
 	<link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.css')}}">
 	<!-- Custom Fonts -->
-	<link href='https://fonts.googleapis.com/css?family=Mrs+Sheppards%7CDosis:300,400,700%7COpen+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800;' rel='stylesheet' type='text/css'>
+	<!-- <link href='https://fonts.googleapis.com/css?family=Mrs+Sheppards%7CDosis:300,400,700%7COpen+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800;' rel='stylesheet' type='text/css'> -->
 	<link rel="stylesheet" href="{{url_for('static', filename='font-awesome/css/font-awesome.min.css')}}" type="text/css">
 	<!-- Plugin CSS -->
 	<link rel="stylesheet" href="{{url_for('static', filename='css/animate.min.css')}}" type="text/css">
@@ -915,7 +919,7 @@
 </div>
 </div>
 </section>
-
+{% block Footer%}
 <!-- Section Footer
 ================================================== -->
 <section class="bg-dark">
@@ -930,6 +934,7 @@
 </div>
 </div>
 </section>
+{% endblock %}
 	{% block jquery %}
 	<!-- jQuery -->
 		<script type="text/javascript" src="{{url_for('static', filename='js/jquery.min.js')}}"></script>
@@ -940,7 +945,7 @@
 		<script type="text/javascript" src="{{url_for('static', filename='js/jquery.easing.min.js')}}"></script>
 		<script type="text/javascript" src="{{url_for('static', filename='js/wow.min.js')}}"></script>
 		<script type="text/javascript" src="{{url_for('static', filename='js/common.js')}}"></script>
-		<script src="//cdn.ckeditor.com/4.7.3/standard/ckeditor.js"></script>
+		<script type="text/javascript" src="{{url_for('static', filename='ckeditor/ckeditor.js')}}"></script>
 	{% endblock %}
 {% endblock %}
 </body>

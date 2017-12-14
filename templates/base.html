@@ -94,9 +94,13 @@
 			<li>
 			<a class="page-scroll" href="#pricing">후원 마당</a>
 			</li>
-
+      		{% if session:%}
+      		<li><a href="{{url_for('login_form')}}"><span class="glyphicon glyphicon-user"></span> {{userid}}님</a></li>
+      		<li><a href="{{url_for('login_form')}}"><span class="glyphicon glyphicon-log-out"></span> 로그아웃</a></li>
+      		{% else: %}
 			<li><a href="{{url_for('signup_form')}}"><span class="glyphicon glyphicon-user"></span> 화원가입</a></li>
       		<li><a href="{{url_for('login_form')}}"><span class="glyphicon glyphicon-log-in"></span> 로그인</a></li>
+   			{% endif %}
 		</ul>
 	</div>
 	<!-- /.navbar-collapse -->
@@ -945,7 +949,8 @@
 		<script type="text/javascript" src="{{url_for('static', filename='js/jquery.easing.min.js')}}"></script>
 		<script type="text/javascript" src="{{url_for('static', filename='js/wow.min.js')}}"></script>
 		<script type="text/javascript" src="{{url_for('static', filename='js/common.js')}}"></script>
-		<script type="text/javascript" src="{{url_for('static', filename='ckeditor/ckeditor.js')}}"></script>
+		<!-- <script type="text/javascript" src="{{url_for('static', filename='ckeditor/ckeditor.js')}}"></script> ckeditor -->
+		<script type="text/javascript" src="{{url_for('static', filename='se2/js/HuskyEZCreator.js')}}" charset="utf-8"></script>
 	{% endblock %}
 {% endblock %}
 </body>

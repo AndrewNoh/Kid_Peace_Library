@@ -94,12 +94,39 @@
 			<li>
 			<a class="page-scroll" href="#pricing">후원 마당</a>
 			</li>
-      		{% if session:%}
+      	{% if session:%}
       		<li><a href="{{url_for('login_form')}}"><span class="glyphicon glyphicon-user"></span> {{userid}}님</a></li>
       		<li><a href="{{url_for('login_form')}}"><span class="glyphicon glyphicon-log-out"></span> 로그아웃</a></li>
-      		{% else: %}
-			<li><a href="{{url_for('signup_form')}}"><span class="glyphicon glyphicon-user"></span> 화원가입</a></li>
-      		<li><a href="{{url_for('login_form')}}"><span class="glyphicon glyphicon-log-in"></span> 로그인</a></li>
+      	{% else: %}
+					<li><a href="{{url_for('signup_form')}}" ><span class="glyphicon glyphicon-user"></span> 화원가입</a></li>
+					<li><a href="#" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-log-in"></span> 로그인</a></li>
+					<!--로그인 모달 창 -->
+						<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal">
+											<span aria-hidden="true">×</span>
+											<span class="sr-only">Close</span>
+										</button>
+										<h4 class="modal-title" id="myModalLabel">로그인</h4>
+									</div>
+									<div class="modal-body">
+										<form id="login-form">
+											<div>
+												<input type="text" class="form-control" name="id" placeholder="Id" autofocus>
+											</div>
+											<div>
+												<input type="password" class="form-control" name="password" placeholder="Password">
+											</div>
+										</form>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-primary">로그인</button>
+									</div>
+								</div>
+							</div>
+						</div>
    			{% endif %}
 		</ul>
 	</div>

@@ -12,10 +12,6 @@ def base_index():
 def index():
     return render_template('index.html')
 
-@app.route('/Login')
-def login_form():
-    return render_template('login.html')
-
 @app.route('/Sginup')
 def signup_form():
     return render_template('signup.html')
@@ -27,6 +23,10 @@ def board_form():
 @app.route('/Write')
 def write_form():
     return render_template('write.html')
+
+@app.route('/userinf')
+def userinf_form():
+    return render_template('userinf.html')
 
 @app.route('/backgroundimg1')
 def backgroundimg1():

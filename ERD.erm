@@ -41,11 +41,11 @@
 		<suspend_validator>false</suspend_validator>
 		<export_setting>
 			<export_ddl_setting>
-				<output_path></output_path>
-				<encoding></encoding>
-				<line_feed></line_feed>
+				<output_path>ERD.sql</output_path>
+				<encoding>UTF-8</encoding>
+				<line_feed>LF</line_feed>
 				<is_open_after_saved>true</is_open_after_saved>
-				<environment_id>null</environment_id>
+				<environment_id>0</environment_id>
 				<category_id>null</category_id>
 				<ddl_target>
 					<create_comment>true</create_comment>
@@ -135,7 +135,7 @@
 			</connections>
 			<display>false</display>
 			<creation_date>2017-12-02 09:55:27</creation_date>
-			<updated_date>2017-12-18 18:58:16</updated_date>
+			<updated_date>2017-12-18 19:15:59</updated_date>
 			<model_property>
 				<name>Project Name</name>
 				<value></value>
@@ -787,7 +787,7 @@
 			<connections>
 				<relation>
 					<id>1</id>
-					<source>4</source>
+					<source>3</source>
 					<target>2</target>
 						<source_xp>-1</source_xp>
 						<source_yp>-1</source_yp>
@@ -809,7 +809,7 @@
 				</relation>
 				<relation>
 					<id>2</id>
-					<source>3</source>
+					<source>4</source>
 					<target>2</target>
 						<source_xp>-1</source_xp>
 						<source_yp>-1</source_yp>
@@ -873,7 +873,7 @@
 				<normal_column>
 					<id>7</id>
 					<referenced_column>9</referenced_column>
-					<relation>2</relation>
+					<relation>1</relation>
 					<description></description>
 					<unique_key_name></unique_key_name>
 					<logical_name></logical_name>
@@ -907,7 +907,7 @@
 				<normal_column>
 					<id>8</id>
 					<referenced_column>17</referenced_column>
-					<relation>1</relation>
+					<relation>2</relation>
 					<description></description>
 					<unique_key_name></unique_key_name>
 					<logical_name></logical_name>

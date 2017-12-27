@@ -33,7 +33,8 @@ def signup_form():
         password = request.form['password']
         name = request.form['name']
         cell_phone = request.form['cell_phone']
-        
+        if password == '':
+            return render_template('alert_msg.html', msg="회원가입 실패! 비밀번호는 8자리 이상 문자, 숫자, 특수문자로 구성하여야 합니다.")
         item = user(\
                     id = id,
                     permission = 'user',

@@ -4,10 +4,6 @@ from flask import render_template, url_for, redirect, session, request
 from Server.app_blueprint import app
 from Server.model.user import user
 from Server.database import DB
-import MySQLdb
-import MySQLdb.cursors
-import sys
-
 
 
 def login_requied():
@@ -59,31 +55,7 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for('.index'))
-    
-@app.route('/Sginup', methods=['post', 'get'])
-def signup_form():
-    if request.method == 'POST':
-        
-        id = request.form['id']
-        email = request.form['email']
-        password = request.form['password']
-        name = request.form['name']
-        cell_phone = request.form['cell_phone']
-        
-        item = user(\
-                    id = id,
-                    permission = 'user',
-                    cell_phone = cell_phone,
-                    email = email,
-                    name = name,
-                    password=password)
-        
-        mydb = DB()
-        if not mydb.sign_up(item):
-            del mydb
-            return render_template('alert_msg.html', msg="회원가입 실패")
-        del mydb
-    return redirect(url_for('.index'))
+
 
 @app.route('/Board')
 def board_form():

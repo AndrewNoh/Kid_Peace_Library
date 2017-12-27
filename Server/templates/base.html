@@ -24,6 +24,9 @@
 	<link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}" type="text/css">
 	<!-- My CSS -->
 	<link rel="stylesheet" href="{{url_for('static', filename='css/mystyle.css')}}" type="text/css">
+	<script type=text/javascript>
+ 	 	$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+	</script>
 	{% endblock %}
 </head>
 <body id="page-top">
@@ -39,7 +42,7 @@
 		<span class="icon-bar"></span>
 		<span class="icon-bar"></span>
 		</button>
-		<a class="navbar-brand page-scroll" href="{{url_for('app.index')}}"><img src="#" alt="꼬마평화도서관"></a>
+		<a class="navbar-brand page-scroll" href="{{url_for('.index')}}"><img src="#" alt="꼬마평화도서관"></a>
 	</div>
 	<form class="navbar-form navbar-left" action="/action_page.php">
       <div class="input-group">
@@ -56,13 +59,13 @@
 	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		<ul class="nav navbar-nav navbar-right">
 			<li>
-			<a class="page-scroll" href="{{url_for('app.index')}}">Home</a>
+			<a class="page-scroll" href="{{url_for('.index')}}">Home</a>
 			</li>
 			<li class="dropdown">
 	        <a class="dropbtn" data-toggle="dropdown" href="#">알림 마당
 	        <span class="caret"></span></a>
 	        <ul class="dropdown-content">
-	          <li><a href="{{url_for('app.board_form')}}">소식 마당</a></li>
+	          <li><a href="{{url_for('.board_form')}}">소식 마당</a></li>
 	          <li><a href="#">책 마당</a></li>
 	          <li><a href="#">영화 마당</a></li>
 	        </ul>
@@ -98,7 +101,7 @@
       		<li><a href="{{url_for('app.login')}}"><span class="glyphicon glyphicon-user"></span> {{name}}({{permission}})님</a></li>
       		<li><a href="{{url_for('app.logout')}}"><span class="glyphicon glyphicon-log-out"></span> 로그아웃</a></li>
       	{% else: %}
-					<!-- <li><a href="{{url_for('app.signup_form')}}" ><span class="glyphicon glyphicon-user"></span> 화원가입</a></li>  -->
+					<!-- <li><a href="{{url_for('.signup_form')}}" ><span class="glyphicon glyphicon-user"></span> 화원가입</a></li>  -->
 					<li><a href="#" data-toggle="modal" data-target="#signup_Modal" ><span class="glyphicon glyphicon-user"></span> 화원가입</a></li>
 						<div class="modal fade" id="signup_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 							<div class="modal-dialog" style="top:50%; margin-top: -300px; margin-left: 300px;">
@@ -110,14 +113,17 @@
 								                <div class="panel-title">Sign up!</div>
 								            </div>
 								            <div class="panel-body">
-								                <form class="form-horizontal" action="{{url_for('app.signup_form')}}" method=post>
+								                <form class="form-horizontal" action="{{url_for('.signup_form')}}" method=post>
 								                	<div class="form-group">
 												  		<label class="control-label col-sm-2" for="id">아이디:</label>
-												   		<div class="col-sm-7">
-												      		<input type="id" class="form-control" name="id" placeholder="Enter id">
+												   		<div class="col-sm-6">
+												      		<input type="id" class="form-control" name="id" id="id" placeholder="Enter id">
 												    	</div>
 												    	<div class="col-sm-2">
-												    		<button type="button" class="btn btn-primary" id="id_check" style="margin-top: 0px;padding-top: 10px;padding-left: 20px;padding-right: 20px;padding-bottom: 10px;">중복 검사</button>
+												    		<button type="button" href="#" class="btn btn-primary" id="id_check" style="margin-top: 0px;padding-top: 10px;padding-left: 20px;padding-right: 20px;padding-bottom: 10px;">중복 검사</button>
+												    	</div>
+												    	<div class="col-sm-2">
+												    	<div class="a" id="checkMsg" style="margin-top:5px; margin-left:-10px; margin-bottom:-20px">None</div>
 												    	</div>
 												  	</div>
 												  	<div class="form-group">
@@ -1050,6 +1056,26 @@
 		<script type="text/javascript" src="{{url_for('static', filename='js/common.js')}}"></script>
 		<!-- <script type="text/javascript" src="{{url_for('static', filename='ckeditor/ckeditor.js')}}"></script> ckeditor -->
 		<script type="text/javascript" src="{{url_for('static', filename='se2/js/HuskyEZCreator.js')}}" charset="utf-8"></script>
+		
+		<script type="text/javascript">
+		var submit;
+		$(function() {
+			$('#id_check').bind('click', function() {
+				$.getJSON($SCRIPT_ROOT + '/user/check_id', {
+					id: $('input[name="id"]').val()
+				}, function(data) {
+				if($.trim(data.count) == 0){
+						$('#checkMsg').html('<p class="text-success" style="margin-top:5px; margin-left:-10px; margin-bottom:-20px">사용가능</p>');
+						 document.getElementById("checkMsg").className = "p"
+				}
+				else{
+						$('#checkMsg').html('<p class="text-danger" style="margin-top:5px; margin-left:-10px; margin-bottom:-20px">사용불가능</p>');
+				}
+			});
+				return false;
+			});
+		});
+		</script>
 	{% endblock %}
 {% endblock %}
 </body>

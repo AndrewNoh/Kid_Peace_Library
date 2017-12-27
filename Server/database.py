@@ -19,6 +19,18 @@ class DB():
     def __del__(self):
         self.conn.close()
         self.cur.close()
+        
+    def id_check(self, id):
+        sql = "select count(*) from MEMBERS where id='"+id+"'"
+        try:
+            self.cur.execute(sql)
+            rows = self.cur.fetchall()
+        except:
+            print("Select id execute error!")
+            return "error"
+        if rows:
+            return rows[0]['count(*)']
+        return
 
     def login(self, id, password):
         sql = "select * from MEMBERS where id='"+id+"' AND password=password('"+password+"')"
@@ -28,8 +40,9 @@ class DB():
         except:
             print("login execute error!")
             return
-
-        for data in rows:
+        
+        if rows:
+            data = rows[0]
             buf = user(\
                        id = data['id'],
                        password = data['password'],
@@ -66,5 +79,5 @@ class DB():
 if __name__ == '__main__':
     mydb = DB()
     data = mydb.select_Member('kim910712', 'kim15885')
-
+    del mydb
     print(data.email)

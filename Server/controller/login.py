@@ -35,11 +35,11 @@ def login():
         mydb = DB()
         user_buffer = mydb.login(id, password)
         del mydb
-        
+
         if user_buffer:
             session['id'] = user_buffer.id
             session['password'] = user_buffer.password
-            session['permission'] = user_buffer.permission 
+            session['permission'] = user_buffer.permission
             session['cell_phone'] = user_buffer.cell_phone
             session['email'] = user_buffer.email
             session['name'] = user_buffer.name
@@ -56,14 +56,6 @@ def logout():
     session.clear()
     return redirect(url_for('.index'))
 
-
-@app.route('/Board')
-def board_form():
-    return render_template('board.html')
-
-@app.route('/Write')
-def write_form():
-    return render_template('write.html')
 
 @app.route('/userinf')
 def userinf_form():

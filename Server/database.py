@@ -91,6 +91,21 @@ class DB():
             return False
         return True
 
+    def select_category(self, category):
+        sql = "select CATEGORYS from '+category+'"
+        try:
+            self.cur.excute(sql)
+            rows = self.cur.fetchall()
+        except:
+            print("잘못된 접근입니다.")
+            return
+        if rows:
+            data = rows[0]
+            category = data['category']
+            return category
+        else :
+            return
+
 if __name__ == '__main__':
     mydb = DB()
     data = mydb.select_Member('kim910712', 'kim15885')

@@ -19,16 +19,16 @@ def Check_id():
         return render_template('alert_msg.html', msg="사용할수 없는 id 입니다.")
     mydb = DB()
     count = int(mydb.id_check(id))
-        
+
     data = OrderedDict()
     data['count'] = count
     return jsonify(data)
-        
-    
+
+
 @app.route('/user/Signup', methods=['post'])
 def signup_form():
     if request.method == 'POST':
-        
+
         id = request.form['id']
         email = request.form['email']
         password = request.form['password']
@@ -42,7 +42,7 @@ def signup_form():
                     email = email,
                     name = name,
                     password=password)
-        
+
         mydb = DB()
         data = OrderedDict()
         data['status'] = 'ok' 
@@ -55,8 +55,34 @@ def signup_form():
         session.clear()
     return jsonify(data)
 
+
+
 @app.route('/user/modify')
-def modify_user():
-    get_user = login_requied()
-    id = get_user.id
-    
+def modify():
+    get_user = login_requied
+    if request.method == 'POST':
+        id = get_user.id
+        email = request.form['email']
+        password = request.form['password']
+        name = request.form['name']
+        cell_phone = request.form['cell_phone']
+        new_passoword = request.form['new_password']
+        if password == '':
+            return render_template('alert_msg.html', msg="회원가입 실패! 비밀번호는 8자리 이상 문자, 숫자, 특수문자로 구성하여야 합니다.")
+        elif password == get_user.password :
+            item = user(\
+                        id = id,
+                        permission = 'user',
+                        cell_phone = cell_phone,
+                        email = email,
+                        name = name,
+                        password = new_passoword)
+            mydb = DB()
+            if not mydb.modify(item):
+                del mydb
+                return render_template('alert_msg.html', msg="회원정보 수정 실패")
+            del mydb
+        return redirect(url_for('.index'))
+
+    return render_template('modify.html', name정 = get_user.name, password = get_user.password, cell_phone = get_user.cell_phone, id = get_user.id, email = get_user.email)
+

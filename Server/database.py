@@ -19,7 +19,7 @@ class DB():
     def __del__(self):
         self.conn.close()
         self.cur.close()
-        
+
     def id_check(self, id):
         sql = "select count(*) from MEMBERS where id='"+id+"'"
         try:
@@ -40,7 +40,7 @@ class DB():
         except:
             print("login execute error!")
             return
-        
+
         if rows:
             data = rows[0]
             buf = user(\
@@ -73,6 +73,21 @@ class DB():
             self.conn.commit()
         except:
             print('sign_up execute error!')
+            return False
+        return True
+
+
+    def modify(self, user):
+        sql = \
+        "update MEMBERS set password='"+user.password+"', \
+        cell_phone='"+user.cell_phone+"', email='"+user.email+"', \
+        name='"+user.name+"' where id='"+user.id+"'"
+
+        try:
+            self.cur.execute(sql)
+            self.conn.commit()
+        except:
+            print('modify execute error!')
             return False
         return True
 

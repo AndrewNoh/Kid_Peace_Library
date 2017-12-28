@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block head %}
+{% block title %}Index{% endblock %}
+	{{super()}}
+{% endblock %}
+{% block body %}
+	{% block Nav %}
+		{{super()}}
+	{% endblock %}
+	<section id="signup">
+	<div class="container">
+	    <div class="col-md-9 col-md-offset-35 col-sm-12 col-sm-offset-2">
+	        <div class="panel panel-info" style="margin-top: 150px;">
+	            <div class="panel-heading">
+	                <div class="panel-title">회원탈퇴안내</div>
+	            </div>
+	            <div class="panel-body">
+	                <form class="form-horizontal" action="/action_page.php">
+	                	<div class="form-group">
+					  					<label class="control-label col-sm-2" for="id">아이디:</label>
+					   					<div class="col-sm-7">
+					      				{{id}}
+					    				</div>
+										</div>
+					  				<div class="form-group">
+					    				<label class="control-label col-sm-2" for="email">이메일:</label>
+					    				<div class="col-sm-10">
+					      				<input type="email" class="form-control" name="email" id="email" value="{{email}}">
+					    				</div>
+					  				</div>
+								  	<div class="form-group">
+									    <label class="control-label col-sm-2" for="password">비밀번호:</label>
+									    <div class="col-sm-10">
+									      <input type="password" class="form-control" name="password" id="password" placeholder="Enter password">
+								    	</div>
+								  	</div>
+										<div class="form-group">
+									    <label class="control-label col-sm-2" for="new_password">새로운 비밀번호:</label>
+									    <div class="col-sm-10">
+									      <input type="password" class="form-control" name="new_password" id="new_password" placeholder="Repeat password">
+								    	</div>
+								  	</div>
+								   	<div class="form-group">
+									    <label class="control-label col-sm-2" for="rpassword">비밀번호 재입력</label>
+									    <div class="col-sm-10">
+									      <input type="password" class="form-control" id="rpassword" placeholder="Repeat password">
+								    	</div>
+								  	</div>
+								   	<div class="form-group">
+									    <label class="control-label col-sm-2"for="name">이름:</label>
+									    <div class="col-sm-10">
+									      <input type="text" class="form-control" id="name" value="{{name}}">
+								    	</div>
+								  	</div>
+								  	<div class="form-group">
+									    <label class="control-label col-sm-2" for="cell_phone">전화번호:</label>
+									    <div class="col-sm-10">
+									      <input type="text" class="form-control" id="cell_phone" value="{{cell_phone}}">
+									    </div>
+								  	</div>
+								  	<div class="form-group">
+									    <div class="col-sm-offset-2 col-sm-10">
+									      <button type="submit" class="btn btn-default-red pull-right">회원탈퇴</button>
+									    </div>
+											<div class="col-sm-offset-2 col-sm-10">
+									      <button type="submit" class="btn btn-default pull-right">Submit</button>
+									    </div>
+								  	</div>
+									</form>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+	</section>
+
+	{% block Footer %}
+		{{super()}}
+	{% endblock %}
+
+	{% block jquery %}
+		{{super()}}
+	{% endblock %}
+
+{% endblock %}

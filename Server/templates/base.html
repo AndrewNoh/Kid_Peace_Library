@@ -13,7 +13,7 @@
 		@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
 		@import url(http://fonts.googleapis.com/earlyaccess/nanummyeongjo.css);
     </style>
-	<!-- Bootstrap Core CSS --> 
+	<!-- Bootstrap Core CSS -->
 	<link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.css')}}">
 	<!-- Custom Fonts -->
 	<!-- <link href='https://fonts.googleapis.com/css?family=Mrs+Sheppards%7CDosis:300,400,700%7COpen+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800;' rel='stylesheet' type='text/css'> -->
@@ -1066,7 +1066,7 @@
 		<script type="text/javascript" src="{{url_for('static', filename='js/common.js')}}"></script>
 		<!-- <script type="text/javascript" src="{{url_for('static', filename='ckeditor/ckeditor.js')}}"></script> ckeditor -->
 		<script type="text/javascript" src="{{url_for('static', filename='se2/js/HuskyEZCreator.js')}}" charset="utf-8"></script>
-		
+
 		<script type="text/javascript">
 		var idCheck = 0;
 		var passCheck = 0;
@@ -1080,24 +1080,24 @@
 				return false; 
 			} 
 		}
-		function checkSpecial(str) { 
-			var special_pattern = /[`~!@#$%^&*|\\\'\";:\/?]/gi; 
-			if(special_pattern.test(str) == true) { 
-				return true; 
+		function checkSpecial(str) {
+			var special_pattern = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+			if(special_pattern.test(str) == true) {
+				return true;
 			} else {
 				return false;
 			}
 		}
 
-		function checkPasswordPattern(str) { 
-			var pattern1 = /[0-9]/; // 숫자 
-			var pattern2 = /[a-zA-Z]/; // 문자 
-			var pattern3 = /[~!@#$%^&*()_+|<>?:{}]/; // 특수문자 
-			if(!pattern1.test(str) || !pattern2.test(str) || !pattern3.test(str) || str.length < 8) { 
-				return false; 
-			} else { 
-					return true; 
-			} 
+		function checkPasswordPattern(str) {
+			var pattern1 = /[0-9]/; // 숫자
+			var pattern2 = /[a-zA-Z]/; // 문자
+			var pattern3 = /[~!@#$%^&*()_+|<>?:{}]/; // 특수문자
+			if(!pattern1.test(str) || !pattern2.test(str) || !pattern3.test(str) || str.length < 8) {
+				return false;
+			} else {
+					return true;
+			}
 		}
 		function checkEmail(){
 			 var regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
@@ -1113,6 +1113,7 @@
 				 $('#email').css("background-color", "#FFCECE");
 			 }
 		}
+
 		function checkId(){
 			var input_id = $('#id').val();
 			$.getJSON($SCRIPT_ROOT + '/user/check_id', {
@@ -1173,7 +1174,7 @@
 		function repeatPassword(){
 			var input_password = $('#password').val();
 			var input_rpassword = $('#rpassword').val();
-			
+
 			if(input_password == input_rpassword){
 				$('#rpassword').css("background-color", "#B0F6AC");
 				passCheck = 1;
@@ -1185,7 +1186,7 @@
 				$('#rpassword').css("background-color", "#FFCECE");
 			}
 		}
-		
+
 		function checkPassword(){
 			if(checkPasswordPattern($('#password').val())){
 				$('#password').css("background-color", "#B0F6AC");

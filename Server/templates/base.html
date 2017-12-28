@@ -97,6 +97,12 @@
 			<li>
 			<a class="page-scroll" href="#pricing">후원 마당</a>
 			</li>
+		{% if status == True: %}
+		<script>
+			clearForm()
+			alert("가입 완료")
+		</script>
+		{% endif %}
       	{% if name:%}
       		<li><a href="{{url_for('app.login')}}"><span class="glyphicon glyphicon-user"></span> {{name}}({{permission}})님</a></li>
       		<li><a href="{{url_for('app.logout')}}"><span class="glyphicon glyphicon-log-out"></span> 로그아웃</a></li>
@@ -113,11 +119,11 @@
 								                <div class="panel-title">Sign up!</div>
 								            </div>
 								            <div class="panel-body">
-								                <form class="form-horizontal" action="{{url_for('.signup_form')}}" method=post>
+								                <form class="form-horizontal" method=post>
 								                	<div class="form-group">
 												  		<label class="control-label col-sm-2" for="id">아이디:</label>
 												   		<div class="col-sm-10">
-												      		<input type="id" class="form-control" name="id" id="id" oninput="checkId()" required class="id" placeholder="Enter id">
+												      		<input type="id" class="form-control" name="id" id="id" oninput="checkId()" required class="id" style="background-color:#FFCECE;" placeholder="Enter id">
 												    	</div>
 												  	</div>
 												  	<div class="form-group">
@@ -128,7 +134,7 @@
 												  	<div class="form-group">
 												    	<label class="control-label col-sm-2" for="email">이메일:</label>
 												    	<div class="col-sm-10">
-												      	<input type="email" class="form-control" name="email" placeholder="Enter email">
+												      	<input type="email" class="form-control" name="email" id="email" oninput="checkEmail()" style="background-color:#FFCECE;" placeholder="Enter email">
 												    	</div>
 												  	</div>
 												  	<div class="form-group">
@@ -151,18 +157,18 @@
 												   	<div class="form-group">
 													    <label class="control-label col-sm-2"for="name">이름:</label>
 													    <div class="col-sm-10">
-													      <input type="text" class="form-control" name="name" placeholder="Enter name">
+													      <input type="text" class="form-control" name="name" id="name" placeholder="Enter name">
 												    	</div>
 												  	</div>
 												  	<div class="form-group">
 													    <label class="control-label col-sm-2" for="cell_phone">전화번호:</label>
 													    <div class="col-sm-10">
-													      <input type="text" class="form-control" name="cell_phone" placeholder="Enter cell_phone">
+													      <input type="text" class="form-control" name="cell_phone" id="cell_phone" placeholder="Enter cell_phone">
 													    </div>
 												  	</div>
 												  	<div class="form-group">
 													    <div class="col-sm-offset-2 col-sm-10">
-													      <button type="submit" id="sign_up_btn" onclick="checkPassword()" class="btn btn-default pull-right" disabled="disabled">회원 가입</button>
+													      <button type="button" id="sign_up_btn" onclick="checkPassword()" class="btn btn-default pull-right" disabled="disabled">회원 가입</button>
 													    </div>
 												  	</div>
 												</form>
@@ -1064,7 +1070,9 @@
 		<script type="text/javascript">
 		var idCheck = 0;
 		var passCheck = 0;
-
+		var emailCheck = 0;
+		var phoneNumCheck = 0;
+		
 		function checkSpace(str) { 
 			if(str.search(/\s/) != -1) { 
 				return true; 
@@ -1091,7 +1099,20 @@
 					return true; 
 			} 
 		}
-		
+		function checkEmail(){
+			 var regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+			 var input_email = $('#email').val();
+			 if(input_email.match(regExp) != null){
+				$('#email').css("background-color", "#B0F6AC");
+				emailCheck = 1;
+				if(idCheck == 1 && passCheck == 1 && emailCheck == 1){
+					$('#sign_up_btn').prop("disabled", false);
+					$('#sign_up_btn').css("background-color", "#4CAF50");
+				}
+			 }else{
+				 $('#email').css("background-color", "#FFCECE");
+			 }
+		}
 		function checkId(){
 			var input_id = $('#id').val();
 			$.getJSON($SCRIPT_ROOT + '/user/check_id', {
@@ -1119,7 +1140,7 @@
 							$('#id').css("background-color", "#B0F6AC");
 							$('#checkMsg').html('<p class="text-success" style="margin-top:-15px; margin-bottom:-20px">사용 가능</p>');
 							idCheck = 1;
-							if(idCheck == 1 && passCheck == 1){
+							if(idCheck == 1 && passCheck == 1 && emailCheck == 1){
 								$('#sign_up_btn').prop("disabled", false);
 								$('#sign_up_btn').css("background-color", "#4CAF50");
 							}
@@ -1132,7 +1153,23 @@
 					}
 			});
 		}
+		
+		function checkphoneNum(){
+			var cellExp =  /^[0-9]+$/;
 
+			input_cell = $('#cell_phone').val()
+			if(input_cell ==''){
+				alert('전화번호를 입력하세요!')
+				$('cell_phone').focus()
+				 return false;
+			}else if(!cellExp.test(input_cell)){
+				alert("잘못된 전화번호입니다. 숫자만 입력하세요.");
+				$('cell_phone').focus()
+				$('cell_phone').select()
+				return false;
+			}
+			return true;
+		}
 		function repeatPassword(){
 			var input_password = $('#password').val();
 			var input_rpassword = $('#rpassword').val();
@@ -1140,7 +1177,7 @@
 			if(input_password == input_rpassword){
 				$('#rpassword').css("background-color", "#B0F6AC");
 				passCheck = 1;
-				if(idCheck == 1 && passCheck == 1){
+				if(idCheck == 1 && passCheck == 1 && emailCheck == 1){
 					$('#sign_up_btn').prop("disabled", false);
 					$('#sign_up_btn').css("background-color", "#4CAF50");
 				}
@@ -1152,12 +1189,62 @@
 		function checkPassword(){
 			if(checkPasswordPattern($('#password').val())){
 				$('#password').css("background-color", "#B0F6AC");
+				return true;
 			}
 			else{
+				alert("회원가입 실패! 비밀번호는 8자리 이상 문자, 숫자, 특수문자로 구성하여야 합니다.")
 				$('#password').val('');
 				$('#password').focus();
+				$('#rpassword').css("background-color", "#FFCECE");
+				$('#sign_up_btn').prop("disabled", true);
+				passCheck = 0;
+				return false;
 			}
 		}
+		function clearForm(){
+			$('#id').val(null)
+			$('#password').val(null)
+			$('#rpassword').val(null)
+			$('#email').val(null)
+			$('#name').val(null)
+			$('#cell_phone').val(null)
+			$('#sign_up_btn').prop("disabled", true);
+			$('#id').css("background-color", "#FFCECE");
+			$('#rpassword').css("background-color", "#FFCECE");
+			$('#email').css("background-color", "#FFCECE");
+			$('#cell_phone').css("background-color", "#FFCECE");
+		}
+		
+		$(function() {
+		    $('#sign_up_btn').click(function() {
+		    	if(!checkPassword())
+		    		return;
+		    	if(!checkphoneNum())
+		    		return;
+		        var id = $('#id').val();
+		        var password = $('#password').val();
+		        var email = $('#email').val();
+		        var name = $('#name').val();
+		        var cell_phone = $('#cell_phone').val();
+		        $.ajax({
+		            url: '/user/Signup',
+		            data: $('form').serialize(),
+		            type: 'POST',
+		            success: function(data) {
+		                status = $.trim(data.status);
+		                if(status == 'error'){
+		                	alert('회원가입 실패')
+		                }else if(status == 'ok'){
+		                	clearForm()
+		                	alert('가입 완료')
+		                }
+		            },
+		            error: function(error) {
+		                console.log(error);
+		            }
+		        });
+		    });
+		});
 		</script>
 	{% endblock %}
 {% endblock %}

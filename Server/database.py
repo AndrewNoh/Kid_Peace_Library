@@ -62,8 +62,8 @@ class DB():
         "insert into MEMBERS values('"\
         +user.id+"', "\
         +"password('"+user.password+"'), '"\
-        +user.permission+"',"\
-        +user.cell_phone+",'"\
+        +user.permission+"','"\
+        +user.cell_phone+"','"\
         +user.email+"','"\
         +user.name+"', 0, 0)"
 

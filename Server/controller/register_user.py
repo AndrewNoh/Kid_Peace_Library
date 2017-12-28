@@ -5,6 +5,7 @@ from Server.app_blueprint import app
 from Server.model.user import user
 from Server.database import DB
 from collections import OrderedDict
+from Server.controller.login import login_requied
 
 @app.route('/user/check_id')
 def Check_id():
@@ -33,8 +34,7 @@ def signup_form():
         password = request.form['password']
         name = request.form['name']
         cell_phone = request.form['cell_phone']
-        if password == '':
-            return render_template('alert_msg.html', msg="회원가입 실패! 비밀번호는 8자리 이상 문자, 숫자, 특수문자로 구성하여야 합니다.")
+        
         item = user(\
                     id = id,
                     permission = 'user',
@@ -44,8 +44,19 @@ def signup_form():
                     password=password)
         
         mydb = DB()
+        data = OrderedDict()
+        data['status'] = 'ok' 
         if not mydb.sign_up(item):
             del mydb
-            return render_template('alert_msg.html', msg="회원가입 실패")
+            data['status'] = 'error'
+            return jsonify(data)
         del mydb
-    return redirect(url_for('.index'))
+    if 'id' in session:
+        session.clear()
+    return jsonify(data)
+
+@app.route('/user/modify')
+def modify_user():
+    get_user = login_requied()
+    id = get_user.id
+    

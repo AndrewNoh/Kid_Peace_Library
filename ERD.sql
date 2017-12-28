@@ -59,7 +59,7 @@ CREATE TABLE MEMBERS
 	id varchar(30) NOT NULL,
 	password varchar(255) NOT NULL,
 	permission varchar(20) NOT NULL,
-	cell_phone int NOT NULL,
+	cell_phone varchar(20) NOT NULL,
 	email varchar(50) NOT NULL,
 	name varchar(30) NOT NULL,
 	sponsor_status boolean NOT NULL,

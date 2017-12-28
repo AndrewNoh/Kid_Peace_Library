@@ -16,7 +16,7 @@ class categorys() :
 
 
 class comments() :
-    def __init__(self, comments, uuid, id):
+    def __init__(self, comment_contents, uuid, id):
     	self.comment_contents = comment_contents
     	self.uuid = uuid
     	self.id = id

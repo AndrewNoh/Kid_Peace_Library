@@ -18,16 +18,16 @@ def Check_id():
         return render_template('alert_msg.html', msg="사용할수 없는 id 입니다.")
     mydb = DB()
     count = int(mydb.id_check(id))
-        
+
     data = OrderedDict()
     data['count'] = count
     return jsonify(data)
-        
-    
+
+
 @app.route('/user/Signup', methods=['post'])
 def signup_form():
     if request.method == 'POST':
-        
+
         id = request.form['id']
         email = request.form['email']
         password = request.form['password']
@@ -42,10 +42,23 @@ def signup_form():
                     email = email,
                     name = name,
                     password=password)
-        
+
         mydb = DB()
         if not mydb.sign_up(item):
             del mydb
             return render_template('alert_msg.html', msg="회원가입 실패")
         del mydb
     return redirect(url_for('.index'))
+
+
+@app.route('/modify', methods=['post'])
+	def modify():
+		get_user = login_requied()
+		if request.method == 'POST'
+    		id = get_user.id
+            email = request.form['email']
+            password = request.form['password']
+            name = request.form['name']
+            cell_phone = request.form['cell_phone']
+
+        return render_template('modify.html', name = get_user.name, password = get_user.password, cell_phone = get_user.cell_phone, id = get_user.id, email = get_user.email)

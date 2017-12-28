@@ -14,6 +14,7 @@ def create_app():
     # 블루프린트 등록전 뷰 함수 모듈 임포트
     from Server.controller import login
     from Server.controller import register_user
+    from Server.controller import api
     
     # 블루프린트 등록
     from Server.app_blueprint import app

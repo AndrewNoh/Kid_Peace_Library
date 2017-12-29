@@ -5,9 +5,9 @@ from Server.app_blueprint import app
 from Server.model.user import user
 from Server.database import DB
 
-def session_refresh(id, password):
+def session_refresh(id):
     mydb = DB()
-    user_buffer = mydb.login(id, password)
+    user_buffer = mydb.user_info(id)
     del mydb
     
     session.clear()
@@ -50,7 +50,21 @@ def login():
     if request.method == 'POST':
         id = request.form['id']
         password = request.form['password']
-        if session_refresh(id,password):
+        mydb = DB()
+        user_buffer = mydb.user_info(id)
+        del mydb
+        
+        session.clear()
+        
+        if user_buffer:
+            session['id'] = user_buffer.id
+            session['password'] = user_buffer.password
+            session['permission'] = user_buffer.permission
+            session['cell_phone'] = user_buffer.cell_phone
+            session['email'] = user_buffer.email
+            session['name'] = user_buffer.name
+            session['sponsor_status'] = user_buffer.sponsor_status
+            session['m_delete'] = user_buffer.m_delete
             return redirect(url_for('app.index'))
         else:
             return render_template('alert_msg.html', msg="Login Fail! 등록되지 않았거나 아이디 혹은 비밀번호가 다릅니다.")

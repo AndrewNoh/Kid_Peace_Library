@@ -113,13 +113,13 @@ def modify():
         db = DB()
         if newpassword == '':
             if db.modify_nopassword(buf):
-                session_refresh(buf.id, session['password'])
+                session_refresh(buf.id)
                 data['status'] = 'ok'
             else:
                 data['status'] = 'fail'
         else:
             if db.modify(buf):
-                session_refresh(buf.id, buf.password)
+                session_refresh(buf.id)
                 data['status'] = 'ok'
             else:
                 data['status'] = 'fail'

@@ -45,7 +45,6 @@ class DB():
             data = rows[0]
             buf = user(\
                        id = data['id'],
-                       password = data['password'],
                        permission = data['permission'],
                        cell_phone = data['cell_phone'],
                        email = data['email'],
@@ -56,6 +55,28 @@ class DB():
         else:
             return
 
+    def user_info(self, id):
+        sql = "select * from MEMBERS where id='"+id+"'"
+        try:
+            self.cur.execute(sql)
+            rows = self.cur.fetchall()
+        except:
+            print("login execute error!")
+            return
+
+        if rows:
+            data = rows[0]
+            buf = user(\
+                       id = data['id'],
+                       permission = data['permission'],
+                       cell_phone = data['cell_phone'],
+                       email = data['email'],
+                       name = data['name'],
+                       sponsor_status = data['sponsor_status'],
+                       m_delete = data['m_delete'])
+            return buf
+        else:
+            return
 
     def sign_up(self, user):
         sql = \
@@ -77,11 +98,25 @@ class DB():
         return True
 
 
+    def modify_nopassword(self, user):
+        sql = \
+            "update MEMBERS set cell_phone = '"\
+            +user.cell_phone+"', email = '"+user.email+"',"\
+            "name = '"+user.name+"' where id= '"+user.id+"'"
+
+        try:
+            self.cur.execute(sql)
+            self.conn.commit()
+        except:
+            print('modify execute error!')
+            return False
+        return True
+
     def modify(self, user):
         sql = \
-        "update MEMBERS set password='"+user.password+"', \
-        cell_phone='"+user.cell_phone+"', email='"+user.email+"', \
-        name='"+user.name+"' where id='"+user.id+"'"
+            "update MEMBERS set password= password('"+user.password+"') , "\
+            "cell_phone='"+user.cell_phone+"', email='"+user.email+"', "\
+            "name='"+user.name+"' where id='"+user.id+"'"
 
         try:
             self.cur.execute(sql)

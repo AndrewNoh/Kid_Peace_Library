@@ -1,9 +1,12 @@
 //<<<<<<<<<<<<<<<<<<<<<<<mask 
+
+	//공백 체크 함수 공백 있으면 true
 		function checkSpace(str) { 
-			if(str.search(/\s/) != -1) { 
-				return true; 
-			} else { 
+			var space_Exp = /\s/g;
+			if(!space_Exp.test(str)) { 
 				return false; 
+			} else { 
+				return true; 
 			} 
 		}
 		function checkSpecial(str) {
@@ -14,7 +17,7 @@
 				return false;
 			}
 		}
-
+		// 비밀번호 체크 함수 만족시 조건 만족시 true else false
 		function checkPasswordPattern(str) {
 			var pattern1 = /[0-9]/; // 숫자
 			var pattern2 = /[a-zA-Z]/; // 문자

@@ -77,12 +77,12 @@ class DB():
         return True
 
 
-    def modify(self, user):
+    def modify_nopassword(self, user):
         sql = \
-        "update MEMBERS set password='"+user.password+"', \
-        cell_phone='"+user.cell_phone+"', email='"+user.email+"', \
-        name='"+user.name+"' where id='"+user.id+"'"
-
+            "update MEMBERS set cell_phone = '"\
+            +user.cell_phone+"', email = '"+user.email+"',"\
+            "name = '"+user.name+"' where id= '"+user.id+"'"
+            
         try:
             self.cur.execute(sql)
             self.conn.commit()
@@ -90,7 +90,21 @@ class DB():
             print('modify execute error!')
             return False
         return True
-
+            
+    def modify(self, user):
+        sql = \
+            "update MEMBERS set password= password('"+user.password+"') , "\
+            "cell_phone='"+user.cell_phone+"', email='"+user.email+"', "\
+            "name='"+user.name+"' where id='"+user.id+"'"
+    
+        try:
+            self.cur.execute(sql)
+            self.conn.commit()
+        except:
+            print('modify execute error!')
+            return False
+        return True
+    
     def select_category(self, category):
         sql = "select CATEGORYS from '+category+'"
         try:

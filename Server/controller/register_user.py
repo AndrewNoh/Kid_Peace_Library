@@ -6,6 +6,7 @@ from Server.model.user import user
 from Server.database import DB
 from collections import OrderedDict
 from Server.controller.login import login_requied
+from Server.controller.login import session_refresh
 
 @app.route('/user/check_id')
 def Check_id():
@@ -68,7 +69,62 @@ def modify_form():
     
     return render_template('modify.html', name = name, password = password, cell_phone = cell_phone, id = id, email = email, permission = get_user.permission)
 
-@app.route('/user/modify/', methods=['POST'])
+
+@app.route('/user/modify/password/check', methods=['POST'])
+def modify_password_check():
+    if request.method == 'POST':
+        id = session['id']
+        password = request.form['password']
+        
+        #보낼 json데이터
+        data = OrderedDict()
+        
+        db = DB()
+        user_buf = db.login(id, password)
+        del db
+        if user_buf != None:
+            data['status'] = 'ok'
+            return jsonify(data)
+        else:
+            data['status'] = 'fail'
+            return jsonify(data)
+    data['status'] = 'error'
+    return jsonify(data)
+
+@app.route('/user/modify', methods=['post'])
 def modify():
-    return
+    if request.method == 'POST':
+        id = session['id']
+        newpassword = request.form['new_password']
+        email = request.form['email']
+        name = request.form['name']
+        cell_phone = request.form['cell_phone']
+        
+        buf = user(\
+                   id=id, \
+                   permission= session['permission'],\
+                   password=newpassword,\
+                   email=email,\
+                   name=name,\
+                   cell_phone=cell_phone)
+        
+        data = OrderedDict()
+        
+        db = DB()
+        if newpassword == '':
+            if db.modify_nopassword(buf):
+                session_refresh(buf.id, session['password'])
+                data['status'] = 'ok'
+            else:
+                data['status'] = 'fail'
+        else:
+            if db.modify(buf):
+                session_refresh(buf.id, buf.password)
+                data['status'] = 'ok'
+            else:
+                data['status'] = 'fail'
+        del db
+        return jsonify(data)
+    data['status'] = 'error'
+    return jsonify(data)
 

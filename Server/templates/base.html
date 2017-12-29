@@ -65,7 +65,7 @@
 	        <a class="dropbtn" data-toggle="dropdown" href="#">알림 마당
 	        <span class="caret"></span></a>
 	        <ul class="dropdown-content">
-	          <li><a href="{{url_for('.board_form')}}">소식 마당</a></li>
+	          <li><a href="{{url_for('.board_form')}}" name="cat" value = "소식마당" method=post>소식 마당</a></li>
 	          <li><a href="#">책 마당</a></li>
 	          <li><a href="#">영화 마당</a></li>
 	        </ul>
@@ -1066,7 +1066,7 @@
 		<script type="text/javascript" src="{{url_for('static', filename='js/common.js')}}"></script>
 		<!-- <script type="text/javascript" src="{{url_for('static', filename='ckeditor/ckeditor.js')}}"></script> ckeditor -->
 		<script type="text/javascript" src="{{url_for('static', filename='se2/js/HuskyEZCreator.js')}}" charset="utf-8"></script>
-		
+
 		<!-- 폼 유효성 마스크 -->
 		<script type="text/javascript" src="{{url_for('static', filename='js/form_mask.js')}}" charset="utf-8"></script>
 		<!-- 회원가입 폼 유효성 검사, ajax -->

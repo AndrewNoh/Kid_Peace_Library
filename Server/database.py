@@ -91,8 +91,9 @@ class DB():
             return False
         return True
 
-    def select_category(self, category):
-        sql = "select CATEGORYS from '+category+'"
+
+    def view_board(self, category):
+        sql = "select uuid, title, hits, write_time, modify_time, category, id  from BOARD where category = '+category+'"
         try:
             self.cur.excute(sql)
             rows = self.cur.fetchall()
@@ -101,8 +102,15 @@ class DB():
             return
         if rows:
             data = rows[0]
-            category = data['category']
-            return category
+            Selcat = category(\
+                       uuid = data['uuid'],
+                       title= data['title'],
+                       hits = data['hits'],
+                       write_time = data['write_time'],
+                       modify_time = data['modify_time'],
+                       category = data['category'],
+                       id = data['id'],
+            return Selcat
         else :
             return
 

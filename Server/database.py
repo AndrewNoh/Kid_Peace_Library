@@ -137,17 +137,18 @@ class DB():
             return
         if rows:
             data = rows[0]
-            Selcat = category(\
+            selcat = category(\
                        uuid = data['uuid'],
                        title= data['title'],
                        hits = data['hits'],
                        write_time = data['write_time'],
                        modify_time = data['modify_time'],
                        category = data['category'],
-                       id = data['id'],
-            return Selcat
+                       id = data['id'],)
+            return selcat
         else :
             return
+
 
 if __name__ == '__main__':
     mydb = DB()

@@ -23,6 +23,7 @@ def write_form():
         return render_template("write.html", name = get_user.name, permission = get_user.permission)
     return render_template("write.html")
 
+'''
 @app.route('/Board/Category', methods=['POST'])
 def category():
     if request.method == 'POST':
@@ -33,3 +34,4 @@ def category():
 
         return
     return
+'''

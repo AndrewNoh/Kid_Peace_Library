@@ -77,7 +77,7 @@ class DB():
             return buf
         else:
             return
-        
+
     def sign_up(self, user):
         sql = \
         "insert into MEMBERS values('"\
@@ -103,7 +103,7 @@ class DB():
             "update MEMBERS set cell_phone = '"\
             +user.cell_phone+"', email = '"+user.email+"',"\
             "name = '"+user.name+"' where id= '"+user.id+"'"
-            
+
         try:
             self.cur.execute(sql)
             self.conn.commit()
@@ -111,13 +111,13 @@ class DB():
             print('modify execute error!')
             return False
         return True
-            
+
     def modify(self, user):
         sql = \
             "update MEMBERS set password= password('"+user.password+"') , "\
             "cell_phone='"+user.cell_phone+"', email='"+user.email+"', "\
             "name='"+user.name+"' where id='"+user.id+"'"
-    
+
         try:
             self.cur.execute(sql)
             self.conn.commit()
@@ -125,9 +125,10 @@ class DB():
             print('modify execute error!')
             return False
         return True
-    
-    def select_category(self, category):
-        sql = "select CATEGORYS from '+category+'"
+
+
+    def view_board(self, category):
+        sql = "select uuid, title, hits, write_time, modify_time, category, id  from BOARD where category = '+category+'"
         try:
             self.cur.excute(sql)
             rows = self.cur.fetchall()
@@ -136,10 +137,18 @@ class DB():
             return
         if rows:
             data = rows[0]
-            category = data['category']
-            return category
+            selcat = category(\
+                       uuid = data['uuid'],
+                       title= data['title'],
+                       hits = data['hits'],
+                       write_time = data['write_time'],
+                       modify_time = data['modify_time'],
+                       category = data['category'],
+                       id = data['id'],)
+            return selcat
         else :
             return
+
 
 if __name__ == '__main__':
     mydb = DB()

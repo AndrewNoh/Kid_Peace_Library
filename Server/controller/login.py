@@ -37,6 +37,7 @@ def login_requied():
                     m_delete=session['m_delete'])
         return USER
 
+
 @app.route('/')
 def index():
     get_user = login_requied()

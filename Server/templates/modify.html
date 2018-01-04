@@ -1,9 +1,15 @@
-{% extends "base.html" %} {% block head %} {% block title %}회원정보 수정{%
-endblock %} {{super()}} {% endblock %} {% block body %} {% block Nav %}
-{{super()}} {% endblock %}
+{% extends "base.html" %} 
+{% block head %} 
+	{% block title %}회원정보 수정{%endblock %} 
+	{{super()}} 
+{% endblock %} 
+{% block body %} 
+	{% block Nav %}
+		{{super()}} 
+	{% endblock %}
 <section id="signup">
 	<div class="container">
-		<div class="col-md-9 col-md-offset-35 col-sm-12 col-sm-offset-2">
+		<div class="col-md-9 col-sm-10 col-sm-offset-2">
 			<div class="panel panel-info" style="margin-top: 100px;">
 				<div class="panel-heading">
 					<div class="panel-title">회원 정보 수정</div>
@@ -11,37 +17,37 @@ endblock %} {{super()}} {% endblock %} {% block body %} {% block Nav %}
 				<div class="panel-body">
 					<form class="form-horizontal">
 						<div class="form-group">
-							<label class="control-label col-sm-2" for="id">아이디:</label>
+							<label class="control-label col-sm-2 col-sm-offset-1" for="id">아이디:</label>
 							<div class="col-sm-7">
 								<input type="text" name="id" id="modify_id" value="{{id}}"
 									disabled="disabled">
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="control-label col-sm-2" for="email">이메일:</label>
-							<div class="col-sm-10">
+							<label class="control-label col-sm-2 col-sm-offset-1" for="email">이메일:</label>
+							<div class="col-sm-7">
 								<input type="email" class="form-control" name="email"
 									id="modify_email" value="{{email}}">
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="control-label col-sm-2" for="password">현재
+							<label class="control-label col-sm-2 col-sm-offset-1" for="password">현재
 								비밀번호:</label>
-							<div class="col-sm-10">
+							<div class="col-sm-7">
 								<input type="password" class="form-control" name="password"
 									id="modify_password" placeholder="Enter password">
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="control-label col-sm-2" for="new_password">새로운
+							<label class="control-label col-sm-2 col-sm-offset-1" for="new_password">새
 								비밀번호:</label>
-							<div class="col-sm-10">
+							<div class="col-sm-7">
 								<input type="password" class="form-control" name="new_password"
 									id="modify_new_password" placeholder="Repeat password">
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="control-label col-sm-2" for="rpassword">비밀번호
+							<label class="control-label col-sm-2 col-sm-offset-1" for="rpassword">비밀번호
 								재입력</label>
 							<div class="col-sm-7">
 								<input type="password" class="form-control"
@@ -49,26 +55,23 @@ endblock %} {{super()}} {% endblock %} {% block body %} {% block Nav %}
 									oninput="check_repeatPassword_css()"
 									placeholder="Repeat password">
 							</div>
-							<div class="col-sm-4">
-								<p>비밀번호를 입력 하세요.</p>
-							</div>
 						</div>
 						<div class="form-group">
-							<label class="control-label col-sm-2" for="name">이름:</label>
+							<label class="control-label col-sm-2 col-sm-offset-1" for="name">이름:</label>
 							<div class="col-sm-7">
 								<input type="text" class="form-control" name="name"
 									id="modify_name" value="{{name}}">
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="control-label col-sm-2" for="cell_phone">전화번호:</label>
+							<label class="control-label col-sm-2 col-sm-offset-1" for="cell_phone">전화번호:</label>
 							<div class="col-sm-7">
 								<input type="text" class="form-control" name="cell_phone"
 									id="modify_cell_phone" value="{{cell_phone}}">
 							</div>
 						</div>
 						<div class="form-group">
-							<div class="col-sm-offset-8 col-sm-4">
+							<div class="col-sm-offset-7 col-sm-4">
 								<button type="submit" class="btn btn-primary">회원탈퇴</button>
 								<button type="button" id="modify_btn" class="btn btn-default">수
 									정</button>
@@ -81,10 +84,14 @@ endblock %} {{super()}} {% endblock %} {% block body %} {% block Nav %}
 	</div>
 </section>
 
-{% block Footer %} {{super()}} {% endblock %} {% block jquery %}
-{{super()}} {% endblock %}
+	{% block Footer %} 
+		{{super()}}
+	{% endblock %} 
+
+	{% block jquery %}
+		{{super()}} 
+	{% endblock %}
 <script type="text/javascript">
-	var passcheck_status = 0;
 
 	function Empty_Newpassword() {
 		var input_password = $('#modify_newpassword').val()
@@ -140,81 +147,29 @@ endblock %} {{super()}} {% endblock %} {% block body %} {% block Nav %}
 	}
 
 	//회원정보수정전 password 확인 ajax
-	function modify_checkPassword() {
-		var id = $('#modify_id').val()
-		var password = $('#modify_password').val()
+	$(function(){
+		$('#modify_btn').click(function(){
+			var id = $('#modify_id').val()
+			var password = $('#modify_password').val()
 
-		if (checkSpace(password) || password == '') {
-			alert('비밀번호를 입력해 주세요.')
-			return;
-		}
-		$.ajax({
-			url : '/user/modify/password/check',
-			data : $('form').serialize(),
-			type : 'POST',
-			success : function(data) {
-				status = $.trim(data.status);
-				if (status == 'fail') {
-					alert('비밀번호가 다릅니다.');
-					$('#modify_password').focus();
-					passcheck_status = 0;
-				} else if (status == 'ok') {
-					passcheck_status = 1;
-				} else if (status == 'error') {
-					alert('Error!');
-					$('#modify_password').focus();
-					passcheck_status = 0;
-				}
-			},
-			error : function(error) {
-				console.log(error);
-			}
-		});
-	}
-
-	//회원 정보 수정
-	$(function() {
-		$('#modify_btn').click(function() {
-			var newpassword;
-			var modify_pass;
-			modify_checkPassword()
-			if (passcheck_status != 1) {
+			if (checkSpace(password) || password == '') {
+				alert('비밀번호를 입력해 주세요.')
 				return;
 			}
-
-			if (!Empty_Newpassword()) {
-				if (check_Newpassword()) {
-					if (check_repeatPassword()) {
-						modify_pass = $('#modify_repeat_password').val();
-					} else {
-						passcheck_status = 0;
-						return;
-					}
-				} else {
-					passcheck_status = 0;
-					return;
-				}
-			}
-
-			if (!modify_checkphoneNum()) {
-				passcheck_status = 0;
-				return;
-			}
-			var email = $('#modify_email').val();
-			var name = $('#modify_name').val();
-			var cell_phone = $('#modify_cell_phone').val();
 			$.ajax({
-				url : '/user/modify',
+				url : '/user/modify/password/check',
 				data : $('form').serialize(),
 				type : 'POST',
 				success : function(data) {
 					status = $.trim(data.status);
 					if (status == 'fail') {
-						alert('Error!! 회원원정보 수정 실패!')
-						passcheck_status = 0;
+						alert('비밀번호가 다릅니다.');
+						$('#modify_password').focus();
 					} else if (status == 'ok') {
-						alert('회원 정보 수정 완료')
-						passcheck_status = 0;
+						modify();
+					} else if (status == 'error') {
+						alert('Error!');
+						$('#modify_password').focus();
 					}
 				},
 				error : function(error) {
@@ -223,5 +178,47 @@ endblock %} {{super()}} {% endblock %} {% block body %} {% block Nav %}
 			});
 		});
 	});
+	
+	function modify(){
+		var newpassword;
+		var modify_pass;
+
+		if (!Empty_Newpassword()) {
+			if (check_Newpassword()) {
+				if (check_repeatPassword()) {
+					modify_pass = $('#modify_repeat_password').val();
+				} else {
+					return;
+				}
+			} else {
+				return;
+			}
+		}
+
+		if (!modify_checkphoneNum()) {
+			return;
+		}
+		var email = $('#modify_email').val();
+		var name = $('#modify_name').val();
+		var cell_phone = $('#modify_cell_phone').val();
+		$.ajax({
+			url : '/user/modify',
+			data : $('form').serialize(),
+			type : 'POST',
+			success : function(data) {
+				status = $.trim(data.status);
+				if (status == 'fail') {
+					alert('Error!! 회원원정보 수정 실패!')
+					location.href="{{url_for('.modify_form')}}"
+				} else if (status == 'ok') {
+					alert('회원 정보 수정 완료')
+					location.href="{{url_for('.modify_form')}}"
+				}
+			},
+			error : function(error) {
+				console.log(error);
+			}
+		});
+	}
 </script>
 {% endblock %}

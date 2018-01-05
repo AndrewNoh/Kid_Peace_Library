@@ -15,6 +15,14 @@ def board_form():
         return render_template("board.html", name = get_user.name, permission = get_user.permission)
     return render_template("board.html")
 
+@app.route('/Board/<category>/', defaults={'page':1})
+@app.route('/Board/<category>/<int:page>')
+def board_list(category, page):
+    get_user = login_requied()
+    if get_user:
+        return render_template("board.html", name = get_user.name, permission = get_user.permission, board_name= category)
+    else:
+        return render_template("board.html", board_name= category)
 
 @app.route('/Write')
 def write_form():
@@ -23,15 +31,4 @@ def write_form():
         return render_template("write.html", name = get_user.name, permission = get_user.permission)
     return render_template("write.html")
 
-'''
-@app.route('/Board/Category', methods=['POST'])
-def category():
-    if request.method == 'POST':
-        cat = request.form[cat]
-        mydb=DB()
-        categorys = mydb.view_board(cat)
-        if categorys == "소식마당":
 
-        return
-    return
-'''

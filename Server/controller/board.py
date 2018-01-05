@@ -24,11 +24,19 @@ def board_list(category, page):
     else:
         return render_template("board.html", board_name= category)
 
-@app.route('/Write')
-def write_form():
+@app.route('/Write/<category>/')
+def write_form(category):
     get_user = login_requied()
     if get_user:
-        return render_template("write.html", name = get_user.name, permission = get_user.permission)
-    return render_template("write.html")
+        if session['permission'] == "admin" or session['permission'] == "manager" :
+            return render_template("write.html", name = get_user.name, permission = get_user.permission, board_name= category)
+        elif session['permission'] == "user" :
+            if category == "회원 게시판" or category == "자유 게시판" :
+                return render_template("write.html", name = get_user.name, permission = get_user.permission, board_name= category)
+            else :
+                return render_template("alert_msg.html", msg="권한이 없습니다.")
+    elif category == "자유 게시판":
+        return render_template("write.html", board_name=category)
+    return render_template("alert_msg.html", msg="로그인을 해주세요.")
 
 

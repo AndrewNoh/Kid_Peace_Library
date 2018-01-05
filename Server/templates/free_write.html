@@ -10,12 +10,23 @@
 <section id="write" style="margin-top:50px;">
   <div class = "container">
 		<form action = "{{url_for('.write_form')}}" accept-charset="utf-8" method =post >
-		 <div class="panel-heading">
-        <div class="panel-title" style="font-size:20px; text-align:center;">{{board_name}}</div>
-   		 </div>
 	    <div class="form-group">
 	      <label for="subject">Title</label>
 	      <input type="text" class="form-control" name ="subject" id="subject" placeholder="Enter title">
+	    </div>
+			<div class="form-group">
+	      <label>카테고리</label>
+	      <select class="form-control" name ="category">
+					<option value = "소식마당">소식마당</option>
+					<option value = "책마당">책마당</option>
+					<option value = "영화마당">영화마당</option>
+					<option value = "영세중립마당">영세중립마당</option>
+					<option value = "살림마당">살림마당</option>
+					<option value = "관장게시판">관장게시판</option>
+					<option value = "회원게시판">회원게시판</option>
+					<option value = "자유게시판">자유게시판</option>
+					<option value = "후원마당">후원마당</option>
+				</select>
 	    </div>
 	    <div class="form-group">
 	      <label for="content">Comment:</label>

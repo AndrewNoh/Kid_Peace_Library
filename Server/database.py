@@ -148,6 +148,15 @@ class DB():
             return selcat
         else :
             return
+        
+    def create_board(self, board):
+        sql =\
+        "insert into BOARD values('"+board.uuid+"', '"\
+        +board.title+"', '"\
+        +board.contents+"', 0, timestamp, '"\
+        +board.datetime+"', '"\
+        +board.category+"', '"\
+        +board.id+"' "
 
 
 if __name__ == '__main__':

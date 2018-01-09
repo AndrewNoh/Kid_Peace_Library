@@ -19,7 +19,7 @@
 	    </div>
 	    <div class="form-group">
 	      <label for="content">Comment:</label>
-	      <textarea class="form-control" rows="10" id="MESSAGE" name="MESSAGE" placeholder="Describe yourself here..."></textarea>
+	      <textarea class="form-control" rows="10" id="MESSAGE" name="editor1" placeholder="Describe yourself here..."></textarea>
 	    </div>
 	    <div class="form-group">
 	      <input type="file" class="btn btn-default pull-left" id="File">
@@ -38,19 +38,15 @@
 	{% block jquery %}
 		{{super()}}
 	{% endblock %}
+	<script>
+            CKEDITOR.replace( 'editor1', {
+                filebrowserImageUploadUrl: '/ckupload/'
+            });
+	</script>
   <!-- <script>
   CKEDITOR.replace( 'MESSAGE' );
   </script>
    -->
 
-   <script type="text/javascript">
-	var oEditors = [];
-	nhn.husky.EZCreator.createInIFrame({
-	    oAppRef: oEditors,
-	    elPlaceHolder: "MESSAGE",
-	    sSkinURI: "{{url_for('static', filename='se2/SmartEditor2Skin.html')}}",
-	    fCreator: "createSEditor2"
-	});
-	</script>
 
 {% endblock %}

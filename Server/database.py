@@ -149,6 +149,7 @@ class DB():
         else :
             return
         
+        
     def create_board(self, board):
         sql =\
         "insert into BOARD values('"+board.uuid+"', '"\
@@ -157,6 +158,14 @@ class DB():
         +board.datetime+"', '"\
         +board.category+"', '"\
         +board.id+"' "
+        try:
+            self.cur.execute(sql)
+            self.conn.commit()
+        except:
+            print('False Create Contents')
+            return False
+        
+        return True
 
 
 if __name__ == '__main__':

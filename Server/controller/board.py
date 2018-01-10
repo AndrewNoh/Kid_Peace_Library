@@ -6,6 +6,7 @@ import random
 from flask import render_template, url_for, redirect, session, request, jsonify, current_app, make_response
 from Server.app_blueprint import app
 from Server.model.user import user
+from Server.model.board import board
 from Server.database import DB
 from Server.controller.login import login_requied
 from Server.controller.pagination_class import Pagination
@@ -39,13 +40,12 @@ def write_form(category):
         if session['permission'] == "admin" or session['permission'] == "manager" :
             return render_template("write.html", name = get_user.name, permission = get_user.permission, board_name= category)
         elif session['permission'] == "user" :
-            if category == "회원 게시판" or category == "자유 게시판" :
+            if category == "자유 게시판" :
                 return render_template("write.html", name = get_user.name, permission = get_user.permission, board_name= category)
             else :
                 return render_template("alert_msg.html", msg="권한이 없습니다.")
-    elif category == "자유 게시판":
-        return render_template("write.html", board_name=category)
     return render_template("alert_msg.html", msg="로그인을 해주세요.")
+
 
 @app.route('/Write/create', methods =['POST'])
 def create():
@@ -55,20 +55,29 @@ def create():
             id = get_user.id
             title =  request.form['subject']
             category = request.form['category']
-            contents = request.form['MESSAGE']
+            contents = request.form['editor1']
             uuid = uuid.uuid4()
             datetime = datetime()
-            """
-            item = boards(\
-                         id = id\
-                         title = title\
-                         category = category\
-                         contents = contents\
-                         uuid = uuid\
-                         datetime = datetime)
-            mydb = DB()
-            """
+            hit = 0
             
+            item = board(\
+                         uuid = uuid,
+                         title = title,
+                         category = category,
+                         contents = contents,
+                         datetime = datetime,
+                         hit = hit,
+                         id = id)
+            mydb = DB()
+            if not mydb.create_board(item):
+                del mydb
+                return render_template('alert_msg.html', msg="글작성에 실패하였습니다.")
+            mydb.create_board(item)
+            del mydb
+            return render_template('alert_msg.html', msg="글작성을 완료하였습니다.")
+        return render_template('alert_msg.html', msg="권한이 없습니다.")
+        
+        
         
 @app.route('/ckupload/', methods=['POST', 'OPTIONS'])
 def ckupload():

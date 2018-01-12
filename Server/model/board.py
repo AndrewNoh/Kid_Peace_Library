@@ -2,7 +2,7 @@
 
 
 class board() :
-    def __init__(self, uuid, title, contents, hits, write_time, modify_time, category, id):
+    def __init__(self, uuid, title, contents, hits , category, id, write_time=None, modify_time= None):
         self.uuid = uuid
         self.title = title
         self.contents = contents

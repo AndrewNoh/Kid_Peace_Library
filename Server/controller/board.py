@@ -46,35 +46,29 @@ def write_form(category):
                 return render_template("alert_msg.html", msg="권한이 없습니다.")
     return render_template("alert_msg.html", msg="로그인을 해주세요.")
 
-
 @app.route('/Write/create', methods =['POST'])
-def create():
+@app.route('/Write/create/<category>', methods =['POST'])
+def create(category):
     get_user = login_requied()
     if get_user:  
         if request.method == 'POST' :
             id = get_user.id
             title =  request.form['subject']
-            category = request.form['category']
             contents = request.form['editor1']
-            uuid = uuid.uuid4()
-            datetime = datetime()
-            hit = 0
             
             item = board(\
-                         uuid = uuid,
+                         uuid = str(uuid.uuid4()),
                          title = title,
                          category = category,
                          contents = contents,
-                         datetime = datetime,
-                         hit = hit,
+                         hits = 0,
                          id = id)
             mydb = DB()
-            if not mydb.create_board(item):
+            if mydb.create_board(item):
                 del mydb
-                return render_template('alert_msg.html', msg="글작성에 실패하였습니다.")
-            mydb.create_board(item)
+                return render_template('alert_msg.html', msg="글작성을 완료하였습니다.")
             del mydb
-            return render_template('alert_msg.html', msg="글작성을 완료하였습니다.")
+            return render_template('alert_msg.html', msg="글작성을 실패하였습니다.")
         return render_template('alert_msg.html', msg="권한이 없습니다.")
         
         

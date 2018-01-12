@@ -5,23 +5,18 @@
 <title>Insert title here</title>
 	<script>
 		function alert_msg(){
-			alert("{{msg}}")
-		}
-		function backTopage(){
+			alert("{{msg}}");
 			history.go(-1)();
 		}
 	</script>
 </head>
 <body>
 <body>	
-	
 	{% if msg: %}
-	<script>
-		alert_msg()
-		backTopage()
-	</script>
+				<script>
+					alert_msg()
+				</script>
 	{% endif %}
-	
 </body>
 </body>
 </html>

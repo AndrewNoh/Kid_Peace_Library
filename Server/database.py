@@ -4,7 +4,7 @@ import MySQLdb
 import MySQLdb.cursors
 import sys
 from Server.model.user import user
-
+from Server.model.board import board
 
 class DB():
     def __init__(self):
@@ -154,10 +154,9 @@ class DB():
         sql =\
         "insert into BOARD values('"+board.uuid+"', '"\
         +board.title+"', '"\
-        +board.contents+"', 0, timestamp, '"\
-        +board.datetime+"', '"\
+        +board.contents+"', 0, 0, NOW(), '"\
         +board.category+"', '"\
-        +board.id+"' "
+        +board.id+"')"
         try:
             self.cur.execute(sql)
             self.conn.commit()

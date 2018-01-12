@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block head %}
-{% block title %}글쓰기{% endblock %}
+{% block title %}글수정{% endblock %}
 	{{super()}}
 {% endblock %}
 {% block body %}
@@ -15,11 +15,11 @@
    		 </div>
 	    <div class="form-group">
 	      <label for="subject">Title</label>
-	      <input type="text" class="form-control" name ="subject" id="subject" placeholder="Enter title">
+	      <input type="text" class="form-control" name ="subject" id="subject" placeholder={{title}}>
 	    </div>
 	    <div class="form-group">
 	      <label for="content">Comment:</label>
-	      <textarea class="form-control" rows="10" id="MESSAGE" name="editor1">"Describe yourself here..."</textarea>
+	      <textarea class="form-control" rows="10" id="MESSAGE" name="editor1">{{contents}}</textarea>
 	    </div>
 	    <div class="form-group">
 	      <input type="file" class="btn btn-default pull-left" id="File">

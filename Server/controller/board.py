@@ -46,7 +46,7 @@ def write_form(category):
                 return render_template("alert_msg.html", msg="권한이 없습니다.")
     return render_template("alert_msg.html", msg="로그인을 해주세요.")
 
-@app.route('/Write/create', methods =['POST'])
+
 @app.route('/Write/create/<category>', methods =['POST'])
 def create(category):
     get_user = login_requied()

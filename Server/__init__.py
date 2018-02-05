@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask, render_template
+from flask_jsglue import JSGlue
 """
     Server 패키지 초기화 모듈
 """
 
 def create_app():
+    jsglue = JSGlue()
     application = Flask(__name__);
-
+    
+    jsglue.init_app(application)
     # 비밀키 등록
     application.secret_key = 'any random string'
 

@@ -110,6 +110,12 @@
 						$('#checkMsg').html('<p class="text-danger" style="margin-top:-15px; margin-bottom:-20px">특수문자 사용 불가능</p>');
 						idCheck = 0;
 					}
+					else if($.trim(data.count) == 0 && chkrtext(input_id)){
+						$('#sign_up_btn').prop("disabled", true);
+						$('#id').css("background-color", "#FFCECE");
+						$('#checkMsg').html('<p class="text-danger" style="margin-top:-15px; margin-bottom:-20px">한글 사용 불가능</p>');
+						idCheck = 0;
+					}
 					else if($.trim(data.count) == 0){
 							$('#id').css("background-color", "#B0F6AC");
 							$('#checkMsg').html('<p class="text-success" style="margin-top:-15px; margin-bottom:-20px">사용 가능</p>');
@@ -144,6 +150,7 @@
 		            url: '/user/Signup',
 		            data: $('form').serialize(),
 		            type: 'POST',
+		            async: false,
 		            success: function(data) {
 		                status = $.trim(data.status);
 		                if(status == 'error'){

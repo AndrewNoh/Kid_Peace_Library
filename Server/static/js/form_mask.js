@@ -9,6 +9,7 @@
 				return true; 
 			} 
 		}
+		// 특수문자 포함시 true 미포함시 false
 		function checkSpecial(str) {
 			var special_pattern = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
 			if(special_pattern.test(str) == true) {
@@ -17,7 +18,7 @@
 				return false;
 			}
 		}
-		// 비밀번호 체크 함수 만족시 조건 만족시 true else false
+		// 비밀번호 체크 함수 숫자,특수문자를 포함하고 8자이상이면 true else false
 		function checkPasswordPattern(str) {
 			var pattern1 = /[0-9]/; // 숫자
 			var pattern2 = /[a-zA-Z]/; // 문자
@@ -28,6 +29,16 @@
 					return true;
 			}
 		}
+		//한글포함시 true 미포함시 false;
+		function chkrtext(str){
+			if(str.match(".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*")){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		// 이메일 마스크
 		function email_mask(email){
 			var regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 			if(email.match(regExp) != null){

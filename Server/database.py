@@ -152,9 +152,9 @@ class DB():
         
     def create_board(self, board):
         sql =\
-        "insert into BOARD values('"+board.uuid+"', '"\
+        "INSERT INTO BOARD VALUES('"+board.uuid+"', '"\
         +board.title+"', '"\
-        +board.contents+"', 0, 0, NOW(), '"\
+        +board.contents+"', 0, NULL, NOW(), '"\
         +board.category+"', '"\
         +board.id+"')"
         try:

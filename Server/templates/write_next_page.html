@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	{% if status == "ok" %}
+	<script>
+		alert("글쓰기 완료");
+		window.location.replace("{{url_for('.board_list', category=board_name)}}")
+	</script>
+	{% elif status == "fail" %}
+	<script>
+		alert("글쓰기 실패");
+		window.location.replace("{{url_for('.board_list', category=board_name)}}")
+	</script>
+	{% elif status == "denied" %}
+	<script>
+		alert("권한 없음");
+		window.location.replace("{{url_for('.board_list', category=board_name)}}")
+	</script>
+	{% elif status == "error" %}
+	<script>
+		alert("Error!! 글쓰기 에러");
+		window.location.replace("{{url_for('.board_list', category=board_name)}}")
+	</script>
+	{% endif %}
+	
+</body>
+</html>

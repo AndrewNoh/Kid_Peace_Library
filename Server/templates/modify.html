@@ -91,8 +91,7 @@
 	{% block jquery %}
 		{{super()}} 
 	{% endblock %}
-<script type="text/javascript">
-
+	<script type="text/javascript" >
 	function Empty_Newpassword() {
 		var input_password = $('#modify_newpassword').val()
 		if (checkSpace(input_password)) {
@@ -159,6 +158,7 @@
 			$.ajax({
 				url : '/user/modify/password/check',
 				data : $('form').serialize(),
+				async: false,
 				type : 'POST',
 				success : function(data) {
 					status = $.trim(data.status);
@@ -205,14 +205,15 @@
 			url : '/user/modify',
 			data : $('form').serialize(),
 			type : 'POST',
+			async: false,
 			success : function(data) {
 				status = $.trim(data.status);
 				if (status == 'fail') {
 					alert('Error!! 회원원정보 수정 실패!')
-					location.href="{{url_for('.modify_form')}}"
+					location.replace("{{url_for('.modify_form')}}");
 				} else if (status == 'ok') {
 					alert('회원 정보 수정 완료')
-					location.href="{{url_for('.modify_form')}}"
+					location.replace("{{url_for('.modify_form')}}");
 				}
 			},
 			error : function(error) {
@@ -220,5 +221,5 @@
 			}
 		});
 	}
-</script>
+	</script>
 {% endblock %}

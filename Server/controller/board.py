@@ -46,31 +46,32 @@ def write_form(category):
                 return render_template("alert_msg.html", msg="권한이 없습니다.")
     return render_template("alert_msg.html", msg="로그인을 해주세요.")
 
-@app.route('/Write/create', methods =['POST'])
 @app.route('/Write/create/<category>', methods =['POST'])
 def create(category):
-    get_user = login_requied()
-    if get_user:  
-        if request.method == 'POST' :
+    if request.method=="POST":
+        get_user = login_requied()
+        if get_user:  
             id = get_user.id
             title =  request.form['subject']
             contents = request.form['editor1']
-            
+                
             item = board(\
-                         uuid = str(uuid.uuid4()),
-                         title = title,
-                         category = category,
-                         contents = contents,
-                         hits = 0,
-                         id = id)
+                        uuid = str(uuid.uuid4()),
+                        title = title,
+                        category = category,
+                        contents = contents,
+                        hits = 0,
+                        id = id)
             mydb = DB()
             if mydb.create_board(item):
                 del mydb
-                return render_template('alert_msg.html', msg="글작성을 완료하였습니다.")
-            del mydb
-            return render_template('alert_msg.html', msg="글작성을 실패하였습니다.")
-        return render_template('alert_msg.html', msg="권한이 없습니다.")
-        
+                return render_template('write_next_page.html', board_name=category, status="ok")
+            else:
+                del mydb
+                return render_template('write_next_page.html', board_name=category, status="fail")
+        return render_template('write_next_page.html', board_name=category, status="denied")
+    else:
+        return render_template('write_next_page.html', board_name=category, status="error")
         
         
 @app.route('/ckupload/', methods=['POST', 'OPTIONS'])

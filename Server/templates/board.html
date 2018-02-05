@@ -31,9 +31,9 @@
       </tbody>
     </table>
 
-    <hr/>
+   
 
-    <a class="btn btn-default pull-right" href="{{url_for('.write_form', category=board_name)}}">글쓰기</a>
+    <button class="btn btn-default pull-right" onclick="location.href='/Write/{{board_name}}'" >글쓰기</button>
 
     <div class="text-center">
       <ul class="pagination">

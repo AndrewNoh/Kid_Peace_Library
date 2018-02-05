@@ -2,35 +2,51 @@
 {% block head %}
 {% block title %}글쓰기{% endblock %}
 	{{super()}}
+	<script src="//cdn.ckeditor.com/4.5.3/standard/ckeditor.js"></script>
+	<script>
+		function next_Page(message){
+			alert(message);
+			window.location.replace("{{url_for('.board_list', category=board_name)}}")
+		}
+	</script>
 {% endblock %}
 {% block body %}
 	{% block Nav %}
-		{{super()}}기
+		{{super()}}
 	{% endblock %}
+	{% if status == "ok" %}
+		<script>
+			next_Page("글쓰기 완료");
+		</script>
+	{% endif %}
 <section id="write" style="margin-top:50px;">
   <div class = "container">
-		<form action = "{{url_for('.create', category=board_name)}}" accept-charset="utf-8" method =post >
-		 <div class="panel-heading">
-        <div class="panel-title" style="font-size:20px; text-align:center;">{{board_name}}</div>
+ 		 <div class="panel-heading">
+        	<div class="panel-title" style="font-size:20px; text-align:center;">{{board_name}}</div>
    		 </div>
-	    <div class="form-group">
-	      <label for="subject">Title</label>
-	      <input type="text" class="form-control" name ="subject" id="subject" placeholder="Enter title">
-	    </div>
-	    <div class="form-group">
-	      <label for="content">Comment:</label>
-	      <textarea class="form-control" rows="10" id="MESSAGE" name="editor1" placeholder="Describe yourself here..."></textarea>
-	    </div>
-	    <div class="form-group">
-	      <input type="file" class="btn btn-default pull-left" id="File">
-	    </div>
-	    <div class="form-group">
-	        <button type="submit" class="btn btn-default pull-right">Submit</button>
-	    </div>
+		<form method="POST" action="{{url_for('.create', category=board_name)}}">
+		    <div class="form-group">
+		      <label for="subject">Title:</label>
+		      <input type="text" class="form-control" name ="subject" id="subject" placeholder="Enter title">
+		    </div>
+		    <div class="form-group">
+		      <label for="content">Comment:</label>
+		      <textarea name="editor1" placeholder="Describe yourself here..."></textarea>
+		    </div>
+		    <div class="form-group">
+		      <input type="file" class="btn btn-default pull-left" id="File">
+		    </div>
+		    <div class="form-group">
+		        <button type="submit" id="board_write" class="btn btn-default pull-right">Submit</button>
+		    </div>
 		</form>
   </div>
 </section>
-
+	<script>
+    CKEDITOR.replace( 'editor1', {
+        filebrowserImageUploadUrl: '/ckupload/'
+    });
+	</script>
 	{% block Footer %}
 		{{super()}}
 	{% endblock %}
@@ -38,15 +54,5 @@
 	{% block jquery %}
 		{{super()}}
 	{% endblock %}
-	<script>
-            CKEDITOR.replace( 'editor1', {
-                filebrowserImageUploadUrl: '/ckupload/'
-            });
-	</script>
-  <!-- <script>
-  CKEDITOR.replace( 'MESSAGE' );
-  </script>
-   -->
-
-
+	
 {% endblock %}

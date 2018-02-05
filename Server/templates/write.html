@@ -3,22 +3,11 @@
 {% block title %}글쓰기{% endblock %}
 	{{super()}}
 	<script src="//cdn.ckeditor.com/4.5.3/standard/ckeditor.js"></script>
-	<script>
-		function next_Page(message){
-			alert(message);
-			window.location.replace("{{url_for('.board_list', category=board_name)}}")
-		}
-	</script>
 {% endblock %}
 {% block body %}
 	{% block Nav %}
 		{{super()}}
 	{% endblock %}
-	{% if status == "ok" %}
-		<script>
-			next_Page("글쓰기 완료");
-		</script>
-	{% endif %}
 <section id="write" style="margin-top:50px;">
   <div class = "container">
  		 <div class="panel-heading">

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block head %}
+{% block title %}View{% endblock %}
+	{{super()}}
+{% endblock %}
+{% block body %}
+
+	{% block Nav %}
+		{{super()}}
+	{% endblock %}
+<section>
+  <div class="container">
+  	<div class="panel-heading">
+  		<div class="panel-title" style="font-size:20px; text-align:center;">{{board_name}}</div>
+    </div>
+    <div class="panel-body">
+	    <div>
+			<label>조회수 : {{hits}}</label>
+			<label>작성날짜 : {{modify_time}}</label>
+	    </div>
+	    <div>
+			<label>제목 : {{title}}</label>
+			<label>작성자 : {{id}}</label>
+	    </div>
+	    <div>
+	    	<label>내용</label>
+	    </div>
+	    <div>
+	    	{{contens}}
+	    </div>
+	    <div>
+	    	 <button type="submit" class="btn btn-default pull-right">글 수정</button>
+	    	 <button type="submit" class="btn btn-default pull-right">글 목록</button>
+	    </div>
+    </div>
+  </div>
+</section>
+
+
+	{% block Footer %}
+		{{super()}}
+	{% endblock %}
+
+	{% block jquery %}
+		{{super()}}
+	{% endblock %}
+
+{% endblock %}

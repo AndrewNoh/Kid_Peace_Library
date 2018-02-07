@@ -42,14 +42,17 @@ def board_list(category, page):
     else:
         return render_template("board.html", board_name=category, rows = rows,pagination=pagination)
     
-@app.route('/Board/show/<uuid>')
-def board_show(uuid):
+@app.route('/Board/show/<uuid>/<hits>')
+def board_show(uuid, hits):
     get_user = login_requied()
+    db = DB()
+    rows = db.get_board(uuid)
+    db.hits_add(uuid, hits)
+    rows['hits'] = hits
+    del db
     if get_user:
-        db = DB()
-        rows = db.get_board(uuid)
         if get_user.id == rows['id']:
-            return render_template("board_show.html", rows=rows, user_check=True)
+            return render_template("board_show.html", name = get_user.name, permission = get_user.permission, rows=rows, user_check=True)
         
         return render_template("board_show.html", rows=rows)
     return render_template("board_show.html", rows=rows)

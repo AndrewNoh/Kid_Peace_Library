@@ -27,15 +27,15 @@
 		<tr>
 			{% set numbering = loop.index+(pagination.page*pagination.per_page)-10 %}
 			<td>{{ numbering }}</td>
-			<td><a  class="text-muted" href="{{url_for('.board_show', uuid=row['uuid'])}}">{{ row['title'] }}</a></td>
+			<td><a  class="text-muted" href="{{url_for('.board_show', uuid=row['uuid'], hits=row['hits']+1)}}">{{ row['title'] }}</a></td>
 			{% if not row['user_delete']: %}
 			<td class="text-center">{{ row['id'] }}</td>
 			{% else: %}
 			<td class="text-center">-</td>
 			{% endif %} 
 			<td class="text-center">{{ row['write_time'] }}</td> 
-			{% if row['hit']: %}
-			<td>{{ row['hit'] }}</td>
+			{% if row['hits']: %}
+			<td class="text-center">{{ row['hits'] }}</td>
 			{% else: %}
 			<td class="text-center">0</td>
 			{% endif %} 

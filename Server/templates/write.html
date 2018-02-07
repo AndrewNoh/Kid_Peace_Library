@@ -2,7 +2,8 @@
 {% block head %}
 {% block title %}글쓰기{% endblock %}
 	{{super()}}
-	<script src="//cdn.ckeditor.com/4.5.3/standard/ckeditor.js"></script>
+	<!-- <script src="//cdn.ckeditor.com/4.5.3/standard/ckeditor.js"></script> -->
+	<script type="text/javascript" src="{{url_for('static', filename='ckeditor/ckeditor.js')}}"></script>
 {% endblock %}
 {% block body %}
 	{% block Nav %}

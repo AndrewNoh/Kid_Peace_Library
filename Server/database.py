@@ -125,7 +125,7 @@ class DB():
         
     def create_board(self, board):
         sql =\
-        "INSERT INTO BOARD VALUES( %s, %s, %s, 0, NULL, NOW(), %s, %s, %s)"
+        "INSERT INTO BOARD VALUES( %s, %s, %s, 0, NOW(), NOW(), %s, %s, %s)"
         try:
             self.cur.execute(sql, (board.uuid, board.title, board.contents, board.category, board.id, board.user_delete))
             self.conn.commit()
@@ -179,6 +179,16 @@ class DB():
             print('Got error {!r}, errno is {}'.format(e, e.args[0]))
             return None
         return None
+    
+    def hits_add(self, uuid, hits):
+        sql = "UPDATE BOARD SET hits=%s WHERE uuid=%s"
+        try:
+            self.cur.execute(sql, (hits, uuid))
+            self.conn.commit()
+        except MySQLError as e:
+            print('Got error {!r}, errno is {}'.format(e, e.args[0]))
+            return None
+        return True
     
 if __name__ == '__main__':
     mydb = DB()

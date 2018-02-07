@@ -19,7 +19,7 @@ CREATE TABLE BOARD
 	title varchar(50) NOT NULL,
 	contents text,
 	hits int unsigned NOT NULL,
-	write_time timestamp,
+	write_time datetime,
 	modify_time datetime,
 	category varchar(20) NOT NULL,
 	id varchar(30) NOT NULL,

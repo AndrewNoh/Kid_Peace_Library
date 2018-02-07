@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request, url_for
 from flask_jsglue import JSGlue
 """
     Server 패키지 초기화 모듈
 """
+
+# pagenation 할때 html에서 쓰일 글로벌 함수
+def url_for_other_page(page):
+    args = request.view_args.copy()
+    args['page'] = page
+    return url_for(request.endpoint, **args)
 
 def create_app():
     jsglue = JSGlue()
@@ -22,5 +28,6 @@ def create_app():
     # 블루프린트 등록
     from Server.app_blueprint import app
     application.register_blueprint(app)
-
+    application.jinja_env.globals['url_for_other_page'] = url_for_other_page
+    
     return application;

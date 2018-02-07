@@ -61,15 +61,17 @@ def signup_form():
 @app.route('/user/modify_form')
 def modify_form():
     get_user = login_requied()
-    id = get_user.id
-    email = get_user.email
-    password = ''
-    name = get_user.name
-    cell_phone = get_user.cell_phone
+    if get_user:
+        id = get_user.id
+        email = get_user.email
+        password = ''
+        name = get_user.name
+        cell_phone = get_user.cell_phone
+        
+        return render_template('modify.html', name = name, password = password, cell_phone = cell_phone, id = id, email = email, permission = get_user.permission)
+    else:
+        return render_template('alert_msg.html', msg="로그인후 이용할 수 있습니다.")
     
-    return render_template('modify.html', name = name, password = password, cell_phone = cell_phone, id = id, email = email, permission = get_user.permission)
-
-
 @app.route('/user/modify/password/check', methods=['POST'])
 def modify_password_check():
     if request.method == 'POST':
@@ -128,3 +130,34 @@ def modify():
     data['status'] = 'error'
     return jsonify(data)
 
+@app.route('/user/Withdrawal', methods=['POST'])
+def withdrawal():
+    if request.method == 'POST':
+        get_user = login_requied()
+        if get_user:
+            password = request.form['password']
+            data = OrderedDict()
+            
+            db = DB()
+            user_buf = db.login(get_user.id, password)
+            if user_buf==None:
+                data['status'] = 'password_discordance'
+                return jsonify(data) 
+            
+            buf = user(\
+                   id=user_buf.id, \
+                   permission= session['permission'],\
+                   password='',\
+                   email='',\
+                   name='',\
+                   cell_phone='',\
+                   m_delete=1)
+            if db.modify(buf):
+                if db.user_delete_update_board(buf.id):
+                    del db
+                    session_refresh(buf.id)
+                    data['status'] = 'ok'
+                    return jsonify(data)
+            del db 
+    data['status'] = 'error'
+    return jsonify(data) 

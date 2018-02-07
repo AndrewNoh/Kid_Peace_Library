@@ -24,13 +24,35 @@ def gen_rnd_filename():
 def board_list(category, page):
     get_user = login_requied()
     
-    per_page = 20
+    mydb = DB()
+    total_cnt = mydb.get_board_cnt(category)
+    per_page =10
+        
+    pagination = Pagination(page, per_page=per_page, total_count= total_cnt)
+
+    if page != 1:
+        offset = per_page * (page - 1)
+    else:
+        offset = 0
+        
+    rows = mydb.get_Page_list(per_page, offset, category)
     
     if get_user:
-        return render_template("board.html", name = get_user.name, permission = get_user.permission, board_name= category)
+        return render_template("board.html", name = get_user.name, permission = get_user.permission, board_name= category, rows = rows,pagination=pagination)
     else:
-        return render_template("board.html", board_name= category)
+        return render_template("board.html", board_name=category, rows = rows,pagination=pagination)
     
+@app.route('/Board/show/<uuid>')
+def board_show(uuid):
+    get_user = login_requied()
+    if get_user:
+        db = DB()
+        rows = db.get_board(uuid)
+        if get_user.id == rows['id']:
+            return render_template("board_show.html", rows=rows, user_check=True)
+        
+        return render_template("board_show.html", rows=rows)
+    return render_template("board_show.html", rows=rows)
 
 @app.route('/Write')
 @app.route('/Write/<category>')
@@ -104,5 +126,3 @@ def ckupload():
     response = make_response(res)
     response.headers["Content-Type"] = "text/html"
     return response
-
-

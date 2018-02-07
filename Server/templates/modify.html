@@ -72,9 +72,38 @@
 						</div>
 						<div class="form-group">
 							<div class="col-sm-offset-7 col-sm-4">
-								<button type="submit" class="btn btn-primary">회원탈퇴</button>
-								<button type="button" id="modify_btn" class="btn btn-default">수
-									정</button>
+								<input type="button" data-toggle="modal" data-target="#withdrawal_Modal" class="btn btn-primary" value="회원탈퇴">
+									<div class="modal fade" id="withdrawal_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+									  <div class="modal-dialog">
+									    <div class="modal-content">
+										      <!-- header -->
+										      <div class="modal-header">
+										        <!-- header title 
+										        <h4 class="modal-title">회원 탈퇴</h4> -->
+										      </div>
+										      <!-- body -->
+										      <div class="modal-body">
+										      		<div class="panel panel-danger">
+														<div class="panel-heading">
+															<div class="panel-title">회원 탈퇴</div>
+																<!-- 닫기(x) 버튼 -->
+																<button type="button" class="close" data-dismiss="modal" style="margin-top:-30px;">×</button>
+														</div>
+														<div class="panel-body">
+															<h5>※탈퇴하시면 계정복구가 불가능합니다. </h5>
+															<label "control-label">비밀번호 : </label>
+															<input type="password" id="withdrawal_password" placeholder="Enter password">
+														</div>
+													</div>
+										      </div>
+										      <!-- Footer -->
+										      <div class="modal-footer">
+										        <button id="withdrawal_btn" type="button" class="btn btn-primary" data-dismiss="modal">회원 탈퇴</button>
+										      </div>
+									    </div>
+									  </div>
+									</div>
+								<button type="button" id="modify_btn" class="btn btn-default">수 정</button>
 							</div>
 						</div>
 					</form>
@@ -151,7 +180,7 @@
 			var id = $('#modify_id').val()
 			var password = $('#modify_password').val()
 
-			if (checkSpace(password) || password == '') {
+			if (password == '') {
 				alert('비밀번호를 입력해 주세요.')
 				return;
 			}
@@ -178,7 +207,40 @@
 			});
 		});
 	});
-	
+	$(function(){
+		$('#withdrawal_btn').click(function(){
+			var input_password = $('#withdrawal_password').val();
+
+			if(input_password==''){
+				alert('비밀번호를 입력하세요');
+				return
+			}
+
+			$.ajax({
+				url : "{{ url_for('.withdrawal') }}",
+				type : 'POST',
+				dataType : "json",
+				data : {password:input_password},
+				async: false,
+				success : function(data) {
+					status = $.trim(data.status);
+					if (status == 'password_discordance') {
+						alert('비밀번호가 다릅니다.');
+						$('#modify_password').focus();
+					} else if (status == 'ok') {
+						alert('회원 탈퇴 완료');
+						window.location.replace("{{url_for('.index')}}")
+					} else if (status == 'error') {
+						alert('Error!');
+						$('#modify_password').focus();
+					}
+				},
+				error : function(error) {
+					console.log(error);
+				}
+			});
+		});
+	});
 	function modify(){
 		var newpassword;
 		var modify_pass;

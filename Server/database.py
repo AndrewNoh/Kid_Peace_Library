@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import MySQLdb
-import MySQLdb.cursors
+import pymysql.cursors
+from pymysql.err import MySQLError
 import sys
 from Server.model.user import user
 from Server.model.board import board
@@ -9,9 +9,9 @@ from Server.model.board import board
 class DB():
     def __init__(self):
         try:
-            self.conn = MySQLdb.connect("localhost","Admin", "kosta6006", "Kid_Peace_Library_db", charset="utf8")
+            self.conn = pymysql.connect("localhost","Admin", "kosta6006", "Kid_Peace_Library_db", charset="utf8")
             #db.row_factory = dict_factory
-            self.cur = self.conn.cursor(MySQLdb.cursors.DictCursor)
+            self.cur = self.conn.cursor(pymysql.cursors.DictCursor)
         except:
             print("database connect fail")
             sys.exit()
@@ -39,7 +39,7 @@ class DB():
             rows = self.cur.fetchall()
         except:
             print("login execute error!")
-            return
+            return None
 
         if rows:
             data = rows[0]
@@ -53,7 +53,7 @@ class DB():
                        m_delete = data['m_delete'])
             return buf
         else:
-            return
+            return None
 
     def user_info(self, id):
         sql = "select * from MEMBERS where id='"+id+"'"
@@ -113,62 +113,81 @@ class DB():
         return True
 
     def modify(self, user):
-        sql = \
-            "update MEMBERS set password= password('"+user.password+"') , "\
-            "cell_phone='"+user.cell_phone+"', email='"+user.email+"', "\
-            "name='"+user.name+"' where id='"+user.id+"'"
+        sql =  "update MEMBERS set password=password(%s) , cell_phone=%s, email=%s, name=%s, sponsor_status=%s, m_delete=%s where id=%s"
 
         try:
-            self.cur.execute(sql)
+            self.cur.execute(sql, (user.password, user.cell_phone, user.email, user.name, int(user.sponsor_status), int(user.m_delete), user.id))
             self.conn.commit()
-        except:
-            print('modify execute error!')
-            return False
+        except MySQLError as e:
+            print('Got error {!r}, errno is {}'.format(e, e.args[0]))
+            return None
         return True
-
-
-    def view_board(self, category):
-        sql = "select uuid, title, hits, write_time, modify_time, category, id  from BOARD where category = '+category+'"
-        try:
-            self.cur.excute(sql)
-            rows = self.cur.fetchall()
-        except:
-            print("잘못된 접근입니다.")
-            return
-        if rows:
-            data = rows[0]
-            selcat = category(\
-                       uuid = data['uuid'],
-                       title= data['title'],
-                       hits = data['hits'],
-                       write_time = data['write_time'],
-                       modify_time = data['modify_time'],
-                       category = data['category'],
-                       id = data['id'],)
-            return selcat
-        else :
-            return
-        
         
     def create_board(self, board):
         sql =\
-        "INSERT INTO BOARD VALUES('"+board.uuid+"', '"\
-        +board.title+"', '"\
-        +board.contents+"', 0, NULL, NOW(), '"\
-        +board.category+"', '"\
-        +board.id+"')"
+        "INSERT INTO BOARD VALUES( %s, %s, %s, 0, NULL, NOW(), %s, %s, %s)"
         try:
-            self.cur.execute(sql)
+            self.cur.execute(sql, (board.uuid, board.title, board.contents, board.category, board.id, board.user_delete))
             self.conn.commit()
-        except:
-            print('False Create Contents')
-            return False
+        except MySQLError as e:
+            print('Got error {!r}, errno is {}'.format(e, e.args[0]))
+            return None
         
         return True
 
+    def user_delete_update_board(self, id):
+        sql =\
+        "update BOARD set user_delete=%s where id=%s"
+        try:
+            self.cur.execute(sql, (1, id))
+            self.conn.commit()
+        except MySQLError as e:
+            print('Got error {!r}, errno is {}'.format(e, e.args[0]))
+            return None
+        return True
+    
+    def get_board_cnt(self, category):
+        sql = "SELECT count(*) cnt FROM BOARD where category=%s"
+        try:
+            self.cur.execute(sql, (category))
+            total_cnt = self.cur.fetchone()
+        except MySQLError as e:
+            print('Got error {!r}, errno is {}'.format(e, e.args[0]))
+            return None
+        return total_cnt['cnt']
+    
+    def get_Page_list(self, limit, offset, category):
+        sql = "SELECT * FROM BOARD where category=%s ORDER BY write_time DESC LIMIT %s OFFSET %s"
+        try:
+            self.cur.execute(sql, (category, limit, offset))
+            rows = self.cur.fetchall()
+        except MySQLError as e:
+            print('Got error {!r}, errno is {}'.format(e, e.args[0]))
+            return None
+        """for row in rows:
+            row['id'] = 'None'"""
+        return rows
 
+    def get_board(self, uuid):
+        sql = "SELECT * FROM BOARD WHERE uuid=%s"
+        try:
+            self.cur.execute(sql, (uuid))
+            rows = self.cur.fetchone()
+            if rows:
+                return rows
+        except MySQLError as e:
+            print('Got error {!r}, errno is {}'.format(e, e.args[0]))
+            return None
+        return None
+    
 if __name__ == '__main__':
     mydb = DB()
-    data = mydb.select_Member('kim910712', 'kim15885')
+    rows = mydb.get_Page_list(10, 0, '자유 게시판')
+    print(rows)
+    cnt = mydb.get_board_cnt( '자유 게시판');
+    print(cnt)
+    data = mydb.get_board('03b093b5-839f-4d5d-acd7-9018435286ac')
+    print(data.contents)
     del mydb
-    print(data.email)
+    for index, row in enumerate(rows):
+        print(index)

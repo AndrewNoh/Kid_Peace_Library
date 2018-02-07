@@ -2,7 +2,7 @@
 
 
 class board() :
-    def __init__(self, uuid, title, contents, hits , category, id, write_time=None, modify_time= None):
+    def __init__(self, uuid, title, contents, hits , category, id, write_time=None, modify_time= None, user_delete=0):
         self.uuid = uuid
         self.title = title
         self.contents = contents
@@ -11,6 +11,7 @@ class board() :
         self.modify_time = modify_time
         self.category = category
         self.id = id
+        self.user_delete = user_delete
 
 
 class categorys() :

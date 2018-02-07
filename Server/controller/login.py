@@ -66,6 +66,9 @@ def login():
             session['name'] = user_buffer.name
             session['sponsor_status'] = user_buffer.sponsor_status
             session['m_delete'] = user_buffer.m_delete
+            
+            if user_buffer.m_delete:
+                return render_template('alert_msg.html', msg="탈퇴한 회원입니다.")
             return redirect(url_for('app.index'))
         else:
             return render_template('alert_msg.html', msg="Login Fail! 등록되지 않았거나 아이디 혹은 비밀번호가 다릅니다.")

@@ -23,6 +23,7 @@ CREATE TABLE BOARD
 	modify_time datetime,
 	category varchar(20) NOT NULL,
 	id varchar(30) NOT NULL,
+	user_delete boolean NOT NULL,
 	PRIMARY KEY (uuid)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block head %}
+{% block title %}View{% endblock %}
+	{{super()}}
+{% endblock %}
+{% block body %}
+
+	{% block Nav %}
+		{{super()}}
+	{% endblock %}
+<section>
+  <div class="container">
+  {% if rows: %}
+	  	<div class="panel-heading">
+	  		<div class="panel-title" style="font-size:20px; text-align:center;">{{rows['category']}}</div>
+	    </div>
+	    <div class="panel-body">
+		    <div>
+				<label>조회수 : {{rows['hits']}}</label><br>
+				<label>작성날짜 : {{rows['write_time']}}</label><br>
+		    </div>
+		    <div>
+				<label>제목 : {{rows['title']}}</label><br>
+				<label>작성자 : {{rows['id']}}</label><br>
+		    </div>
+		    <div>
+		    	<label>내용</label><br>
+		    </div>
+			<div>
+			{% autoescape false %}
+			{{rows['contents']}}
+			{% endautoescape %}
+			</div>
+
+		    <div>
+		    	 <button type="submit" class="btn btn-default pull-right">글 수정</button>
+		    	 <button type="submit" class="btn btn-default pull-right">글 목록</button>
+		    </div>
+	    </div>
+	{% else: %}
+		<h1>404 Error!</h1>
+	{% endif %}
+  </div>
+</section>
+
+
+	{% block Footer %}
+		{{super()}}
+	{% endblock %}
+
+	{% block jquery %}
+		{{super()}}
+	{% endblock %}
+
+{% endblock %}

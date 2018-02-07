@@ -11,33 +11,38 @@
 <section>
   <div class="container">
   {% if rows: %}
-	  	<div class="panel-heading">
-	  		<div class="panel-title" style="font-size:20px; text-align:center;">{{rows['category']}}</div>
+	  	<div>
+	  		<br><div style="font-size:20px; text-align:center;">{{rows['category']}}</div>
 	    </div>
-	    <div class="panel-body">
-		    <div>
-				<label>조회수 : {{rows['hits']}}</label><br>
-				<label>작성날짜 : {{rows['write_time']}}</label><br>
-		    </div>
-		    <div>
-				<label>제목 : {{rows['title']}}</label><br>
-				<label>작성자 : {{rows['id']}}</label><br>
-		    </div>
-		    <div>
-		    	<label>내용</label><br>
-		    </div>
-			<div>
-			{% autoescape false %}
-			{{rows['contents']}}
-			{% endautoescape %}
-			</div>
-
-		    <div>
-		    {% if user_check==True: %}
-				<a href="#" class="btn btn-default pull-right">글 수정</a>
-				<a href="#" class="btn btn-default pull-right">글 수정</a>
-		    {% endif %}
-				<a href="{{url_for('.board_list', category=rows['category'])}}" class="btn btn-default pull-right">글 목록</a>
+	    <br>
+	    <div class="container">
+		    <div class="panel panel-info">
+		    	<div class="panel-heading">
+		    		<div class="panel-title">
+						<div class="panel-heading">
+			    			<label class="col-sm-4">{{rows['id']}}</label>
+			    			<label class="col-sm-4 text-center">{{rows['write_time']}}</label>
+			    			<label class="col-sm-4 text-right">조회수 : {{rows['hits']}}</label><br>
+						</div>
+		    		</div>
+		    	</div>
+		    	
+			    <div class="panel-body">
+					<h3 class="text-primary" style="font-weight:bold;">{{rows['title']}}</h3><br>
+					<div>
+					{% autoescape false %}
+					{{rows['contents']}}
+					{% endautoescape %}
+					</div>
+		
+				    <div>
+				    {% if user_check==True: %}
+						<a href="#" class="btn btn-default pull-right">글 삭제</a>
+						<a href="#" class="btn btn-default pull-right">글 수정</a>
+				    {% endif %}
+						<a href="{{url_for('.board_list', category=rows['category'])}}" class="btn btn-default pull-right">글 목록</a>
+				    </div>
+			    </div>
 		    </div>
 	    </div>
 	{% else: %}

@@ -65,9 +65,9 @@
 	        <a class="dropbtn" data-toggle="dropdown" href="#">알림 마당
 	        <span class="caret"></span></a>
 	        <ul class="dropdown-content">
-	          <li><a href="{{url_for('.board_list', category='소식마당')}}">소식 마당</a></li>
-	          <li><a href="#">책 마당</a></li>
-	          <li><a href="#">영화 마당</a></li>
+	          <li><a href="{{url_for('.board_list', category='소식 마당')}}">소식 마당</a></li>
+	          <li><a href="{{url_for('.board_list', category='책 마당')}}">책 마당</a></li>
+	          <li><a href="{{url_for('.board_list', category='영화 마당')}}">영화 마당</a></li>
 	        </ul>
 	      </li>
 			<li>
@@ -78,8 +78,8 @@
 				<a class="dropbtn" data-toggle="dropdown" href="#">정보 마당
 				<span class="caret"></span></a>
 				<ul class="dropdown-content">
-					<li><a href="#">영세중립 마당</a></li>
-					<li><a href="#">살림 마당</a></li>
+					<li><a href="{{url_for('.board_list', category='영세중립 마당')}}">영세중립 마당</a></li>
+					<li><a href="{{url_for('.board_list', category='살림 마당')}}">살림 마당</a></li>
 				</ul>
 			</li>
 

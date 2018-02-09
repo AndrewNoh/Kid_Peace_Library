@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 {% block head %}
-{% block title %}View{% endblock %}
+{% block title %}Show{% endblock %}
 	{{super()}}
+	<style>
+		.thumbnail-wrappper { width: 25%; height: 200px; overflow: hidden; }
+		img { max-width: 100%; height: auto; }
+	</style>
 {% endblock %}
 {% block body %}
 
@@ -16,7 +20,7 @@
 	    </div>
 	    <br>
 	    <div class="container">
-		    <div class="panel panel-info">
+		    <div class="panel panel-default">
 		    	<div class="panel-heading">
 		    		<div class="panel-title">
 						<div class="panel-heading">
@@ -28,16 +32,60 @@
 		    	</div>
 		    	
 			    <div class="panel-body">
-					<h3 class="text-primary" style="font-weight:bold;">{{rows['title']}}</h3><br>
-					<div>
-					{% autoescape false %}
-					{{rows['contents']}}
-					{% endautoescape %}
-					</div>
+			    	<table class="table">
+			    		<thread>
+			    			<tr>
+			    				<th><h3 class="text-muted" style="font-weight:bold;">Title : {{rows['title']}}</h3></th>
+			    			</tr>
+			    		</thread>
+			    		<tbody>
+			    			<td>
+			    				<div>
+								{% autoescape false %}
+									{{rows['contents']}}
+								{% endautoescape %}
+								</div>
+			    			</td>
+			    		</tbody>
+			    	</table>
+					
 		
 				    <div>
 				    {% if user_check==True: %}
-						<a href="#" class="btn btn-default pull-right">글 삭제</a>
+						<input type="button" data-toggle="modal" data-target="#board_delete_Modal" class="btn btn-default pull-right" id="board_delete_btn" value="글 삭제">
+								<div class="modal fade" id="board_delete_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+											</div>
+											<div class="modal-body">
+												<div class="panel panel-danger">
+														<div class="panel-heading">
+															<div class="panel-title">
+																<label class="text-center">글 삭제</label>
+																<!-- 닫기(x) 버튼 -->
+																<button type="button" class="close" data-dismiss="modal">×</button>
+															</div>
+														</div>
+														<div class="panel-body">
+															<h4 class="text-center">정말 삭제 하시겠습니까?</h4>
+															<br>
+															<div class="col-sm-2 col-sm-offset-2">
+																<div div class="container">
+																<button class="btn btn-primary" id="delete_action_btn">삭 제</button>
+																</div>
+															</div>
+															<div class="col-sm-2 col-sm-offset-3">
+																<div div class="container">
+																<button class="btn btn-default" type="button" data-dismiss="modal">취 소</button>
+																</div>
+															</div>
+														</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
 						<a href="#" class="btn btn-default pull-right">글 수정</a>
 				    {% endif %}
 						<a href="{{url_for('.board_list', category=rows['category'])}}" class="btn btn-default pull-right">글 목록</a>
@@ -59,5 +107,32 @@
 	{% block jquery %}
 		{{super()}}
 	{% endblock %}
-
+	<script type="text/javascript">
+	$(function (){
+		$('#delete_action_btn').click(function (){
+				$.ajax({
+					url : "{{ url_for('.board_delete') }}",
+					type : 'POST',
+					dataType : "json",
+					data : {uuid:"{{uuid}}"},
+					async: false,
+					success : function(data) {
+						status = $.trim(data.status);
+						if (status == 'fail') {
+							alert('권한 오류');
+							$('#modify_password').focus();
+						} else if (status == 'ok') {
+							alert('글 삭제 완료');
+							window.location.replace("{{url_for('.board_list', category=rows['category'])}}");
+						} else if (status == 'error') {
+							alert('Error!');
+						}
+					},
+					error : function(error) {
+						console.log(error);
+					}
+				});
+		});
+	});
+	</script>
 {% endblock %}

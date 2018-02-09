@@ -25,9 +25,14 @@ def Check_id():
     data['count'] = count
     return jsonify(data)
 
+@app.route('/user/Signup_form')
+def Signup_form():
+    if session:
+        return redirect(url_for('.index'))
+    return render_template('Signup.html')
 
 @app.route('/user/Signup', methods=['post'])
-def signup_form():
+def signup():
     if request.method == 'POST':
 
         id = request.form['id']

@@ -45,6 +45,12 @@ def index():
         return render_template("index.html", name = get_user.name, permission = get_user.permission)
     return render_template("index.html")
 
+@app.route('/Login_from')
+def login_from():
+    if session:
+        return redirect(url_for('.index'))
+    return render_template('Login.html')
+    
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

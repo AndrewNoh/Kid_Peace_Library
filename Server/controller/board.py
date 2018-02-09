@@ -52,10 +52,26 @@ def board_show(uuid, hits):
     del db
     if get_user:
         if get_user.id == rows['id']:
-            return render_template("board_show.html", name = get_user.name, permission = get_user.permission, rows=rows, user_check=True)
+            return render_template("board_show.html", name = get_user.name, permission = get_user.permission, uuid=uuid, rows=rows, user_check=True)
         
         return render_template("board_show.html", rows=rows)
     return render_template("board_show.html", rows=rows)
+
+@app.route('/Board/delete', methods=['POST'])
+def board_delete():
+    uuid = request.form['uuid']
+    get_user = login_requied()
+    db = DB()
+    rows = db.get_board(uuid)
+    data = OrderedDict()
+    data['status'] = 'error'
+    if get_user:
+        if get_user.id == rows['id']:
+            db.delete_board(uuid)
+            data['status'] = 'ok'
+        else:
+            data['status'] = 'fail'
+    return jsonify(data)
 
 @app.route('/Write')
 @app.route('/Write/<category>')
@@ -94,9 +110,7 @@ def create(category):
             else:
                 del mydb
                 return render_template('write_next_page.html', board_name=category, status="fail")
-        return render_template('write_next_page.html', board_name=category, status="denied")
-    else:
-        return render_template('write_next_page.html', board_name=category, status="error")
+    return render_template('write_next_page.html', board_name=category, status="error")
         
         
 @app.route('/ckupload/', methods=['POST', 'OPTIONS'])

@@ -180,6 +180,16 @@ class DB():
             return None
         return None
     
+    def delete_board(self, uuid):
+        sql = "DELETE FROM BOARD WHERE uuid=%s"
+        try:
+            self.cur.execute(sql, (uuid))
+            self.conn.commit()
+        except MySQLError as e:
+            print('Got error {!r}, errno is {}'.format(e, e.args[0]))
+            return False
+        return True
+    
     def hits_add(self, uuid, hits):
         sql = "UPDATE BOARD SET hits=%s WHERE uuid=%s"
         try:
@@ -187,7 +197,7 @@ class DB():
             self.conn.commit()
         except MySQLError as e:
             print('Got error {!r}, errno is {}'.format(e, e.args[0]))
-            return None
+            return False
         return True
     
 if __name__ == '__main__':

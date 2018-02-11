@@ -7,30 +7,34 @@
 	{% block Nav %}
 		{{super()}}기
 	{% endblock %}
-<section id="write" style="margin-top:50px;">
+<section style="margin-top:50px;">
   <div class = "container">
-		<form action = "{{url_for('.create', category=board_name)}}" accept-charset="utf-8" method =post >
-		 <div class="panel-heading">
-        <div class="panel-title" style="font-size:20px; text-align:center;">{{board_name}}</div>
+ 		 <div class="panel-heading">
+        	<div class="panel-title" style="font-size:20px; text-align:center;">글 수정</div>
    		 </div>
-	    <div class="form-group">
-	      <label for="subject">Title</label>
-	      <input type="text" class="form-control" name ="subject" id="subject" placeholder={{title}}>
-	    </div>
-	    <div class="form-group">
-	      <label for="content">Comment:</label>
-	      <textarea class="form-control" rows="10" id="MESSAGE" name="editor1">{{contents}}</textarea>
-	    </div>
-	    <div class="form-group">
-	      <input type="file" class="btn btn-default pull-left" id="File">
-	    </div>
-	    <div class="form-group">
-	        <button type="submit" class="btn btn-default pull-right">Submit</button>
-	    </div>
+		<form method="POST" action="{{url_for('.board_modify', category=board_name)}}"> 
+		    <div class="form-group">
+		    	<label>Category: {{data['category']}}</label><br>
+		      <label for="subject">Title:</label>
+		      <input type="text" class="form-control" name ="subject" id="subject" oninput="title_spaceCheck()" value="{{data['title']}}">
+		    </div>
+		    <div class="form-group">
+		      <label for="content">Comment:</label>
+		      <textarea id="editor1" name="editor1" >
+		      {% autoescape false %}
+		      	{{data['contents']}}
+		      {% endautoescape %}
+		      </textarea>
+		    </div>
+		    <div class="form-group">
+		      <input type="file" class="btn btn-default pull-left" id="File">
+		    </div>
+		    <div class="form-group">
+		        <button type="submit" id="board_write" class="btn btn-primary pull-right" disabled="disabled">수 정</button>
+		    </div>
 		</form>
   </div>
 </section>
-
 	{% block Footer %}
 		{{super()}}
 	{% endblock %}

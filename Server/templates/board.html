@@ -45,19 +45,10 @@
     </table>
 
    
+	<div class="container">
+    <a href="{{url_for('.write_form', category=board_name)}}" class="btn btn-default pull-right">글쓰기</a>
+	</div>
 
-    <button class="btn btn-default pull-right" onclick="location.href='/Write/{{board_name}}'" >글쓰기</button>
-
-<!--
-    <div class="text-center">
-      <ul class="pagination">
-        <li><a href="#">1</a></li>
-        <li><a href="#">2</a></li>
-        <li><a href="#">3</a></li>
-        <li><a href="#">4</a></li>
-      </ul>
-    </div>
- -->
 {% if pagination %}
 <div class="row" align="center">
 	<div class="col-md-12">

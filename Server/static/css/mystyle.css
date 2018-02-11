@@ -30,6 +30,8 @@
 
 .dropdown-content a:hover {background-color: #fcaf3e}
 
+.navbar-default .nav > li > a:hover { background-color: #fcaf3e;}
+
 .open > .dropdown-content {
     display: block;
 }

@@ -33,7 +33,7 @@
 {% block body %}
 {% block Nav %}
 <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
-<div class="container">
+<div class="container-fluid">
 	<!-- Brand and toggle get grouped for better mobile display -->
 	<div class="navbar-header">
 		<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -42,7 +42,7 @@
 		<span class="icon-bar"></span>
 		<span class="icon-bar"></span>
 		</button>
-		<a class="navbar-brand page-scroll" href="{{url_for('.index')}}"><img src="#" alt="꼬마평화도서관"></a>
+		<a class="navbar-brand page-scroll" href="{{url_for('.index')}}"><img alt="꼬마평화도서관"></a>
 	</div>
 	<form class="navbar-form navbar-left" action="/action_page.php">
       <div class="input-group">
@@ -62,9 +62,9 @@
 			<a class="page-scroll" href="{{url_for('.index')}}">Home</a>
 			</li>
 			<li class="dropdown">
-	        <a class="dropdown-toggle" data-toggle="dropdown" href="#">알림 마당
+	        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" href="#">알림 마당
 	        <span class="caret"></span></a>
-	        <ul class="dropdown-content">
+	        <ul class="dropdown-content"  role="menu">
 	          <li><a href="{{url_for('.board_list', category='소식 마당')}}">소식 마당</a></li>
 	          <li><a href="{{url_for('.board_list', category='책 마당')}}">책 마당</a></li>
 	          <li><a href="{{url_for('.board_list', category='영화 마당')}}">영화 마당</a></li>
@@ -192,9 +192,9 @@
 		<script type="text/javascript" src="{{url_for('static', filename='js/parallax.js')}}"></script>
 		<script type="text/javascript" src="{{url_for('static', filename='js/contact.js')}}"></script>
 		<script type="text/javascript" src="{{url_for('static', filename='js/countto.js')}}"></script>
-		<script type="text/javascript" src="{{url_for('static', filename='js/jquery.easing.min.js')}}"></script>
+		<!--<script type="text/javascript" src="{{url_for('static', filename='js/jquery.easing.min.js')}}"></script> 
 		<script type="text/javascript" src="{{url_for('static', filename='js/wow.min.js')}}"></script>
-		<script type="text/javascript" src="{{url_for('static', filename='js/common.js')}}"></script>
+		<script type="text/javascript" src="{{url_for('static', filename='js/common.js')}}"></script> -->
 		
 		<!-- 폼 유효성 마스크 -->
 		<script type="text/javascript" src="{{url_for('static', filename='js/form_mask.js')}}" charset="utf-8"></script>

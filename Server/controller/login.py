@@ -48,7 +48,7 @@ def index():
 @app.route('/Login_from')
 def login_from():
     if session:
-        return redirect(url_for('.index'))
+        session.clear()
     return render_template('Login.html')
     
 
@@ -85,11 +85,6 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for('.index'))
-
-
-@app.route('/userinf')
-def userinf_form():
-    return render_template('userinf.html')
 
 @app.route('/backgroundimg1')
 def backgroundimg1():

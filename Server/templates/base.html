@@ -13,6 +13,10 @@
 		@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
 		@import url(http://fonts.googleapis.com/earlyaccess/nanummyeongjo.css);
     </style>
+    <style>
+		.thumbnail-wrappper { width: 25%; height: 200px; overflow: hidden; }
+		img { max-width: 100%; height: auto; }
+	</style>
 	<!-- Bootstrap Core CSS -->
 	<link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.css')}}">
 	<!-- Custom Fonts -->
@@ -192,9 +196,9 @@
 		<script type="text/javascript" src="{{url_for('static', filename='js/parallax.js')}}"></script>
 		<script type="text/javascript" src="{{url_for('static', filename='js/contact.js')}}"></script>
 		<script type="text/javascript" src="{{url_for('static', filename='js/countto.js')}}"></script>
-		<!--<script type="text/javascript" src="{{url_for('static', filename='js/jquery.easing.min.js')}}"></script> 
+		<!-- <script type="text/javascript" src="{{url_for('static', filename='js/jquery.easing.min.js')}}"></script>  -->
 		<script type="text/javascript" src="{{url_for('static', filename='js/wow.min.js')}}"></script>
-		<script type="text/javascript" src="{{url_for('static', filename='js/common.js')}}"></script> -->
+		<script type="text/javascript" src="{{url_for('static', filename='js/common.js')}}"></script> 
 		
 		<!-- 폼 유효성 마스크 -->
 		<script type="text/javascript" src="{{url_for('static', filename='js/form_mask.js')}}" charset="utf-8"></script>

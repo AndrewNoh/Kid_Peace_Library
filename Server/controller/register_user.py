@@ -160,7 +160,7 @@ def withdrawal():
             if db.modify(buf):
                 if db.user_delete_update_board(buf.id):
                     del db
-                    session_refresh(buf.id)
+                    session.clear()
                     data['status'] = 'ok'
                     return jsonify(data)
             del db 

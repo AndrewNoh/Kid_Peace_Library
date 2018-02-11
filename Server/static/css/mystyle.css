@@ -30,7 +30,7 @@
 
 .dropdown-content a:hover {background-color: #fcaf3e}
 
-.dropdown:hover .dropdown-content {
+.open > .dropdown-content {
     display: block;
 }
 

@@ -190,6 +190,16 @@ class DB():
             return False
         return True
     
+    def modify_board(self, data):
+        sql ="UPDATE BOARD SET title=%s, contents=%s, modify_time=NOW() WHERE uuid=%s"
+        try:
+            self.cur.execute(sql, (data['title'], data['contents'], data['uuid']))
+            self.conn.commit()
+        except MySQLError as e:
+            print('Got error {!r}, errno is {}'.format(e, e.args[0]))
+            return False
+        return True
+            
     def hits_add(self, uuid, hits):
         sql = "UPDATE BOARD SET hits=%s WHERE uuid=%s"
         try:

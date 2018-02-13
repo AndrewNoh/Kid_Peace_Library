@@ -24,25 +24,11 @@ def session_refresh(id):
         return True
     return False
 
-def login_requied():
-    if 'id' in session:
-        USER = user(\
-                    id = session['id'],
-                    permission = session['permission'],
-                    cell_phone = session['cell_phone'],
-                    email = session['email'],
-                    name = session['name'],
-                    password = session['password'],
-                    sponsor_status=session['sponsor_status'],
-                    m_delete=session['m_delete'])
-        return USER
-
 
 @app.route('/')
 def index():
-    get_user = login_requied()
-    if get_user:
-        return render_template("index.html", name = get_user.name, permission = get_user.permission)
+    if session:
+        return render_template("index.html", session=session)
     return render_template("index.html")
 
 @app.route('/Login_from')
@@ -65,7 +51,6 @@ def login():
         
         if user_buffer:
             session['id'] = user_buffer.id
-            session['password'] = user_buffer.password
             session['permission'] = user_buffer.permission
             session['cell_phone'] = user_buffer.cell_phone
             session['email'] = user_buffer.email

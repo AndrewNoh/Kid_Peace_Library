@@ -8,7 +8,6 @@ from Server.app_blueprint import app
 from Server.model.user import user
 from Server.model.board import board
 from Server.database import DB
-from Server.controller.login import login_requied
 from Server.controller.pagination_class import Pagination
 from collections import OrderedDict
 import uuid, datetime
@@ -22,7 +21,6 @@ def gen_rnd_filename():
 @app.route('/Board/<category>/', defaults={'page':1})
 @app.route('/Board/<category>/<int:page>')
 def board_list(category, page):
-    get_user = login_requied()
     
     mydb = DB()
     total_cnt = mydb.get_board_cnt(category)
@@ -37,22 +35,21 @@ def board_list(category, page):
         
     rows = mydb.get_Page_list(per_page, offset, category)
     
-    if get_user:
-        return render_template("board.html", name = get_user.name, permission = get_user.permission, board_name= category, rows = rows,pagination=pagination)
+    if session:
+        return render_template("board.html", session = session, board_name= category, rows = rows,pagination=pagination)
     else:
         return render_template("board.html", board_name=category, rows = rows,pagination=pagination)
     
 @app.route('/Board/show/<uuid>/<hits>')
 def board_show(uuid, hits):
-    get_user = login_requied()
     db = DB()
     rows = db.get_board(uuid)
     db.hits_add(uuid, hits)
     rows['hits'] = hits
     del db
-    if get_user:
-        if get_user.id == rows['id']:
-            return render_template("board_show.html", name = get_user.name, permission = get_user.permission, uuid=uuid, rows=rows, user_check=True)
+    if session:
+        if session['id'] == rows['id']:
+            return render_template("board_show.html",session = session, uuid=uuid, rows=rows, user_check=True)
         
         return render_template("board_show.html", rows=rows)
     return render_template("board_show.html", rows=rows)
@@ -60,13 +57,12 @@ def board_show(uuid, hits):
 @app.route('/Board/delete', methods=['POST'])
 def board_delete():
     uuid = request.form['uuid']
-    get_user = login_requied()
     db = DB()
     rows = db.get_board(uuid)
     data = OrderedDict()
     data['status'] = 'error'
-    if get_user:
-        if get_user.id == rows['id']:
+    if session:
+        if session['id'] == rows['id']:
             db.delete_board(uuid)
             data['status'] = 'ok'
         else:
@@ -76,13 +72,12 @@ def board_delete():
 @app.route('/Write')
 @app.route('/Write/<category>')
 def write_form(category):
-    get_user = login_requied()
-    if get_user:
+    if session:
         if session['permission'] == "admin" or session['permission'] == "manager" :
-            return render_template("write.html", name = get_user.name, permission = get_user.permission, board_name= category)
+            return render_template("write.html", session = session, board_name= category)
         elif session['permission'] == "user" :
             if category == "자유 게시판" :
-                return render_template("write.html", name = get_user.name, permission = get_user.permission, board_name= category)
+                return render_template("write.html", session = session, board_name= category)
             else :
                 return render_template("alert_msg.html", msg="권한이 없습니다.")
     return render_template("alert_msg.html", msg="로그인을 해주세요.")
@@ -90,9 +85,8 @@ def write_form(category):
 @app.route('/Write/create/<category>', methods =['POST'])
 def create(category):
     if request.method=="POST":
-        get_user = login_requied()
-        if get_user:  
-            id = get_user.id
+        if session:  
+            id = session['id']
             title =  request.form['subject']
             contents = request.form['editor1']
                 
@@ -111,8 +105,37 @@ def create(category):
                 del mydb
                 return render_template('write_next_page.html', board_name=category, status="fail")
     return render_template('write_next_page.html', board_name=category, status="error")
-        
-        
+
+@app.route('/Board/Modify_form/<uuid>')
+def board_modify_form(uuid):
+    db = DB()
+    rows = db.get_board(uuid)
+    if session:
+        if session['id'] == rows['id']:
+            return render_template('board_modify.html', session = session, data = rows)
+    return render_template("alert_msg.html", msg="잘못된 접근 입니다.")
+
+@app.route('/Board/Modify/', methods=['POST'])
+def board_modify():
+    send_data = OrderedDict()
+    data = dict()
+    if request.method=="POST":
+        data['uuid'] = request.form['uuid']
+        data['title'] = request.form['subject']
+        data['contents'] = request.form['editor1']
+        send_data['status'] = 'error'
+        db = DB()
+        rows = db.get_board(data['uuid'])
+        if session:
+            if session['id'] == rows['id']:
+                if db.modify_board(data):
+                        send_data['status'] = 'ok'
+                else :
+                    send_data['status'] = 'fail'
+        else :
+            send_data['status'] = 'permission error'
+    return jsonify(send_data)
+
 @app.route('/ckupload/', methods=['POST', 'OPTIONS'])
 def ckupload():
     """CKEditor file upload"""

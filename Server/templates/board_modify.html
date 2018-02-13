@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block head %}
-{% block title %}글수정{% endblock %}
+{% block title %}글 수정{% endblock %}
 	{{super()}}
+	<script type="text/javascript" src="{{url_for('static', filename='ckeditor/ckeditor.js')}}"></script>
 {% endblock %}
 {% block body %}
 	{% block Nav %}
@@ -12,45 +13,98 @@
  		 <div class="panel-heading">
         	<div class="panel-title" style="font-size:20px; text-align:center;">글 수정</div>
    		 </div>
-		<form method="POST" action="{{url_for('.board_modify', category=board_name)}}"> 
-		    <div class="form-group">
+
+
 		    	<label>Category: {{data['category']}}</label><br>
-		      <label for="subject">Title:</label>
-		      <input type="text" class="form-control" name ="subject" id="subject" oninput="title_spaceCheck()" value="{{data['title']}}">
-		    </div>
-		    <div class="form-group">
+		      <label for="subject">Title:</label><br>
+		      <input type="text" class="form-control" name ="subject" id="subject" oninput="title_spaceCheck()" value="{{data['title']}}"><br>
+
+
 		      <label for="content">Comment:</label>
 		      <textarea id="editor1" name="editor1" >
 		      {% autoescape false %}
 		      	{{data['contents']}}
 		      {% endautoescape %}
-		      </textarea>
+		      </textarea><br>
+
+		      <input type="file" class="btn btn-default pull-left" id="File"><br>
+
+
+		        <button id="board_modify" class="btn btn-primary pull-right">수 정</button>
 		    </div>
-		    <div class="form-group">
-		      <input type="file" class="btn btn-default pull-left" id="File">
-		    </div>
-		    <div class="form-group">
-		        <button type="submit" id="board_write" class="btn btn-primary pull-right" disabled="disabled">수 정</button>
-		    </div>
-		</form>
   </div>
 </section>
-	{% block Footer %}
+	{% block Footer %} 
 		{{super()}}
-	{% endblock %}
-
+	{% endblock %} 
 	{% block jquery %}
-		{{super()}}
+		{{super()}} 
 	{% endblock %}
-	<script>
-            CKEDITOR.replace( 'editor1', {
-                filebrowserImageUploadUrl: '/ckupload/'
-            });
-	</script>
-  <!-- <script>
-  CKEDITOR.replace( 'MESSAGE' );
-  </script>
-   -->
+<script>
+
+	CKEDITOR.replace('editor1', {
+		filebrowserImageUploadUrl : '/ckupload/'
+	});
+
+	$(function() {
+		
+		$('#board_modify').click(function(){
+			var subject = $('#subject').val();
+			var editor1 = CKEDITOR.instances.editor1.getData();
+			var uuid = "{{data['uuid']}}";
+			if (null_check(subject)) {
+				alert("'제목'이 비어있습니다.");
+				$('#subject').focus();
+				return;
+			}
+			if(null_check(editor1)){
+				alert("'내용'이 비어있습니다.");
+				$('#editor1').focus();
+				return;
+			}
+				
+			$.ajax({
+				url : "{{url_for('.board_modify')}}",
+				type : 'POST',
+				dataType : "json",
+				data : {uuid:uuid ,subject:$('#subject').val(), editor1:editor1},
+				async: false,
+				success : function(return_data) {
+					status = $.trim(return_data.status);
+					if (status == 'fail') {
+						alert('Error! 글 수정 실패!');
+					} else if (status == 'ok') {
+						alert('글 수정 완료');
+						window.location.replace("{{url_for('.board_list', category=data['category'])}}")
+					} else if (status == 'error') {
+						alert('Error!');
+					}else if(status == 'permission error'){
+						alert('잘못된 접근입니다.!');
+					}
+				},
+				error : function(error) {
+					console.log(error);
+				}
+			});
+		});
+	});
+	
+	function null_check(str) {
+		if (str.length == 0 || !str.trim()) {
+			return true;
+		}
+		return false;
+	}
+
+	function title_spaceCheck() {
+		var subject = $('#subject').val()
+		if (null_check(subject)) {
+			$('#board_write').prop("disabled", true);
+		} else {
+			$('#board_write').prop("disabled", false);
+		}
+	}
+</script>
 
 
 {% endblock %}

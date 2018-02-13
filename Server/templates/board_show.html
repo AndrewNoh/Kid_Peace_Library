@@ -20,9 +20,9 @@
 		    	<div class="panel-heading">
 		    		<div class="panel-title">
 						<div class="panel-heading">
-			    			<label class="col-sm-4">{{rows['id']}}</label>
-			    			<label class="col-sm-4 text-center">{{rows['write_time']}}</label>
-			    			<label class="col-sm-4 text-right">조회수 : {{rows['hits']}}</label><br>
+			    			<label class="col-xs-4 col-md-4 col-sm-4">{{rows['id']}}</label>
+			    			<label class="col-xs-4 col-md-4 col-sm-4 text-center">{{rows['write_time']}}</label>
+			    			<label class="col-xs-4 col-md-4 col-sm-4 text-right">조회수 : {{rows['hits']}}</label><br>
 						</div>
 		    		</div>
 		    	</div>
@@ -82,9 +82,9 @@
 										</div>
 									</div>
 								</div>
-						<a href="#" class="btn btn-default pull-right">글 수정</a>
+						<a href="{{url_for('app.board_modify_form', uuid=rows['uuid'])}}" class="btn btn-default pull-right">글 수정</a>
 				    {% endif %}
-						<a href="{{url_for('.board_list', category=rows['category'])}}" class="btn btn-default pull-right">글 목록</a>
+						<a href="{{url_for('app.board_list', category=rows['category'])}}" class="btn btn-default pull-right">글 목록</a>
 				    </div>
 			    </div>
 		    </div>

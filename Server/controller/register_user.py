@@ -5,7 +5,6 @@ from Server.app_blueprint import app
 from Server.model.user import user
 from Server.database import DB
 from collections import OrderedDict
-from Server.controller.login import login_requied
 from Server.controller.login import session_refresh
 
 @app.route('/user/check_id')
@@ -65,15 +64,14 @@ def signup():
 
 @app.route('/user/modify_form')
 def modify_form():
-    get_user = login_requied()
-    if get_user:
-        id = get_user.id
-        email = get_user.email
+    if session:
+        id = session['id']
+        email = session['email']
         password = ''
-        name = get_user.name
-        cell_phone = get_user.cell_phone
+        name = session['name']
+        cell_phone = session['cell_phone']
         
-        return render_template('modify.html', name = name, password = password, cell_phone = cell_phone, id = id, email = email, permission = get_user.permission)
+        return render_template('modify.html',session = session)
     else:
         return render_template('alert_msg.html', msg="로그인후 이용할 수 있습니다.")
     
@@ -138,13 +136,12 @@ def modify():
 @app.route('/user/Withdrawal', methods=['POST'])
 def withdrawal():
     if request.method == 'POST':
-        get_user = login_requied()
-        if get_user:
+        if session:
             password = request.form['password']
             data = OrderedDict()
             
             db = DB()
-            user_buf = db.login(get_user.id, password)
+            user_buf = db.login(session['id'], password)
             if user_buf==None:
                 data['status'] = 'password_discordance'
                 return jsonify(data) 

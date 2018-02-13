@@ -5,7 +5,6 @@ from Server.app_blueprint import app
 from Server.model.user import user
 from Server.database import DB
 from collections import OrderedDict
-from Server.controller.login import login_requied
 
 @app.route('/api/v1.0/login', methods=['POST'])
 def api_login():

@@ -66,10 +66,16 @@ def login():
     else:
         return render_template('alert_msg.html', msg="POST Error!")
 
+
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('.index'))
+
+
+@app.route('/manage')
+def manage():
+    return render_template('manage.html', session=session)
 
 @app.route('/backgroundimg1')
 def backgroundimg1():

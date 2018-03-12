@@ -73,7 +73,7 @@ def board_delete():
 @app.route('/Write/<category>')
 def write_form(category):
     if session:
-        if session['permission'] == "admin" or session['permission'] == "manager" :
+        if session['permission'] == "Admin" or session['permission'] == "Manager" :
             return render_template("write.html", session = session, board_name= category)
         elif session['permission'] == "user" :
             if category == "자유 게시판" :

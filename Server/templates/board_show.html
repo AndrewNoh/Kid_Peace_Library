@@ -20,7 +20,11 @@
 		    	<div class="panel-heading">
 		    		<div class="panel-title">
 						<div class="panel-heading">
+						{% if rows['user_delete']: %}
+			    			<label class="col-xs-4 col-md-4 col-sm-4">-</label>
+			    		{% else: %}
 			    			<label class="col-xs-4 col-md-4 col-sm-4">{{rows['id']}}</label>
+			    		{% endif %}
 			    			<label class="col-xs-4 col-md-4 col-sm-4 text-center">{{rows['write_time']}}</label>
 			    			<label class="col-xs-4 col-md-4 col-sm-4 text-right">조회수 : {{rows['hits']}}</label><br>
 						</div>

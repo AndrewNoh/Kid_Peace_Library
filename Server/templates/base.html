@@ -97,7 +97,10 @@
 			</ul>
 		</li>
 		<li><a class="page-scroll" href="#pricing">후원 마당</a></li> 
-      	{% if session:%}
+		{% if session['permission'] == 'Administer' %}
+			<li><a href="{{url_for('app.modify_form')}}"><span class="glyphicon glyphicon-user"></span>{{session['permission']}}님</a></li>
+      		<li><a href="{{url_for('app.logout')}}"><span class="glyphicon glyphicon-log-out"></span> 로그아웃</a></li>
+      	{% elif session:%}
       		<li><a href="{{url_for('app.modify_form')}}"><span class="glyphicon glyphicon-user"></span> {{session['name']}}({{session['permission']}})님</a></li>
       		<li><a href="{{url_for('app.logout')}}"><span class="glyphicon glyphicon-log-out"></span> 로그아웃</a></li>
       	{% else: %}

@@ -4,6 +4,7 @@
 	{{super()}}
 	<style>
 		textarea.autosize { min-height: 50px; }
+		.comment-panel{border:0px;}
 	</style>
 {% endblock %}
 {% block body %}
@@ -96,6 +97,23 @@
 			    </div>
 		    </div>
 		    {% if comments: %}
+		    	{% for row in comments %}
+		    		<div class="panel panel-default comment-panel">
+		    			<div class="panel-body">
+			    			<div class="row">
+			    			<label class="col-xs-3 col-md-1 col-sm-2" style="font-weight:bold;">{{row['id']}}</label>
+			    			<a class="col-xs-9 col-md-11 col-sm-10" style="font-size:10px">({{row['write_time']}})</a>
+			    			</div>
+			    			<div class="row">
+			    			<div class="a col-xs-offset-3 col-xs-8 col-md-offset-1 col-md-10 col-sm-offset-2 col-sm-9">{{row['comment_contents']}}</div>
+			    				{% if session['id'] == row['id']: %}
+			    					<a class="col-xs-1 col-md-1 col-sm-1"><span class="glyphicon glyphicon-remove"></span></a>
+			    				{% else: %}
+			    				{% endif %}
+			    			</div>
+		    			</div>
+		    		</div>
+		    	{% endfor %}
 		    	{% if pagination: %}
 				<div class="row" align="center">
 					<div class="col-md-12">
@@ -105,13 +123,16 @@
 						</p>
 					</div>
 				</div>
+				{% else %}
+					<!-- do nothing! -->
+				{% endif %}
 		    {% endif %}
 		    {% if session: %}
 		    <div class="container">
 		    <div class="form-group">
-				<label class="col-md-1"> Coment : </label> 
-				<textarea name="comment_contents" id="comment_contents" class="col-md-9 autosize" onkeydown="resize(this)" onkeyup="resize(this)" style="resize:none"></textarea>
-				<a class="btn col-md-2 btn-sm" id="coment_btn">등 록</a>
+				<label class="col-xs-1 col-md-1 col-sm-1"> Comment : </label> 
+				<textarea name="comment_contents" id="comment_contents" class="col-xs-9 col-md-9 col-sm-9 autosize" onkeydown="resize(this)" onkeyup="resize(this)" style="resize:none"></textarea>
+				<a class="btn col-xs-2 col-md-2 col-sm-2 btn-sm" id="coment_btn">등 록</a>
 			</div>
 			<form name="goLink" style="padding:0; margin:0;">
   				<input type="hidden" name="uuid" />

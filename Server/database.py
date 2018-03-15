@@ -12,6 +12,7 @@ class DB():
             self.conn = pymysql.connect("localhost","Admin", "kosta6006", "Kid_Peace_Library_db", charset="utf8")
             #db.row_factory = dict_factory
             self.cur = self.conn.cursor(pymysql.cursors.DictCursor)
+            print("database connect!!")
         except:
             print("database connect fail")
             sys.exit()
@@ -19,6 +20,7 @@ class DB():
     def __del__(self):
         self.conn.close()
         self.cur.close()
+        print("database disconnect!!")
 
     def id_check(self, id):
         sql = "select count(*) from MEMBERS where id='"+id+"'"

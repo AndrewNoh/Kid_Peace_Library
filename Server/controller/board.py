@@ -8,6 +8,7 @@ from Server.app_blueprint import app
 from Server.model.user import user
 from Server.model.board import board
 from Server.database import DB
+from Server.databases.comments import Comments_DB
 from Server.controller.pagination_class import Pagination
 from collections import OrderedDict
 import uuid, datetime
@@ -40,19 +41,36 @@ def board_list(category, page):
     else:
         return render_template("board.html", board_name=category, rows = rows,pagination=pagination)
     
-@app.route('/Board/show/<uuid>/<hits>')
-def board_show(uuid, hits):
-    db = DB()
-    rows = db.get_board(uuid)
-    db.hits_add(uuid, hits)
-    rows['hits'] = hits
-    del db
-    if session:
-        if session['id'] == rows['id']:
-            return render_template("board_show.html",session = session, uuid=uuid, rows=rows, user_check=True)
+@app.route('/Board/show/', defaults={'page':1}, methods=['POST'])
+@app.route('/Board/show/<int:page>', methods=['POST'])
+def board_show(page):
+    if request.method=="POST":
+        uuid = request.form['uuid']
+        hits = request.form['hits']
+        db = DB()
+        rows = db.get_board(uuid)
+        db.hits_add(uuid, hits)
+        rows['hits'] = hits
+        del db
+        db = Comments_DB()
+        total_cnt = db.get_comment_cnt(uuid)
         
-        return render_template("board_show.html", rows=rows)
-    return render_template("board_show.html", rows=rows)
+        per_page =50
+        pagination = Pagination(page, per_page=per_page, total_count= total_cnt)
+        
+        if page != 1:
+            offset = per_page * (page - 1)
+        else:
+            offset = 0
+            
+        comments = db.get_comments_list(per_page, offset, uuid)
+        
+        if session:
+            if session['id'] == rows['id']:
+                return render_template("board_show.html",session = session, rows=rows, pagination=pagination, comments=comments, user_check=True)
+            
+            return render_template("board_show.html", rows=rows, pagination=pagination, comments=comments)
+        return render_template("board_show.html", rows=rows, pagination=pagination, comments=comments)
 
 @app.route('/Board/delete', methods=['POST'])
 def board_delete():
@@ -73,7 +91,7 @@ def board_delete():
 @app.route('/Write/<category>')
 def write_form(category):
     if session:
-        if session['permission'] == "admin" or session['permission'] == "manager" :
+        if session['permission'] == "Admin" or session['permission'] == "Manager" :
             return render_template("write.html", session = session, board_name= category)
         elif session['permission'] == "user" :
             if category == "자유 게시판" :
@@ -134,6 +152,23 @@ def board_modify():
                     send_data['status'] = 'fail'
         else :
             send_data['status'] = 'permission error'
+    return jsonify(send_data)
+
+@app.route('/board/comment/insert', methods=['POST'])
+def insert_comment():
+    if request.method=="POST":
+        send_data = OrderedDict()
+        recv_data = dict()
+        recv_data['uuid'] = request.form['uuid']
+        recv_data['id'] = request.form['id']
+        recv_data['comment_contents'] = request.form['comment_contents']
+        send_data['status'] = 'error'
+        db = Comments_DB()
+        if db.Insert_comment(recv_data):
+            send_data['status'] = 'ok'
+        else:
+            send_data['status'] = 'fail'
+        del db
     return jsonify(send_data)
 
 @app.route('/ckupload/', methods=['POST', 'OPTIONS'])

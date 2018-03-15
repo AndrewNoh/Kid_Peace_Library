@@ -97,16 +97,17 @@
 			</ul>
 		</li>
 		<li><a class="page-scroll" href="#pricing">후원 마당</a></li> 
-		{% if session['permission'] == 'Administer' %}
-			<li><a href="{{url_for('app.modify_form')}}"><span class="glyphicon glyphicon-user"></span>{{session['permission']}}님</a></li>
+      	{% if session['id'] == 'Admin':%}
+      	    <li><a href="{{url_for('app.manage')}}"><span class="glyphicon glyphicon-cog"></span> 관리</a></li>
+      	    <li><a href="{{url_for('app.modify_form')}}"><span class="glyphicon glyphicon-user"></span> {{session['name']}}님</a></li>
       		<li><a href="{{url_for('app.logout')}}"><span class="glyphicon glyphicon-log-out"></span> 로그아웃</a></li>
-      	{% elif session:%}
-      		<li><a href="{{url_for('app.modify_form')}}"><span class="glyphicon glyphicon-user"></span> {{session['name']}}({{session['permission']}})님</a></li>
+      	{% elif session: %}
+      	    <li><a href="{{url_for('app.modify_form')}}"><span class="glyphicon glyphicon-user"></span> {{session['name']}}({{session['permission']}})님</a></li>
       		<li><a href="{{url_for('app.logout')}}"><span class="glyphicon glyphicon-log-out"></span> 로그아웃</a></li>
+
       	{% else: %}
-					<li><a href="{{url_for('app.Signup_form')}}"><span class="glyphicon glyphicon-user"></span> 화원가입</a></li>
-					<li><a href="{{url_for('app.login_from')}}" ><span class="glyphicon glyphicon-log-in"></span> 로그인</a></li>
-						
+			<li><a href="{{url_for('app.Signup_form')}}"><span class="glyphicon glyphicon-user"></span> 화원가입</a></li>
+			<li><a href="{{url_for('app.login_from')}}" ><span class="glyphicon glyphicon-log-in"></span> 로그인</a></li>					
    		{% endif %}
 		</ul>
 	</div>

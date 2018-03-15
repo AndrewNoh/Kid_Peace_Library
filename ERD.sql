@@ -40,6 +40,7 @@ CREATE TABLE COMMENTS
 	comment_contents varchar(255) NOT NULL,
 	uuid varchar(40) NOT NULL,
 	id varchar(30) NOT NULL,
+	write_time datetime NOT NULL,
 	PRIMARY KEY (comment_contents, uuid, id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -67,7 +68,6 @@ CREATE TABLE MEMBERS
 	m_delete boolean NOT NULL,
 	PRIMARY KEY (id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 
 /* Create Foreign Keys */
@@ -111,4 +111,12 @@ ALTER TABLE COMMENTS
 ;
 
 
-
+INSERT INTO MEMBERS VALUES('Admin', password('kosta6006'), 'Admin', '00000000000', '000@0000.com', '관리자', 0, 0);
+INSERT INTO CATEGORYS VALUES('소식 마당');
+INSERT INTO CATEGORYS VALUES('책 마당');
+INSERT INTO CATEGORYS VALUES('영화 마당');
+INSERT INTO CATEGORYS VALUES('정보 마당');
+INSERT INTO CATEGORYS VALUES('영세중립 마당');
+INSERT INTO CATEGORYS VALUES('살림 마당');
+INSERT INTO CATEGORYS VALUES('관장 게시판');
+INSERT INTO CATEGORYS VALUES('자유 게시판');

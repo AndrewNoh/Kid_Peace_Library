@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block head %}
+	{% block title %}Login{% endblock %}
+	{{super()}}
+{% endblock %}
+{% block body %}
+	{% block Nav %}
+		{{super()}}
+	{% endblock %}
+	
+<section>
+	<div class="container">
+		<br> <br> <br>
+		<div class="col-xs-offset-2 col-xs-6 col-md-offset-2 col-md-6 col-sm-offset-2 col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="panel-title">
+						<label class="text-center">관리자 페이지</label>
+					</div>
+				</div>
+				<div class="panel-body">
+						<div class="form-group">
+							<div class="col-sm-offset-3 col-sm-18">
+								<a href="{{url_for('app.manage')}}" class="btn btn-primary btn-lg">회원관리</a>
+								<a href="{{url_for('app.manage')}}" class="btn btn-primary btn-lg">소개마당</a>
+							</div>
+						</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+{% block Footer %} 
+		{{super()}}
+	{% endblock %}
+	{% block jquery %}
+		{{super()}}
+	{% endblock %}
+{% endblock %}

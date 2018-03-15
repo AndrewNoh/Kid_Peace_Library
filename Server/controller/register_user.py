@@ -14,8 +14,8 @@ def Check_id():
     id == "Error" or \
     id == "Admin" or \
     id == "admin" or \
-    id == "Menager" or\
-    id == "menager" :
+    id == "Manager" or\
+    id == "manager" :
         return render_template('alert_msg.html', msg="사용할수 없는 id 입니다.")
     mydb = DB()
     count = int(mydb.id_check(id))

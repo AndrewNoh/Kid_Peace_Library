@@ -9,6 +9,7 @@
 	{% endblock %}
 <section id="Board" style="margin-top:50px;">
 <div class="container">
+	<br>
     <div class="panel-heading">
         <div class="panel-title" style="font-size:20px; text-align:center;">{{board_name}}</div>
     </div>
@@ -27,7 +28,7 @@
 		<tr>
 			{% set numbering = loop.index+(pagination.page*pagination.per_page)-10 %}
 			<td>{{ numbering }}</td>
-			<td><a  class="text-muted" href="{{url_for('.board_show', uuid=row['uuid'], hits=row['hits']+1)}}">{{ row['title'] }}</a></td>
+			<td><a  onclick="Board_show('{{row['uuid']}}', '{{row['hits']+1}}')" class="text-muted" style="cursor:pointer">{{ row['title'] }}</a></td>
 			{% if not row['user_delete']: %}
 			<td class="text-center">{{ row['id'] }}</td>
 			{% else: %}
@@ -42,14 +43,17 @@
 		</tr>
 		{% endfor %}
       </tbody>
-    </table>
-
+    </table>	
+  <form name="goLink" style="padding:0; margin:0;">
+  	<input type="hidden" name="uuid" />
+  	<input type="hidden" name="hits" />
+  </form>
    
 	<div class="container">
     <a href="{{url_for('.write_form', category=board_name)}}" class="btn btn-default pull-right">글쓰기</a>
 	</div>
 
-{% if pagination %}
+{% if pagination: %}
 <div class="row" align="center">
 	<div class="col-md-12">
 		<p>
@@ -70,5 +74,16 @@
   {% block jquery %}
     {{super()}}
   {% endblock %}
-
+  
+	<script type="text/javascript">
+	//Boad_show로 넘어가는 함수
+		function Board_show(get_uuid, get_hits){
+			var f=document.goLink;  //폼 name
+			f.uuid.value = get_uuid;  //POST방식으로 넘기고 싶은 값
+			f.hits.value = get_hits;  //POST방식으로 넘기고 싶은 값
+			f.action="{{url_for('.board_show')}}";  //이동할 페이지
+			f.method="post";  //POST방식
+			f.submit();
+		}
+	</script>
 {% endblock %}

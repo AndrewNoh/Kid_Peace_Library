@@ -210,6 +210,28 @@ class DB():
             return False
         return True
     
+    def get_user_cnt(self):
+        sql = "SELECT count(*) cnt FROM MEMBERS"
+        try:
+            self.cur.execute(sql)   
+            total_cnt = self.cur.fetchone()
+        except MySQLError as e:
+            print('Got error {!r}, errno is {}'.format(e, e.args[0]))
+            return None
+        return total_cnt['cnt']
+    
+    def get_Page_list2(self, limit, offset):
+        sql = "SELECT * FROM MEMBERS WHERE ID != 'Admin' ORDER BY ID DESC LIMIT %s OFFSET %s"
+        try:
+            self.cur.execute(sql, (limit, offset))
+            rows = self.cur.fetchall()
+        except MySQLError as e:
+            print('Got error {!r}, errno is {}'.format(e, e.args[0]))
+            return None
+        """for row in rows:
+            row['id'] = 'None'"""
+        return rows
+    
 if __name__ == '__main__':
     mydb = DB()
     rows = mydb.get_Page_list(10, 0, '자유 게시판')

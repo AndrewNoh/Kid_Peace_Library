@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block head %}
+{% block title %}Index{% endblock %}
+	{{super()}}
+{% endblock %}
+{% block body %}
+	{% block Nav %}
+		{{super()}}
+	{% endblock %}
+<section id="Board" style="margin-top:50px;">
+<div class="container">
+    <div class="panel-heading">
+        <div class="panel-title" style="font-size:20px; text-align:center;">회원관리</div>
+    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+			<th class="text-center" width="10%">ID</th>
+          <th class="text-center" width="10%">이름</th>
+          <th class="text-center" width="15%">이메일</th>
+          <th class="text-center" width="15%">핸드폰번호</th>
+          <th class="text-center" width="15%">후원여부</th>
+          <th class="text-center" width="15%">권한</th>
+          <th class="text-center" width="20%">회원관리</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+		<tr>
+			<td class="text-center">{{ row['id'] }}</td>
+			<td class="text-center">{{ row['name'] }}</td>
+			<td class="text-center">{{ row['email'] }}</td>
+			<td class="text-center">{{ row['cell_phone'] }}</td>
+			<td class="text-center">{{ row['sponsor_status'] }}</td>
+			<td class="text-center">{{ row['permission'] }}</td>
+			<td class="text-center">{{ row['m_delete'] }}</td>
+		</tr>
+		{% endfor %}
+      </tbody>
+    </table>
+
+{% if pagination %}
+<div class="row" align="center">
+	<div class="col-md-12">
+		<p>
+		    {% from "_pagehelpers.html" import render_pagination %}
+		    {{ render_pagination(pagination) }}
+		</p>
+	</div>
+</div>
+{% else %}
+	<!-- do nothing! -->
+{% endif %}
+</div>
+</section>
+
+	{% block Footer %}
+		{{super()}}
+	{% endblock %}
+  {% block jquery %}
+    {{super()}}
+  {% endblock %}
+
+{% endblock %}

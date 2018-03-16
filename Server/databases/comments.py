@@ -46,3 +46,14 @@ class Comments_DB(DB):
             row['id'] = 'None'"""
         return rows
     
+    def delete_comment(self,data):
+        sql =\
+        "DELETE FROM COMMENTS WHERE write_time=%s AND uuid=%s AND id=%s"
+        try:
+            self.cur.execute(sql, (data['write_time'], data['uuid'], data['id']))
+            self.conn.commit()
+        except MySQLError as e:
+            print('Got error {!r}, errno is {}'.format(e, e.args[0]))
+            return None
+        return True
+    

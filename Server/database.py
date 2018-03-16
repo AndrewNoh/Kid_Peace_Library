@@ -234,6 +234,46 @@ class DB():
             row['id'] = 'None'"""
         return rows
     
+    def mt_sponsor(self, id):
+            sql ="UPDATE MEMBERS SET sponsor_status=0 WHERE id=%s"
+            try:
+                self.cur.execute(sql, (id))
+                self.conn.commit()
+            except MySQLError as e:
+                print('Got error {!r}, errno is {}'.format(e, e.args[0]))
+                return False
+            return True
+        
+    def mf_sponsor(self, id):
+            sql ="UPDATE MEMBERS SET sponsor_status=1 WHERE id=%s"
+            try:
+                self.cur.execute(sql, (id))
+                self.conn.commit()
+            except MySQLError as e:
+                print('Got error {!r}, errno is {}'.format(e, e.args[0]))
+                return False
+            return True
+    
+    def mu_permission(self, id):
+            sql ="UPDATE MEMBERS SET permission='Manage' WHERE id=%s"
+            try:
+                self.cur.execute(sql, (id))
+                self.conn.commit()
+            except MySQLError as e:
+                print('Got error {!r}, errno is {}'.format(e, e.args[0]))
+                return False
+            return True
+            
+    def mm_permission(self, id):
+            sql ="UPDATE MEMBERS SET sponsor_status='user' WHERE id=%s"
+            try:
+                self.cur.execute(sql, (id))
+                self.conn.commit()
+            except MySQLError as e:
+                print('Got error {!r}, errno is {}'.format(e, e.args[0]))
+                return False
+            return True
+    
 if __name__ == '__main__':
     mydb = DB()
     rows = mydb.get_Page_list(10, 0, '자유 게시판')

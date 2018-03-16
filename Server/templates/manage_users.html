@@ -2,6 +2,29 @@
 {% block head %}
 {% block title %}Index{% endblock %}
 	{{super()}}
+	<style>
+		button {
+		  border: 1px solid #d7e2da;
+		  background-color: #cccccc;
+		  color: #000000;
+		  padding: 5px 10px;
+		  border-radius: 5px;
+		  text-transform: uppercase;
+		}
+		
+		button:hover {
+		  border: 1px solid #d7e2da;
+		  background-color: #d7dbe8;
+		  color: #ffffff;
+		  padding: 5px 10px;
+		}
+		button:disabled,
+		button[disabled]{
+		  border: 1px solid #2be25c;
+		  background-color: #31f967;
+		  color: #0c2813;
+		}
+	</style>
 {% endblock %}
 {% block body %}
 	{% block Nav %}
@@ -19,21 +42,47 @@
           <th class="text-center" width="10%">이름</th>
           <th class="text-center" width="15%">이메일</th>
           <th class="text-center" width="15%">핸드폰번호</th>
-          <th class="text-center" width="15%">후원여부</th>
+          <th class="text-center" width="25%">후원여부</th>
           <th class="text-center" width="15%">권한</th>
-          <th class="text-center" width="20%">회원관리</th>
+          <th class="text-center" width="10%">회원관리</th>
         </tr>
       </thead>
       <tbody>
-        {% for row in rows %}
+        {% for row in rows: %}
 		<tr>
 			<td class="text-center">{{ row['id'] }}</td>
 			<td class="text-center">{{ row['name'] }}</td>
 			<td class="text-center">{{ row['email'] }}</td>
 			<td class="text-center">{{ row['cell_phone'] }}</td>
-			<td class="text-center">{{ row['sponsor_status'] }}</td>
-			<td class="text-center">{{ row['permission'] }}</td>
-			<td class="text-center">{{ row['m_delete'] }}</td>
+			{% if row['sponsor_status']==True: %}
+				<td class="text-center">
+					<button disabled>후원인</button>
+					<button onclick="window.location.href='{{url_for('.modify_sponsor', id=row['id'], sponsor=row['sponsor_status'])}}'">비후원인</button> 
+				</td>
+			{% else : %}
+				<td class="text-center">
+					<button onclick="window.location.href='{{url_for('.modify_sponsor', id=row['id'], sponsor=row['sponsor_status'])}}'">후원인</button>
+					<button disabled>비후원인</button>
+				</td>
+			{% endif %}
+			
+			{% if row['permission']=='user' : %}
+				<td class="text-center">
+					<button>관장</button>
+					<button disabled>회원</button>
+				</td>
+			{% else : %}
+				<td class="text-center">
+					<a class="button[disabled]">관장</a>
+					<a href="#" class="button">회원</a>
+				</td>
+			{% endif %}
+			
+			{% if row['m_delete']==False : %}
+				<td class="text-center"><button class="button">회원탈퇴</button></td>
+			{% else : %}
+				<td class="text-center"><button>탈퇴회원</button></td>
+			{% endif %}
 		</tr>
 		{% endfor %}
       </tbody>

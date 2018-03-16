@@ -16,7 +16,7 @@ def manage_user(page):
     
     mydb = DB()
     total_cnt = mydb.get_user_cnt()
-    per_page =10
+    per_page = 20
         
     pagination = Pagination(page, per_page=per_page, total_count= total_cnt)
 
@@ -28,3 +28,17 @@ def manage_user(page):
     rows = mydb.get_Page_list2(per_page, offset)
 
     return render_template("manage_users.html", session = session, rows = rows, pagination=pagination)
+
+@app.route('/manage/modify/<id>/<sponsor>/')
+def modify_sponsor(id, sponsor):
+    if session['permission'] == "Admin" :
+        db = DB()
+        if sponsor == '1' :
+            rows = db.mt_sponsor(id)
+        else :
+            rows = db.mf_sponsor(id)
+        del db
+        return redirect(url_for('.manage_user'))
+    else:
+        return render_template('alert_msg.html', msg="잘못된 접근입니다.")
+

@@ -1,5 +1,5 @@
 SET SESSION FOREIGN_KEY_CHECKS=0;
-
+{{url_for('.modify_sponsor', id=row['id']}}
 /* Drop Tables */
 
 DROP TABLE IF EXISTS COMMENTS;

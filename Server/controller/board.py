@@ -41,37 +41,36 @@ def board_list(category, page):
     else:
         return render_template("board.html", board_name=category, rows = rows,pagination=pagination)
     
-@app.route('/Board/show/', defaults={'page':1}, methods=['POST'])
-@app.route('/Board/show/<int:page>', methods=['POST'])
-def board_show(page):
+@app.route('/Board_View/<uuid>/', defaults={'page':1}, methods=['GET', 'POST'])
+@app.route('/Board_View/<uuid>/<int:page>', methods=['GET', 'POST'])
+def board_show(uuid, page):
+    db = DB()
+    rows = db.get_board(uuid)
+    del db
+    db = Comments_DB()
+    total_cnt = db.get_comment_cnt(uuid)
+        
+    per_page =10
+    pagination = Pagination(page, per_page=per_page, total_count= total_cnt)
+        
+    if page != 1:
+        offset = per_page * (page - 1)
+    else:
+        offset = 0
+            
+    comments = db.get_comments_list(per_page, offset, uuid)
+    
     if request.method=="POST":
-        uuid = request.form['uuid']
         hits = request.form['hits']
-        db = DB()
-        rows = db.get_board(uuid)
         db.hits_add(uuid, hits)
         rows['hits'] = hits
         del db
-        db = Comments_DB()
-        total_cnt = db.get_comment_cnt(uuid)
-        
-        per_page =50
-        pagination = Pagination(page, per_page=per_page, total_count= total_cnt)
-        
-        if page != 1:
-            offset = per_page * (page - 1)
-        else:
-            offset = 0
-            
-        comments = db.get_comments_list(per_page, offset, uuid)
         
         if session:
             if session['id'] == rows['id']:
                 return render_template("board_show.html",session = session, rows=rows, pagination=pagination, comments=comments, user_check=True)
-            
-            return render_template("board_show.html", rows=rows, pagination=pagination, comments=comments)
-        return render_template("board_show.html", rows=rows, pagination=pagination, comments=comments)
-
+    return render_template("board_show.html", rows=rows, pagination=pagination, comments=comments)
+        
 @app.route('/Board/delete', methods=['POST'])
 def board_delete():
     uuid = request.form['uuid']
@@ -154,7 +153,7 @@ def board_modify():
             send_data['status'] = 'permission error'
     return jsonify(send_data)
 
-@app.route('/board/comment/insert', methods=['POST'])
+@app.route('/Board/comment/insert', methods=['POST'])
 def insert_comment():
     if request.method=="POST":
         send_data = OrderedDict()
@@ -165,6 +164,23 @@ def insert_comment():
         send_data['status'] = 'error'
         db = Comments_DB()
         if db.Insert_comment(recv_data):
+            send_data['status'] = 'ok'
+        else:
+            send_data['status'] = 'fail'
+        del db
+    return jsonify(send_data)
+
+@app.route('/Baord/comment/delete', methods=['POST'])
+def delete_comment():
+    if request.method=="POST":
+        send_data = OrderedDict()
+        recv_data = dict()
+        recv_data['uuid'] = request.form['uuid']
+        recv_data['write_time'] = request.form['write_time']
+        recv_data['id'] = request.form['id']
+        send_data['status'] = 'error'
+        db = Comments_DB()
+        if db.delete_comment(recv_data):
             send_data['status'] = 'ok'
         else:
             send_data['status'] = 'fail'

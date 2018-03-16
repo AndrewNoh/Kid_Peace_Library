@@ -77,11 +77,18 @@
   
 	<script type="text/javascript">
 	//Boad_show로 넘어가는 함수
+	var get_uuid = (function (){
+		var private_uuid;
+		return {
+			set : function(val){
+				private_uuid = val;
+			},
+		}
+	});
 		function Board_show(get_uuid, get_hits){
 			var f=document.goLink;  //폼 name
-			f.uuid.value = get_uuid;  //POST방식으로 넘기고 싶은 값
 			f.hits.value = get_hits;  //POST방식으로 넘기고 싶은 값
-			f.action="{{url_for('.board_show')}}";  //이동할 페이지
+			f.action="/Board_View/"+get_uuid+"/";  //이동할 페이지
 			f.method="post";  //POST방식
 			f.submit();
 		}

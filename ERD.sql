@@ -41,7 +41,7 @@ CREATE TABLE COMMENTS
 	uuid varchar(40) NOT NULL,
 	id varchar(30) NOT NULL,
 	write_time datetime NOT NULL,
-	PRIMARY KEY (comment_contents, uuid, id)
+	PRIMARY KEY (write_time, uuid, id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

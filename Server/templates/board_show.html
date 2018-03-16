@@ -55,13 +55,11 @@
 					
 		
 				    <div>
-				    {% if user_check==True: %}
+				    {% if user_check==True or session['permission']=="Admin": %}
 						<input type="button" data-toggle="modal" data-target="#board_delete_Modal" class="btn btn-default pull-right" id="board_delete_btn" value="글 삭제">
 								<div class="modal fade" id="board_delete_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
 									<div class="modal-dialog">
 										<div class="modal-content">
-											<div class="modal-header">
-											</div>
 											<div class="modal-body">
 												<div class="panel panel-danger">
 														<div class="panel-heading">
@@ -90,7 +88,9 @@
 										</div>
 									</div>
 								</div>
+						{% if user_check==True: %}
 						<a href="{{url_for('app.board_modify_form', uuid=rows['uuid'])}}" class="btn btn-default pull-right">글 수정</a>
+						{% endif %}
 				    {% endif %}
 						<a href="{{url_for('app.board_list', category=rows['category'])}}" class="btn btn-default pull-right">글 목록</a>
 				    </div>
@@ -98,22 +98,67 @@
 		    </div>
 		    {% if comments: %}
 		    	{% for row in comments %}
+		    	{% set numbering = loop.index %}
 		    		<div class="panel panel-default comment-panel">
 		    			<div class="panel-body">
 			    			<div class="row">
-			    			<label class="col-xs-3 col-md-1 col-sm-2" style="font-weight:bold;">{{row['id']}}</label>
-			    			<a class="col-xs-9 col-md-11 col-sm-10" style="font-size:10px">({{row['write_time']}})</a>
+			    			<label class="col-xs-3 col-md-1 col-sm-2" id="comment_id{{numbering}}" style="font-weight:bold;">{{row['id']}}</label>
+			    			<a class="col-xs-9 col-md-11 col-sm-10" id="comment_time{{numbering}}" style="font-size:10px">({{row['write_time']}})</a>
 			    			</div>
 			    			<div class="row">
-			    			<div class="a col-xs-offset-3 col-xs-8 col-md-offset-1 col-md-10 col-sm-offset-2 col-sm-9">{{row['comment_contents']}}</div>
+			    			<div class="a col-xs-offset-3 col-xs-8 col-md-offset-1 col-md-10 col-sm-offset-2 col-sm-9" id="comment_contents{{numbering}}">{{row['comment_contents']}}</div>
 			    				{% if session['id'] == row['id']: %}
-			    					<a class="col-xs-1 col-md-1 col-sm-1"><span class="glyphicon glyphicon-remove"></span></a>
+			    				<a class="col-xs-1 col-md-1 col-sm-1" id="delete_{{numbering}}" onclick="set_data('{{row['write_time']}}', '{{row['id']}}')" style="cursor:pointer"><span class="glyphicon glyphicon-remove"></span></a>
+			    				<div class="modal fade" id="comment_delete_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-body">
+												<div class="panel panel-danger">
+														<div class="panel-heading">
+															<div class="panel-title">
+																<label class="text-center">댓글 삭제</label>
+																<!-- 닫기(x) 버튼 -->
+																<button type="button" class="close" data-dismiss="modal">×</button>
+															</div>
+														</div>
+														<div class="panel-body">
+															<h4 class="text-center">정말 삭제 하시겠습니까?</h4>
+															<br>
+															<div class="col-sm-2 col-sm-offset-2">
+																<div div class="container">
+																<button class="btn btn-primary" id="comment_del_btn">삭 제</button>
+																</div>
+															</div>
+															<div class="col-sm-2 col-sm-offset-3">
+																<div div class="container">
+																<button class="btn btn-default" type="button" data-dismiss="modal">취 소</button>
+																</div>
+															</div>
+														</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
 			    				{% else: %}
 			    				{% endif %}
 			    			</div>
 		    			</div>
 		    		</div>
 		    	{% endfor %}
+		    	{% if session: %}
+				    <div class="container">
+					    <div class="form-group">
+							<label class="col-xs-1 col-md-1 col-sm-1"> Comment</label> 
+							<textarea name="comment_contents" id="comment_contents" class="col-xs-9 col-md-9 col-sm-9 autosize" onkeydown="resize(this)" onkeyup="resize(this)" style="resize:none"></textarea>
+							<a class="btn col-xs-2 col-md-2 col-sm-2 btn-sm" id="coment_btn">등 록</a>
+							<form name="goLink" style="padding:0; margin:0;">
+			  				<input type="hidden" name="uuid" />
+			  				<input type="hidden" name="hits" />
+			 				</form>
+						</div>
+					</div>
+			    {% endif %}
 		    	{% if pagination: %}
 				<div class="row" align="center">
 					<div class="col-md-12">
@@ -126,20 +171,21 @@
 				{% else %}
 					<!-- do nothing! -->
 				{% endif %}
-		    {% endif %}
-		    {% if session: %}
-		    <div class="container">
-		    <div class="form-group">
-				<label class="col-xs-1 col-md-1 col-sm-1"> Comment</label> 
-				<textarea name="comment_contents" id="comment_contents" class="col-xs-9 col-md-9 col-sm-9 autosize" onkeydown="resize(this)" onkeyup="resize(this)" style="resize:none"></textarea>
-				<a class="btn col-xs-2 col-md-2 col-sm-2 btn-sm" id="coment_btn">등 록</a>
-			</div>
-			<form name="goLink" style="padding:0; margin:0;">
-  				<input type="hidden" name="uuid" />
-  				<input type="hidden" name="hits" />
- 			</form>
-			
-			</div>
+			{% else: %}
+				{% if session: %}
+				    <div class="container">
+				    <div class="form-group">
+						<label class="col-xs-1 col-md-1 col-sm-1"> Comment</label> 
+						<textarea name="comment_contents" id="comment_contents" class="col-xs-9 col-md-9 col-sm-9 autosize" onkeydown="resize(this)" onkeyup="resize(this)" style="resize:none"></textarea>
+						<a class="btn col-xs-2 col-md-2 col-sm-2 btn-sm" id="coment_btn">등 록</a>
+					</div>
+					<form name="goLink" style="padding:0; margin:0;">
+		  				<input type="hidden" name="uuid" />
+		  				<input type="hidden" name="hits" />
+		 			</form>
+					
+					</div>
+			    {% endif %}
 		    {% endif %}
 	    </div>
 	{% else: %}
@@ -157,15 +203,76 @@
 		{{super()}}
 	{% endblock %}
 	<script type="text/javascript">
-	//Boad_show로 넘어가는 함수
-	function Board_show(get_uuid, get_hits){
-		var f=document.goLink;  //폼 name
-		f.uuid.value = get_uuid;  //POST방식으로 넘기고 싶은 값
-		f.hits.value = get_hits;  //POST방식으로 넘기고 싶은 값
-		f.action="{{url_for('.board_show')}}";  //이동할 페이지
-		f.method="post";  //POST방식
-		f.submit();
+	var comment_writetime = (function(){
+		var private_datetime;
+		return {
+			set : function(val){
+				private_datetime = val;
+			},
+			value : function(){
+				return private_datetime;
+			}
+		}
+	})();
+	
+	var comment_id = (function(){
+		var private_comment_id;
+		return{
+			set : function(val){
+				private_comment_id = val;
+			},
+			value : function(){
+				return private_comment_id;
+			}
+		}
+	})();
+	
+	function set_data(writetime, id){
+		comment_writetime.set(writetime);
+		comment_id.set(id);
+		$('#comment_delete_Modal').modal();
 	}
+	
+	// 댓글 삭제 ajax
+	function delete_comment(){
+		write_time = comment_writetime.value();
+		uuid = "{{rows['uuid']}}"
+		id = comment_id.value();
+		
+		$.ajax({
+			url : "{{url_for('.delete_comment')}}",
+			type : 'POST',
+			dataType : "json",
+			data : {
+				write_time:write_time,
+				uuid:uuid,
+				id:id
+			},
+			async: false,
+			success : function(data) {
+				status = $.trim(data.status);
+				if (status == 'fail') {
+					alert('Error! 댓글 삭제 실패');
+					$('#modify_password').focus();
+				} else if (status == 'ok') {
+					alert('댓글 삭제 완료');
+					window.location.href="{{url_for('.board_show', uuid=rows['uuid'])}}";
+				} else if (status == 'error') {
+					alert('Error!');
+				}
+			},
+			error : function(error) {
+				console.log(error);
+			}
+		});
+	}
+	
+	$(function(){
+		$('#comment_del_btn').click(function (){
+			delete_comment();
+		});
+	});
+	
 	function resize(obj) {
 		  obj.style.height = "1px";
 		  obj.style.height = (12+obj.scrollHeight)+"px";
@@ -199,7 +306,7 @@
 						$('#modify_password').focus();
 					} else if (status == 'ok') {
 						alert('댓글 등록 완료');
-						Board_show("{{rows['uuid']}}", "{{rows['hits']}}")
+						window.location.href="{{url_for('.board_show', uuid=rows['uuid'])}}";
 					} else if (status == 'error') {
 						alert('Error!');
 					}

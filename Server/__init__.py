@@ -25,6 +25,7 @@ def create_app():
     from Server.controller import register_user
     from Server.controller import board
     from Server.controller import api
+    from Server.controller import manage
     # 블루프린트 등록
     from Server.app_blueprint import app
     application.register_blueprint(app)

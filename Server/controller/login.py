@@ -73,10 +73,6 @@ def logout():
     return redirect(url_for('.index'))
 
 
-@app.route('/manage')
-def manage():
-    return render_template('manage.html', session=session)
-
 @app.route('/backgroundimg1')
 def backgroundimg1():
     return redirect(url_for('static', filename='img/Main_img1.jpg'))

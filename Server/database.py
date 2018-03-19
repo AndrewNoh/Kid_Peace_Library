@@ -125,11 +125,11 @@ class DB():
             return None
         return True
         
-    def create_board(self, board):
+    def create_board(self, data):
         sql =\
-        "INSERT INTO BOARD VALUES( %s, %s, %s, 0, NOW(), NOW(), %s, %s, %s)"
+        "INSERT INTO BOARD VALUES( %s, %s, %s, 0, NOW(), NOW(), %s, %s, 0, %s)"
         try:
-            self.cur.execute(sql, (board.uuid, board.title, board.contents, board.category, board.id, board.user_delete))
+            self.cur.execute(sql, (data['uuid'], data['title'], data['contents'], data['category'], data['id'], data['notice']))
             self.conn.commit()
         except MySQLError as e:
             print('Got error {!r}, errno is {}'.format(e, e.args[0]))
@@ -159,7 +159,7 @@ class DB():
         return total_cnt['cnt']
     
     def get_Page_list(self, limit, offset, category):
-        sql = "SELECT * FROM BOARD where category=%s ORDER BY write_time DESC LIMIT %s OFFSET %s"
+        sql = "SELECT * FROM BOARD where category=%s ORDER BY notice DESC, write_time DESC LIMIT %s OFFSET %s"
         try:
             self.cur.execute(sql, (category, limit, offset))
             rows = self.cur.fetchall()

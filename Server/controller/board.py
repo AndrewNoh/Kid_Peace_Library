@@ -102,20 +102,21 @@ def write_form(category):
 @app.route('/Write/create/<category>', methods =['POST'])
 def create(category):
     if request.method=="POST":
-        if session:  
-            id = session['id']
-            title =  request.form['subject']
-            contents = request.form['editor1']
-                
-            item = board(\
-                        uuid = str(uuid.uuid4()),
-                        title = title,
-                        category = category,
-                        contents = contents,
-                        hits = 0,
-                        id = id)
+        if session:
+            data = dict()
+            if 'notice' in request.form.keys():
+                data['notice'] = True
+            else:
+                data['notice'] = False
+            data['id'] = session['id']
+            data['title'] =  request.form['subject']
+            data['contents'] = request.form['editor1']
+            data['category'] = category
+            data['hits'] = 0
+            data['uuid'] = str(uuid.uuid4())
+            
             mydb = DB()
-            if mydb.create_board(item):
+            if mydb.create_board(data):
                 del mydb
                 return render_template('write_next_page.html', board_name=category, status="ok")
             else:

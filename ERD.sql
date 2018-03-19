@@ -24,6 +24,7 @@ CREATE TABLE BOARD
 	category varchar(20) NOT NULL,
 	id varchar(30) NOT NULL,
 	user_delete boolean NOT NULL,
+	notice boolean NOT NULL,
 	PRIMARY KEY (uuid)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

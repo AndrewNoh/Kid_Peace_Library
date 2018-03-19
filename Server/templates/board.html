@@ -16,7 +16,7 @@
     <table class="table table-striped">
       <thead>
         <tr>
-        	<th width="10%">#</th>
+        	<th width="10%">No</th>
           <th class="text-center" width="50%">제목</th>
           <th class="text-center" width="10%">작성자</th>
           <th class="text-center" width="20%">날짜</th>
@@ -28,8 +28,14 @@
 		<tr>
 			{% set numbering = loop.index+(pagination.page*pagination.per_page)-10 %}
 			<td>{{ numbering }}</td>
-			<td><a  onclick="Board_show('{{row['uuid']}}', '{{row['hits']+1}}')" class="text-muted" style="cursor:pointer">{{ row['title'] }}</a></td>
-			{% if not row['user_delete']: %}
+			{% if row['notice']: %}
+			<td><a  onclick="Board_show('{{row['uuid']}}', '{{row['hits']+1}}')" style="cursor:pointer;"><span class="glyphicon glyphicon-bullhorn"></span> {{ row['title'] }}</a></td>
+			{% else: %}
+			<td><a  onclick="Board_show('{{row['uuid']}}', '{{row['hits']+1}}')" class="text-muted" style="cursor:pointer;">{{ row['title'] }}</a></td>
+			{% endif %}
+			{% if row['id'] == "Admin": %}
+			<td class="text-center">관리자</td>
+			{% elif not row['user_delete']: %}
 			<td class="text-center">{{ row['id'] }}</td>
 			{% else: %}
 			<td class="text-center">-</td>

@@ -53,7 +53,7 @@ IP Address, 쿠키, 방문 일시, 서비스 이용 기록, 불량 이용 기록
 
 개인정보취급방침 시행일자 : 2016년 08월 30일
 			</textarea><br>
-			<label class="col-xs-offset-10 col-xs-2 col-md-offset-11 col-md-1 col-sm-offset-11 col-sm-1"><input type="checkbox" id="agree_check" oninput="Personal_info_Agree()"> 동 의</label><br>
+			<label class="col-xs-offset-10 col-xs-2 col-md-offset-11 col-md-1 col-sm-offset-11 col-sm-1"><input type="checkbox" id="agree_check" name="agree_check" onclick="Personal_info_Agree()"> 동 의</label><br>
 			<input type="button" class="btn btn-primary" id="agree" disabled="disabled" onclick="window.location.href='{{url_for('.Signup_form')}}'" value="회원 가입" >
 		</div>
 	</section>
@@ -65,15 +65,22 @@ IP Address, 쿠키, 방문 일시, 서비스 이용 기록, 불량 이용 기록
 		{{super()}}
 	{% endblock %}
 	<script type="text/javascript">
-	$(function(){
-		Personal_info_Agree();
-	});
-		function Personal_info_Agree(){
-			if($("#agree_check").is(":checked")){
-				$('#agree').prop("disabled", false);
-			}else{
-				$('#agree').prop("disabled", true);	
-			}
+
+	function Personal_info_Agree(){
+		var checkBox = document.getElementById("agree_check");
+		if(checkBox.checked == true){
+			$('#agree').prop("disabled", false);
+		}else{
+			$('#agree').prop("disabled", true);	
 		}
+	}
+	$(function(){
+		var checkBox = document.getElementById("agree_check");
+		if(checkBox.checked == true){
+			$('#agree').prop("disabled", false);
+		}else{
+			$('#agree').prop("disabled", true);	
+		}
+	});
 	</script>
 {% endblock %}

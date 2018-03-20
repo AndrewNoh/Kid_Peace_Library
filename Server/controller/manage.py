@@ -41,4 +41,17 @@ def modify_sponsor(id, sponsor):
         return redirect(url_for('.manage_user'))
     else:
         return render_template('alert_msg.html', msg="잘못된 접근입니다.")
+    
+@app.route('/manage/modify/<id>/<permission>/')
+def modify_permission(id, permission):
+    if session['permission'] == "Admin" :
+        db = DB()
+        if permission == 'user' :
+            rows = db.mu_sponsor(id)
+        else :
+            rows = db.mm_sponsor(id)
+        del db
+        return redirect(url_for('.manage_user'))
+    else:
+        return render_template('alert_msg.html', msg="잘못된 접근입니다.")
 

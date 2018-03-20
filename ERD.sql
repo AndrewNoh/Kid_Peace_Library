@@ -1,5 +1,5 @@
 SET SESSION FOREIGN_KEY_CHECKS=0;
-{{url_for('.modify_sponsor', id=row['id']}}
+
 /* Drop Tables */
 
 DROP TABLE IF EXISTS COMMENTS;
@@ -110,8 +110,8 @@ ALTER TABLE COMMENTS
 	ON DELETE RESTRICT
 ;
 
-
 INSERT INTO MEMBERS VALUES('Admin', password('kosta6006'), 'Admin', '00000000000', '000@0000.com', '관리자', 0, 0);
+INSERT INTO BOARD VALUES('소개', '0', '0', 0, NOW(), NOW(), '소개 마당', 'Admin', 0);
 INSERT INTO CATEGORYS VALUES('소개 마당');
 INSERT INTO CATEGORYS VALUES('소식 마당');
 INSERT INTO CATEGORYS VALUES('책 마당');

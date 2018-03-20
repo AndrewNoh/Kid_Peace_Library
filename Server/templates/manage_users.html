@@ -68,13 +68,13 @@
 			
 			{% if row['permission']=='user' : %}
 				<td class="text-center">
-					<button>관장</button>
+					<button onclick="window.location.href='{{url_for('.modify_permission', id=row['id'], permission=row['permission'])}}'">관장</button>
 					<button disabled>회원</button>
 				</td>
 			{% else : %}
 				<td class="text-center">
 					<a class="button[disabled]">관장</a>
-					<a href="#" class="button">회원</a>
+					<button onclick="window.location.href='{{url_for('.modify_permission', id=row['id'], permission=row['permission'])}}'">회원</button>
 				</td>
 			{% endif %}
 			

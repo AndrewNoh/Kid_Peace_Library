@@ -15,6 +15,11 @@
         	<div class="panel-title" style="font-size:20px; text-align:center;">{{board_name}}</div>
    		 </div>
 		<form method="POST" action="{{url_for('.create', category=board_name)}}"> 
+		{% if session['permission'] == "Admin" %}
+			<div class="form-group">
+				<label for="notice"><input type="checkbox" id="notice" name="notice" oninput="noticecheck()"> 공 지</label>
+			</div>
+		{% endif %}
 		    <div class="form-group">
 		      <label for="subject" class="">Title:</label>
 		      <input type="text" class="form-control" name ="subject" id="subject" oninput="title_spaceCheck()" placeholder="Enter title">

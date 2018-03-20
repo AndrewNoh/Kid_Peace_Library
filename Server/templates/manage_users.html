@@ -33,7 +33,11 @@
 <section id="Board" style="margin-top:50px;">
 <div class="container">
     <div class="panel-heading">
+    {% if control == True : %}
         <div class="panel-title" style="font-size:20px; text-align:center;">회원관리</div>
+    {% else : %}
+    	<div class="panel-title" style="font-size:20px; text-align:center;">후원자관리</div>
+    {% endif %}
     </div>
     <table class="table table-striped">
       <thead>

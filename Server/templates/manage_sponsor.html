@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block head %}
+{% block title %}Index{% endblock %}
+	{{super()}}
+	<style>
+		button {
+		  border: 1px solid #d7e2da;
+		  background-color: #cccccc;
+		  color: #000000;
+		  padding: 5px 10px;
+		  border-radius: 5px;
+		  text-transform: uppercase;
+		}
+		
+		button:hover {
+		  border: 1px solid #d7e2da;
+		  background-color: #d7dbe8;
+		  color: #ffffff;
+		  padding: 5px 10px;
+		}
+		button:disabled,
+		button[disabled]{
+		  border: 1px solid #2be25c;
+		  background-color: #31f967;
+		  color: #0c2813;
+		}
+	</style>
+{% endblock %}
+{% block body %}
+	{% block Nav %}
+		{{super()}}
+	{% endblock %}
+<section id="Board" style="margin-top:50px;">
+<div class="container">
+    <div class="panel-heading">
+    	<div class="panel-title" style="font-size:20px; text-align:center;">후원자관리</div>
+    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+			<th class="text-center" width="10%">ID</th>
+          <th class="text-center" width="10%">이름</th>
+          <th class="text-center" width="20%">이메일</th>
+          <th class="text-center" width="20%">핸드폰번호</th>
+          <th class="text-center" width="25%">후원여부</th>
+          <th class="text-center" width="15%">권한</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows: %}
+		<tr>
+			<td class="text-center">{{ row['id'] }}</td>
+			<td class="text-center">{{ row['name'] }}</td>
+			<td class="text-center">{{ row['email'] }}</td>
+			<td class="text-center">{{ row['cell_phone'] }}</td>
+			<td class="text-center">후원인</td>
+			<td class="text-center">{{ row['permission'] }}</td>
+		{% endfor %}
+      </tbody>
+    </table>
+
+{% if pagination %}
+<div class="row" align="center">
+	<div class="col-md-12">
+		<p>
+		    {% from "_pagehelpers.html" import render_pagination %}
+		    {{ render_pagination(pagination) }}
+		</p>
+	</div>
+</div>
+{% else %}
+	<!-- do nothing! -->
+{% endif %}
+</div>
+</section>
+
+	{% block Footer %}
+		{{super()}}
+	{% endblock %}
+  {% block jquery %}
+    {{super()}}
+  {% endblock %}
+{% endblock %}

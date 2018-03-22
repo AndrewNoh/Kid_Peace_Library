@@ -8,10 +8,57 @@
 		{{super()}}
 	{% endblock %}
 <section id="Board" style="margin-top:50px;">
+
 <div class="container">
 	<br>
-    <div class="panel-heading">
-        <div class="panel-title" style="font-size:20px; text-align:center;">{{board_name}}</div>
+{% if search_list: %}
+	<h4>"{{keyword}}"로 검색한 결과</h4><br>
+	{% if search_list == "not search" %}
+		<h5>결과를 찾을수 없음</h5><br>
+	{% else %}
+	<table class="table table-striped">
+      <thead>
+        <tr>
+        	<th width="10%">No</th>
+        	<th class="text-center" width="10%">분류</th>
+          <th class="text-center" width="40%">제목</th>
+          <th class="text-center" width="10%">작성자</th>
+          <th class="text-center" width="20%">날짜</th>
+          <th class="text-center" width="10%">조회수</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in search_list %}
+		<tr>
+			{% set numbering = loop.index+(pagination.page*pagination.per_page)-10 %}
+			<td>{{ numbering }}</td>
+			<td>{{row['category']}}</td>
+			{% if row['notice']: %}
+				<td><a  onclick="Board_show('{{row['uuid']}}', '{{row['hits']+1}}')" style="cursor:pointer;"><span class="glyphicon glyphicon-bullhorn"></span> {{ row['title'] }}</a></td>
+			{% else: %}
+				<td><a  onclick="Board_show('{{row['uuid']}}', '{{row['hits']+1}}')" class="text-muted" style="cursor:pointer;">{{ row['title'] }}</a></td>
+			{% endif %}
+			{% if row['id'] == "Admin": %}
+				<td class="text-center">관리자</td>
+			{% elif not row['user_delete']: %}
+				<td class="text-center">{{ row['id'] }}</td>
+			{% else: %}
+				<td class="text-center">-</td>
+			{% endif %} 
+			<td class="text-center">{{ row['write_time'] }}</td> 
+			{% if row['hits']: %}
+				<td class="text-center">{{ row['hits'] }}</td>
+			{% else: %}
+				<td class="text-center">0</td>
+			{% endif %} 
+		</tr>
+		{% endfor %}
+      </tbody>
+    </table>	
+	{% endif %}
+{% else: %}
+	<div class="panel-heading">
+    	<div class="panel-title" style="font-size:20px; text-align:center;">{{board_name}}</div>
     </div>
     <table class="table table-striped">
       <thead>
@@ -50,28 +97,34 @@
 		{% endfor %}
       </tbody>
     </table>	
+{% endif %}
+    
   <form name="goLink" style="padding:0; margin:0;">
   	<input type="hidden" name="uuid" />
   	<input type="hidden" name="hits" />
   </form>
    
-	<div class="container">
-    <a href="{{url_for('.write_form', category=board_name)}}" class="btn btn-default pull-right">글쓰기</a>
-	</div>
+	{% if search_list: %}
+	
+	{% else: %}
+		<div class="container">
+	    <a href="{{url_for('.write_form', category=board_name)}}" class="btn btn-default pull-right">글쓰기</a>
+		</div>
+	{% endif %}
 
-{% if pagination: %}
-<div class="row" align="center">
-	<div class="col-md-12">
-		<p>
-		    {% from "_pagehelpers.html" import render_pagination %}
-		    {{ render_pagination(pagination) }}
-		</p>
+	{% if pagination: %}
+	<div class="row" align="center">
+		<div class="col-md-12">
+			<p>
+			    {% from "_pagehelpers.html" import render_pagination %}
+			    {{ render_pagination(pagination) }}
+			</p>
+		</div>
 	</div>
-</div>
-{% else %}
-	<!-- do nothing! -->
-{% endif %}
-</div>
+	{% else %}
+		<!-- do nothing! -->
+	{% endif %}
+</>
 </section>
 
 	{% block Footer %}
@@ -82,7 +135,6 @@
   {% endblock %}
   
 	<script type="text/javascript">
-	//Boad_show로 넘어가는 함수
 	var get_uuid = (function (){
 		var private_uuid;
 		return {

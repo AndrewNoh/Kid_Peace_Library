@@ -148,6 +148,16 @@ class DB():
             return None
         return True
     
+    def get_boardtotal_cnt(self):
+        sql = "SELECT count(*) cnt FROM BOARD"
+        try:
+            self.cur.execute(sql)
+            total_cnt = self.cur.fetchone()
+        except MySQLError as e:
+            print('Got error {!r}, errno is {}'.format(e, e.args[0]))
+            return None
+        return total_cnt['cnt']
+    
     def get_board_cnt(self, category):
         sql = "SELECT count(*) cnt FROM BOARD where category=%s"
         try:

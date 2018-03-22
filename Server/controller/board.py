@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import os
-import datetime
 import random
-from flask import render_template, url_for, redirect, session, request, jsonify, current_app, make_response
+from flask import render_template, url_for, session, request, jsonify, current_app, make_response, redirect
 from Server.app_blueprint import app
-from Server.model.user import user
-from Server.model.board import board
 from Server.database import DB
 from Server.databases.comments import Comments_DB
+from Server.databases.Search_db import search_db
 from Server.controller.pagination_class import Pagination
 from collections import OrderedDict
 import uuid, datetime
@@ -26,21 +24,54 @@ def board_list(category, page):
     mydb = DB()
     total_cnt = mydb.get_board_cnt(category)
     per_page =10
-        
+
     pagination = Pagination(page, per_page=per_page, total_count= total_cnt)
 
     if page != 1:
         offset = per_page * (page - 1)
     else:
         offset = 0
-        
+
     rows = mydb.get_Page_list(per_page, offset, category)
     
     if session:
         return render_template("board.html", session = session, board_name= category, rows = rows,pagination=pagination)
     else:
         return render_template("board.html", board_name=category, rows = rows,pagination=pagination)
-    
+
+@app.route('/Search/get_keyword', methods=['POST'])
+def search_get_keyword():
+    if request.method=="POST":
+        keyword = request.form['keyword']
+        if (len(keyword)<=1) or  keyword.find(' ')!=-1:
+            return render_template('alert_msg.html', msg="2글자이상, 공백없이 입력해주세요.")
+        return redirect(url_for('.Search_Boards', keyword = keyword))
+
+@app.route('/Search/<keyword>/', defaults={'page':1})
+@app.route('/Search/<keyword>/<int:page>')
+def Search_Boards(keyword, page):
+    if request.method=="GET":
+        db = DB()
+        total_cnt = db.get_boardtotal_cnt()
+        
+        per_page = 10
+        pagination = Pagination(page, per_page=per_page, total_count= total_cnt)
+        
+        if page != 1:
+            offset = per_page * (page - 1)
+        else:
+            offset = 0
+        
+        del db
+        mydb = search_db()
+        result = mydb.get_search_list(keyword, per_page, offset)
+        if not result:
+            result = "not search"
+        if session:
+            return render_template("board.html", session = session, keyword=keyword, search_list = result, pagination=pagination)
+        else:
+            return render_template("board.html", keyword=keyword, search_list = result, pagination=pagination)
+
 @app.route('/Board_View/<uuid>/', defaults={'page':1}, methods=['GET', 'POST'])
 @app.route('/Board_View/<uuid>/<int:page>', methods=['GET', 'POST'])
 def board_show(uuid, page):
@@ -80,10 +111,10 @@ def board_delete():
     data['status'] = 'error'
     if session:
         if session['id'] == rows['id']:
-            db.delete_board(uuid)
-            data['status'] = 'ok'
-        else:
-            data['status'] = 'fail'
+            if db.delete_board(uuid):
+                data['status'] = 'ok'
+            else:
+                data['status'] = 'fail'
     return jsonify(data)
 
 @app.route('/Write')

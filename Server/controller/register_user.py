@@ -9,8 +9,9 @@ from Server.controller.login import session_refresh
 
 @app.route('/user/개인정보취급동의')
 def Personal_information_Agree():
-    return render_template('Personal_information.html')
-
+    if not session:
+        return render_template('Personal_information.html')
+    return redirect('')
 @app.route('/user/check_id')
 def Check_id():
     id = request.args.get('id', 0)

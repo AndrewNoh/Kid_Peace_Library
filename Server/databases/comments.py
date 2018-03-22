@@ -42,8 +42,6 @@ class Comments_DB(DB):
         except MySQLError as e:
             print('Got error {!r}, errno is {}'.format(e, e.args[0]))
             return None
-        """for row in rows:
-            row['id'] = 'None'"""
         return rows
     
     def delete_comment(self,data):

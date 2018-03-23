@@ -10,6 +10,7 @@ encoding//Server/controller/register_user.py=utf-8
 encoding//Server/database.py=utf-8
 encoding//Server/databases/__init__.py=utf-8
 encoding//Server/databases/comments.py=utf-8
+encoding//Server/databases/manageuser.py=utf-8
 encoding//Server/model/__init__.py=utf-8
 encoding//Server/model/board.py=utf-8
 encoding//Server/model/user.py=utf-8

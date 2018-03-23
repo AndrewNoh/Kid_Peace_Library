@@ -74,8 +74,13 @@
 	          <li><a href="{{url_for('.board_list', category='영화 마당')}}">영화 마당</a></li>
 	        </ul>
 	      </li>
-			<li>
-				<a href="{{url_for('.introduce', uuid='소개')}}">소식 마당</a>
+			<li class="dropdown">
+				<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" href="#">소개 마당
+				<span class="caret"></span></a>
+		        <ul class="dropdown-content"  role="menu">
+		          <li><a href="{{url_for('.introduce', uuid='소개')}}">소개</a></li>
+		          <li><a href="#">지도</a></li>
+		        </ul>
 			</li>
 
 			<li class="dropdown">

@@ -24,49 +24,14 @@
 <section>
   <div class="container">
   {% if rows: %}
-	  	<div>
-	  		<br><div style="font-size:20px; text-align:center;">{{rows['category']}}</div>
-	    </div>
+  		<h3>소 개</h3>
 	    <br>
 	    <div class="container">
-		    <div class="panel panel-default">
-		    	<div class="panel-heading">
-		    		<div class="panel-title">
-						<div class="panel-heading">
-						{% if rows['user_delete']: %}
-			    			<label class="col-xs-4 col-md-4 col-sm-4">-</label>
-			    		{% else: %}
-			    			<label class="col-xs-4 col-md-4 col-sm-4">{{rows['name']}}</label>
-			    		{% endif %}
-			    			<label class="col-xs-4 col-md-4 col-sm-4 text-center">{{rows['write_time']}}</label>
-			    			<label class="col-xs-4 col-md-4 col-sm-4 text-right">조회수 : {{rows['hits']}}</label><br>
-						</div>
-		    		</div>
-		    	</div>
-		    	
-			    <div class="panel-body">
-			    	<table class="table">
-			    		<thread>
-			    			<tr>
-			    			{% if rows['notice']: %}
-			    				<th><h3 class="notice_h3" ><span class="glyphicon glyphicon-bullhorn"></span> Title : {{rows['title']}}</h3></th>
-			    			{% else: %}
-			    				<th><h3 class="text-muted" style="font-weight:bold;">Title : {{rows['title']}}</h3></th>
-			    			{% endif %}
-			    			</tr>
-			    		</thread>
-			    		<tbody>
-			    			<td>
-			    				<div>
-								{% autoescape false %}
-									{{rows['contents']}}
-								{% endautoescape %}
-								</div>
-			    			</td>
-			    		</tbody>
-			    	</table>
-			    </div>
-		    </div>
+			<div>
+				{% autoescape false %}
+					{{rows['contents']}}
+				{% endautoescape %}
+			</div>
  		 </div>
   {% endif %}
   </div>

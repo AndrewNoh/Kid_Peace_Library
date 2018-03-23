@@ -15,7 +15,7 @@ class Manage_DB(DB):
         super().__del__()
 
     def get_Page_list_user(self, limit, offset):
-        sql = "SELECT * FROM MEMBERS WHERE ID != 'Admin' ORDER BY ID DESC LIMIT %s OFFSET %s"
+        sql = "SELECT * FROM MEMBERS WHERE id != 'Admin' AND m_delete != 1 ORDER BY ID DESC LIMIT %s OFFSET %s"
         try:
             self.cur.execute(sql, (limit, offset))
             rows = self.cur.fetchall()
@@ -27,7 +27,7 @@ class Manage_DB(DB):
         return rows
     
     def get_Page_list_sponsor(self, limit, offset):
-        sql = "SELECT * FROM MEMBERS WHERE ID != 'Admin' AND SPONSOR_STATUS = '1' ORDER BY ID DESC LIMIT %s OFFSET %s"
+        sql = "SELECT * FROM MEMBERS WHERE id != 'Admin' AND sponsor_status = '1' AND m_delete != 1 ORDER BY ID DESC LIMIT %s OFFSET %s"
         try:
             self.cur.execute(sql, (limit, offset))
             rows = self.cur.fetchall()
@@ -59,7 +59,7 @@ class Manage_DB(DB):
             return True
     
     def mu_permission(self, id):
-            sql ="UPDATE MEMBERS SET permission='Manage' WHERE id=%s"
+            sql ="UPDATE MEMBERS SET permission='Manager' WHERE id=%s"
             try:
                 self.cur.execute(sql, (id))
                 self.conn.commit()
@@ -69,7 +69,7 @@ class Manage_DB(DB):
             return True
             
     def mm_permission(self, id):
-            sql ="UPDATE MEMBERS SET sponsor_status='user' WHERE id=%s"
+            sql ="UPDATE MEMBERS SET permission='user' WHERE id=%s"
             try:
                 self.cur.execute(sql, (id))
                 self.conn.commit()
@@ -90,5 +90,17 @@ class Manage_DB(DB):
             return None
         return None
 
+    def delete_user(self, id):
+        sql = "UPDATE MEMBERS SET password=password(''), cell_phone='', email='', name='', sponsor_status='', m_delete=1 WHERE id=%s"
+        try:
+            self.cur.execute(sql, (id))
+            self.conn.commit()
+        except MySQLError as e:
+            print('Got error {!r}, errno is {}'.format(e, e.args[0]))
+            return False
+        return True 
+        
+        
+        
 
     

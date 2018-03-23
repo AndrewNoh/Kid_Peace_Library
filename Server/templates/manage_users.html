@@ -11,7 +11,20 @@
 		  border-radius: 5px;
 		  text-transform: uppercase;
 		}
-		
+		.button {
+		  border: 1px solid #d7e2da;
+		  background-color: #cccccc;
+		  color: #000000;
+		  padding: 5px 10px;
+		  border-radius: 5px;
+		  text-transform: uppercase;
+		}
+		.button:hover {
+		  border: 1px solid #d7e2da;
+		  background-color: #d7dbe8;
+		  color: #ffffff;
+		  padding: 5px 10px;
+		}
 		button:hover {
 		  border: 1px solid #d7e2da;
 		  background-color: #d7dbe8;
@@ -32,12 +45,8 @@
 	{% endblock %}
 <section id="Board" style="margin-top:50px;">
 <div class="container">
-    <div class="panel-heading">
-    {% if control == True : %}
+    <div class="panel-heading">	
         <div class="panel-title" style="font-size:20px; text-align:center;">회원관리</div>
-    {% else : %}
-    	<div class="panel-title" style="font-size:20px; text-align:center;">후원자관리</div>
-    {% endif %}
     </div>
     <table class="table table-striped">
       <thead>
@@ -77,17 +86,45 @@
 				</td>
 			{% else : %}
 				<td class="text-center">
-					<a class="button[disabled]">관장</a>
+					<button disabled>관장</button>
 					<button onclick="window.location.href='{{url_for('.modify_permission', id=row['id'], permission=row['permission'])}}'">회원</button>
 				</td>
 			{% endif %}
-			
-			{% if row['m_delete']==False : %}
-				<td class="text-center"><button class="button">회원탈퇴</button></td>
-			{% else : %}
-				<td class="text-center"><button>탈퇴회원</button></td>
-			{% endif %}
-		</tr>
+			<td>
+				<input type="button" class="button" data-toggle="modal" data-target="#board_delete_Modal"value="회원 탈퇴">
+					<div class="modal fade" id="board_delete_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
+						<div class="modal-dialog modal-sm">
+							<div class="modal-content">
+								<div class="modal-body">
+									<div class="panel panel-danger">
+										<div class="panel-heading">
+											<div class="panel-title">
+												<label class="text-center">회원 탈퇴</label>
+												<!-- 닫기(x) 버튼 -->
+												<button type="button" class="close" data-dismiss="modal">X</button>
+											</div>
+										</div>
+										<div class="panel-body">
+											<h4 class="text-center">정말 탈퇴 시키겠습니까?</h4>
+											<br>
+											<div class="col-sm-2 col-sm-offset-2">
+												<div class="container">
+													<button onclick="window.location.href='{{url_for('.del_user', id=row['id'], m_delete=row['m_delete'])}}'">회원탈퇴</button>
+												</div>
+											</div>
+											<div class="col-sm-2 col-sm-offset-3">
+												<div class="container">
+													<button type="button" data-dismiss="modal">취 소</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</td>
+			</tr>
 		{% endfor %}
       </tbody>
     </table>
@@ -113,5 +150,4 @@
   {% block jquery %}
     {{super()}}
   {% endblock %}
-
 {% endblock %}

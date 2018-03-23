@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block head %}
+{% block title %}Show{% endblock %}
+	{{super()}}
+	<style>
+		textarea.autosize {
+			min-height: 50px;
+		}
+		
+		.comment-panel {
+			border: 0px;
+		}
+		.notice_h3{
+			font-weight: bold;
+			color: #f05f40;
+		}
+	</style>
+{% endblock %}
+{% block body %}
+
+	{% block Nav %}
+		{{super()}}
+	{% endblock %}
+<section>
+  <div class="container">
+  {% if rows: %}
+	  	<div>
+	  		<br><div style="font-size:20px; text-align:center;">{{rows['category']}}</div>
+	    </div>
+	    <br>
+	    <div class="container">
+		    <div class="panel panel-default">
+		    	<div class="panel-heading">
+		    		<div class="panel-title">
+						<div class="panel-heading">
+			    			<label class="col-xs-4 col-md-4 col-sm-4">{{rows['name']}}</label>
+			    			<label class="col-xs-4 col-md-4 col-sm-4 text-center">{{rows['write_time']}}</label>
+			    			<label class="col-xs-4 col-md-4 col-sm-4 text-right">조회수 : {{rows['hits']}}</label><br>
+						</div>
+		    		</div>
+		    	</div>
+		    	
+			    <div class="panel-body">
+			    	<table class="table">
+			    		<thread>
+			    			<tr>
+			    				<th><h3 class="text-muted" style="font-weight:bold;">Title : {{rows['title']}}</h3></th>
+			    			</tr>
+			    		</thread>
+			    		<tbody>
+			    			<td>
+			    				<div>
+								{% autoescape false %}
+									{{rows['contents']}}
+								{% endautoescape %}
+								</div>
+			    			</td>
+			    		</tbody>
+			    	</table>
+			    </div>
+		    </div>
+ 		 </div>
+  {% endif %}
+  </div>
+</section>
+
+
+	{% block Footer %}
+		{{super()}}
+	{% endblock %}
+
+	{% block jquery %}
+		{{super()}}
+	{% endblock %}
+{% endblock %}

@@ -5,6 +5,8 @@ from Server.controller.pagination_class import Pagination
 from Server.app_blueprint import app
 from Server.database import DB
 from Server.databases.manage import Manage_DB
+from werkzeug import secure_filename
+import os
 
 
 @app.route('/manage')
@@ -28,7 +30,7 @@ def manage_user(page):
         
     rows = mydb.get_Page_list_user(per_page, offset)
 
-    return render_template("manage_users.html", session = session, rows = rows, pagination=pagination, control = True)
+    return render_template("manage_users.html", session = session, rows = rows, pagination=pagination)
 
 @app.route('/manage/sponsor/', defaults={'page':1})
 @app.route('/manage/sponsor/<int:page>')
@@ -47,9 +49,9 @@ def manage_sponsor(page):
         
     rows = mydb.get_Page_list_sponsor(per_page, offset)
 
-    return render_template("manage_users.html", session = session, rows = rows, pagination=pagination, control = False)
+    return render_template("manage_sponsor.html", session = session, rows = rows, pagination=pagination)
 
-@app.route('/manage/modify/<id>/<sponsor>/')
+@app.route('/manage/modifyU/<id>/<sponsor>/')
 def modify_sponsor(id, sponsor):
     if session['permission'] == "Admin" :
         db = Manage_DB()
@@ -62,22 +64,41 @@ def modify_sponsor(id, sponsor):
     else:
         return render_template('alert_msg.html', msg="잘못된 접근입니다.")
     
-@app.route('/manage/modify/<id>/<permission>/')
+@app.route('/manage/modifyP/<id>/<permission>/')
 def modify_permission(id, permission):
     if session['permission'] == "Admin" :
         db = Manage_DB()
         if permission == 'user' :
-            rows = db.mu_sponsor(id)
+            rows = db.mu_permission(id)
         else :
-            rows = db.mm_sponsor(id)
+            rows = db.mm_permission(id)
         del db
         return redirect(url_for('.manage_user'))
     else:
         return render_template('alert_msg.html', msg="잘못된 접근입니다.")
+    
+@app.route('/manage/<id>/<m_delete>/')
+def del_user(id, m_delete):
+    if session['permission'] == "Admin" :
+        db = DB()
+        mydb = Manage_DB()
+        if m_delete == '0' :
+            mydb.delete_user(id)
+            db.user_delete_update_board(id)
+            del mydb
+            del db
+            return redirect(url_for('.manage_user'))
+        else :
+            return render_template('alert_msg.html', msg="탈퇴된 회원입니다.")
+    else:
+        return render_template('alert_msg.html', msg="잘못된 접근입니다.")
+
 
 @app.route('/manage/introduce/<uuid>/')
 def introduce(uuid):
-        db = Manage_DB()
-        rows = db.introduce(uuid)
-        del db
-        return render_template('introduce.html', rows=rows, session = session)
+    db = Manage_DB()
+    rows = db.introduce(uuid)
+    del db
+    return render_template('introduce.html', rows=rows, session = session)
+    
+    

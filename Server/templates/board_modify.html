@@ -9,30 +9,29 @@
 		{{super()}}기
 	{% endblock %}
 <section style="margin-top:50px;">
-  <div class = "container">
- 		 <div class="panel-heading">
-        	<div class="panel-title" style="font-size:20px; text-align:center;">글 수정</div>
-   		 </div>
-
-
-		    	<label>Category: {{data['category']}}</label><br>
-		      <label for="subject">Title:</label><br>
-		      <input type="text" class="form-control" name ="subject" id="subject" oninput="title_spaceCheck()" value="{{data['title']}}"><br>
-
-
-		      <label for="content">Comment:</label>
-		      <textarea id="editor1" name="editor1" >
-		      {% autoescape false %}
-		      	{{data['contents']}}
-		      {% endautoescape %}
-		      </textarea><br>
-
-		      <input type="file" class="btn btn-default pull-left" id="File"><br>
-
-
-		        <button id="board_modify" class="btn btn-primary pull-right">수 정</button>
-		    </div>
-  </div>
+  	<div class = "container">
+		{% if data['uuid']=='소개' or data['uuid']=='후원' : %}
+   		 
+		{% else : %}
+	   	<div class="panel-heading">
+			<div class="panel-title" style="font-size:20px; text-align:center;">글 수정</div>
+	   	</div>
+		<label>Category: {{data['category']}}</label><br>
+		<label for="subject">Title:</label><br>
+		<input type="text" class="form-control" name ="subject" id="subject" oninput="title_spaceCheck()" value="{{data['title']}}"><br>
+		{% endif %}
+	
+		<label for="content">Contents:</label>
+		<textarea id="editor1" name="editor1" >
+			{% autoescape false %}
+				{{data['contents']}}
+			{% endautoescape %}
+		</textarea>
+		<br>
+		<input type="file" class="btn btn-default pull-left" id="File">
+		<br>
+		<button id="board_modify" class="btn btn-primary pull-right">수 정</button>
+	</div>
 </section>
 	{% block Footer %} 
 		{{super()}}

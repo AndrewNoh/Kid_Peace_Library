@@ -74,8 +74,13 @@
 	          <li><a href="{{url_for('.board_list', category='영화 마당')}}">영화 마당</a></li>
 	        </ul>
 	      </li>
-			<li>
-				<a href="{{url_for('.introduce', uuid='소개')}}">소식 마당</a>
+			<li class="dropdown">
+				<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" href="#">소개 마당
+				<span class="caret"></span></a>
+		        <ul class="dropdown-content"  role="menu">
+		          <li><a href="{{url_for('.introduce', uuid='소개')}}">소개</a></li>
+		          <li><a href="#">지도</a></li>
+		        </ul>
 			</li>
 
 			<li class="dropdown">
@@ -96,7 +101,7 @@
 				<li role="presentation"><a role="menuitem" tabindex="-1" href="{{url_for('.board_list', category='자유 게시판')}}">자유 게시판</a></li>
 			</ul>
 		</li>
-		<li><a href="{{url_for('.introduce', uuid='후원')}}">후원 마당</a></li> 
+		<li><a href="{{url_for('.introduce', uuid='후원')}}">후원 마당</a></li>
 		
       	{% if session['id'] == 'Admin':%}
       	    <li><a href="{{url_for('app.manage')}}"><span class="glyphicon glyphicon-cog"></span> 관리</a></li>

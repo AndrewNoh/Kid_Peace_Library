@@ -113,6 +113,7 @@ ALTER TABLE COMMENTS
 
 INSERT INTO MEMBERS VALUES('Admin', password('kosta6006'), 'Admin', '00000000000', '000@0000.com', '관리자', 0, 0);
 INSERT INTO BOARD VALUES('소개', '0', '0', 0, NOW(), NOW(), '소개 마당', 'Admin', 0, 0);
+INSERT INTO BOARD VALUES('후원', '0', '0', 0, NOW(), NOW(), '후원 마당', 'Admin', 0, 0);
 INSERT INTO CATEGORYS VALUES('소개 마당');
 INSERT INTO CATEGORYS VALUES('소식 마당');
 INSERT INTO CATEGORYS VALUES('책 마당');

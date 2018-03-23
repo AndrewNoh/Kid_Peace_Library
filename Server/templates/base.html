@@ -96,7 +96,8 @@
 				<li role="presentation"><a role="menuitem" tabindex="-1" href="{{url_for('.board_list', category='자유 게시판')}}">자유 게시판</a></li>
 			</ul>
 		</li>
-		<li><a class="page-scroll" href="#pricing">후원 마당</a></li> 
+		<li><a href="{{url_for('.introduce', uuid='후원')}}">후원 마당</a></li> 
+		
       	{% if session['id'] == 'Admin':%}
       	    <li><a href="{{url_for('app.manage')}}"><span class="glyphicon glyphicon-cog"></span> 관리</a></li>
       	    <li><a href="{{url_for('app.modify_form')}}"><span class="glyphicon glyphicon-user"></span> {{session['name']}}님</a></li>

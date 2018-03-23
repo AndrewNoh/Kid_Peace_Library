@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, url_for, redirect, session, request
+from flask import render_template, url_for, redirect, session, request, send_from_directory
 from Server.controller.pagination_class import Pagination
 from Server.app_blueprint import app
 from Server.database import DB
@@ -101,4 +101,8 @@ def introduce(uuid):
     del db
     return render_template('introduce.html', rows=rows, session = session)
     
+@app.route('/uploads/<path:filename>')
+def download_file(filename):
+    return send_from_directory(app.static_folder,
+                               filename, as_attachment=True)
     

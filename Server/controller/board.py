@@ -43,7 +43,10 @@ def board_list(category, page):
 def search_get_keyword():
     if request.method=="POST":
         keyword = request.form['keyword']
-        if (len(keyword)<=1) or  keyword.find(' ')!=-1:
+        #왼쪽 오른쪽 공백 제거
+        keyword.lstrip()
+        keyword.rstrip()
+        if (len(keyword)<=1):
             return render_template('alert_msg.html', msg="2글자이상, 공백없이 입력해주세요.")
         return redirect(url_for('.Search_Boards', keyword = keyword))
 

@@ -2,7 +2,7 @@
 
 import os
 import random
-from flask import render_template, url_for, session, request, jsonify, current_app, make_response, redirect
+from flask import render_template, url_for, session, request, jsonify, current_app, make_response, redirect, json
 from Server.app_blueprint import app
 from Server.database import DB
 from Server.databases.comments import Comments_DB
@@ -10,12 +10,18 @@ from Server.databases.Search_db import search_db
 from Server.controller.pagination_class import Pagination
 from collections import OrderedDict
 import uuid, datetime
+from MySQLdb.constants.FLAG import NOT_NULL
 
+
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 def gen_rnd_filename():
     filename_prefix = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
     return '%s%s' % (filename_prefix, str(random.randrange(1000, 10000)))
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 @app.route('/Board/<category>/', defaults={'page':1})
 @app.route('/Board/<category>/<int:page>')
@@ -145,7 +151,7 @@ def create(category):
             data['category'] = category
             data['hits'] = 0
             data['uuid'] = str(uuid.uuid4())
-            
+            f_upload(data['uuid'])            
             mydb = DB()
             if mydb.create_board(data):
                 del mydb
@@ -227,20 +233,23 @@ def ckupload():
     callback = request.args.get("CKEditorFuncNum")
     if request.method == 'POST' and 'upload' in request.files:
         fileobj = request.files['upload']
-        fname, fext = os.path.splitext(fileobj.filename)
-        rnd_name = '%s%s' % (gen_rnd_filename(), fext)
-        filepath = os.path.join(current_app.static_folder, 'upload', rnd_name)
-        dirname = os.path.dirname(filepath)
-        if not os.path.exists(dirname):
-            try:
-                os.makedirs(dirname)
-            except:
-                error = 'ERROR_CREATE_DIR'
-        elif not os.access(dirname, os.W_OK):
-            error = 'ERROR_DIR_NOT_WRITEABLE'
-        if not error:
-            fileobj.save(filepath)
-            url = url_for('static', filename='%s/%s' % ('upload', rnd_name))
+        if fileobj and allowed_file(fileobj.filename):
+            fname, fext = os.path.splitext(fileobj.filename)
+            rnd_name = '%s%s' % (gen_rnd_filename(), fext)
+            filepath = os.path.join(current_app.static_folder, 'upload', rnd_name)
+            dirname = os.path.dirname(filepath)
+            if not os.path.exists(dirname):
+                try:
+                    os.makedirs(dirname)
+                except:
+                    error = 'ERROR_CREATE_DIR'
+            elif not os.access(dirname, os.W_OK):
+                error = 'ERROR_DIR_NOT_WRITEABLE'
+            if not error:
+                fileobj.save(filepath)
+                url = url_for('static', filename='%s/%s' % ('upload', rnd_name))
+        else:
+            error = '이미지가 아닙니다.'
     else:
         error = 'post error'
     res = """<script type="text/javascript"> 
@@ -249,3 +258,50 @@ def ckupload():
     response = make_response(res)
     response.headers["Content-Type"] = "text/html"
     return response
+
+@app.route('/uploader', methods=['GET', 'POST'])
+def f_upload(uid):
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            return
+        file = request.files['file']
+        blob = request.files['file'].read()
+        size = len(blob)
+        limit_size = 51200
+        if size >= limit_size :
+            return render_template("alert_msg.html", msg="파일크기가 너무 큽니다 #max size = 50MB")
+        extension = os.path.splitext(file.filename)[1]
+        f_name = str(uuid.uuid4()) + extension
+        filepath = os.path.join(current_app.static_folder, 'upload', f_name)
+        dirname = os.path.dirname(filepath)
+        if not os.path.exists(dirname):
+            try:
+                os.makedirs(dirname)
+            except:
+                error = 'ERROR_CREATE_DIR'
+        elif not os.access(dirname, os.W_OK):
+            error = 'ERROR_DIR_NOT_WRITEABLE'
+        else:
+            file.save(filepath)
+    else:
+        error = 'post error'
+    return redirect(url_for('.file_db', f_name=f_name, size=size, uuid=uid, format=f_name.split('.')[1], filepath=filepath))
+
+@app.route('/file_db')
+def file_db(uuid, f_name, size, format, filepath):
+        data = dict()
+        data['file_name'] = f_name
+        data['path'] =  filepath
+        data['size'] = size
+        data['format'] = format
+        data['uuid'] = uuid
+            
+        mydb = DB()
+        if mydb.file_upload(data):
+            del mydb
+            return
+        else:
+            del mydb
+            return render_template("alert_msg.html", msg="파일저장에 실패하였습니다.")
+        
+        

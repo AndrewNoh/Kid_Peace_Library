@@ -153,11 +153,11 @@ def create(category):
             data['contents'] = request.form['editor1']
             data['category'] = category
             data['hits'] = 0
-            data['uuid'] = str(uuid.uuid4())
-            f_upload(data['uuid'])            
+            data['uuid'] = str(uuid.uuid4())            
             mydb = DB()
             if mydb.create_board(data):
                 del mydb
+                f_upload(data['uuid'])
                 return render_template('write_next_page.html', board_name=category, status="ok")
             else:
                 del mydb
@@ -286,9 +286,10 @@ def f_upload(uid):
             error = 'ERROR_DIR_NOT_WRITEABLE'
         else:
             file.save(filepath)
+            file_db( uuid=uid, f_name=f_name, size=size, format=f_name.split('.')[1], filepath=filepath)
     else:
         error = 'post error'
-    return redirect(url_for('.file_db', f_name=f_name, size=size, uuid=uid, format=f_name.split('.')[1], filepath=filepath))
+    return
 
 @app.route('/file_db')
 def file_db(uuid, f_name, size, format, filepath):

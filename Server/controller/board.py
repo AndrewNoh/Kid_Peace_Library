@@ -286,6 +286,7 @@ def f_upload(uid):
             error = "파일크기가 너무 큽니다 #max size = 50MB"
         extension = os.path.splitext(file.filename)[1]
         f_name = str(uuid.uuid4()) + file.filename
+        o_name = secure_filename(file.filename)
         filepath = os.path.join(current_app.static_folder, 'upload', f_name)
         dirname = os.path.dirname(filepath)
         if not os.path.exists(dirname):
@@ -296,7 +297,7 @@ def f_upload(uid):
         elif not os.access(dirname, os.W_OK):
             error = 'ERROR_DIR_NOT_WRITEABLE'
         else:
-            if file_db( uuid=uid, f_name=f_name, size=size, format=f_name.split('.')[1], filepath=filepath):
+            if file_db( uuid=uid, f_name=f_name, o_name=o_name, size=size, format=f_name.split('.')[1], filepath=filepath):
                 file.save(filepath)
             else:
                 error = 'file upload DB save Error'
@@ -304,9 +305,10 @@ def f_upload(uid):
         error = 'post error'
     return error 
 
-def file_db(uuid, f_name, size, format, filepath):
+def file_db(uuid, f_name, o_name, size, format, filepath):
         data = dict()
         data['file_name'] = f_name
+        data['origin_name'] = o_name
         data['path'] =  filepath
         data['size'] = size
         data['format'] = format

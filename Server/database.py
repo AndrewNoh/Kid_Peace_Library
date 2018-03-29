@@ -234,9 +234,9 @@ class DB():
     
     def file_upload(self, data):
         sql =\
-        "INSERT INTO FILES VALUES( %s, %s, %s, %s, %s)"
+        "INSERT INTO FILES VALUES( %s, %s, %s, %s, %s, %s)"
         try:
-            self.cur.execute(sql, (data['file_name'], data['path'], data['size'], data['format'], data['uuid']))
+            self.cur.execute(sql, (data['file_name'], data['origin_name'], data['path'], data['size'], data['format'], data['uuid']))
             self.conn.commit()
         except MySQLError as e:
             print('Got error {!r}, errno is {}'.format(e, e.args[0]))

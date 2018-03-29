@@ -49,6 +49,7 @@ CREATE TABLE COMMENTS
 CREATE TABLE FILES
 (
 	file_name varchar(255) NOT NULL,
+	origin_name varchar(255) NOT NULL,
 	path varchar(255) NOT NULL,
 	size int unsigned NOT NULL,
 	format varchar(20) NOT NULL,

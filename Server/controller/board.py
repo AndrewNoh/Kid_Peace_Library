@@ -9,8 +9,10 @@ from Server.databases.comments import Comments_DB
 from Server.databases.Search_db import search_db
 from Server.controller.pagination_class import Pagination
 from collections import OrderedDict
+from werkzeug import secure_filename
 import uuid, datetime
 from MySQLdb.constants.FLAG import NOT_NULL
+from symbol import except_clause
 
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
@@ -156,8 +158,11 @@ def create(category):
             data['uuid'] = str(uuid.uuid4())            
             mydb = DB()
             if mydb.create_board(data):
+                error = f_upload(data['uuid'])
+                if error:
+                    mydb.delete_board(data['uuid'])
+                    return render_template('alert_msg.html', msg=error)
                 del mydb
-                f_upload(data['uuid'])
                 return render_template('write_next_page.html', board_name=category, status="ok")
             else:
                 del mydb
@@ -231,7 +236,7 @@ def delete_comment():
 @app.route('/ckupload/', methods=['POST', 'OPTIONS'])
 def ckupload():
     """CKEditor file upload"""
-    error = ''
+    error = None
     url = ''
     callback = request.args.get("CKEditorFuncNum")
     if request.method == 'POST' and 'upload' in request.files:
@@ -264,17 +269,23 @@ def ckupload():
 
 @app.route('/uploader', methods=['GET', 'POST'])
 def f_upload(uid):
+    error = None
     if request.method == 'POST':
         if 'file' not in request.files:
-            return
+            return error
         file = request.files['file']
-        blob = request.files['file'].read()
-        size = len(blob)
-        limit_size = 51200
+        try:
+            pos = file.tell()
+            file.seek(0, 2)  #seek to end
+            size = file.tell()
+            file.seek(pos) 
+        except:
+            pass
+        limit_size = 50*1024*1024
         if size >= limit_size :
-            return render_template("alert_msg.html", msg="파일크기가 너무 큽니다 #max size = 50MB")
+            error = "파일크기가 너무 큽니다 #max size = 50MB"
         extension = os.path.splitext(file.filename)[1]
-        f_name = str(uuid.uuid4()) + extension
+        f_name = str(uuid.uuid4()) + file.filename
         filepath = os.path.join(current_app.static_folder, 'upload', f_name)
         dirname = os.path.dirname(filepath)
         if not os.path.exists(dirname):
@@ -285,13 +296,14 @@ def f_upload(uid):
         elif not os.access(dirname, os.W_OK):
             error = 'ERROR_DIR_NOT_WRITEABLE'
         else:
-            file.save(filepath)
-            file_db( uuid=uid, f_name=f_name, size=size, format=f_name.split('.')[1], filepath=filepath)
+            if file_db( uuid=uid, f_name=f_name, size=size, format=f_name.split('.')[1], filepath=filepath):
+                file.save(filepath)
+            else:
+                error = 'file upload DB save Error'
     else:
         error = 'post error'
-    return
+    return error 
 
-@app.route('/file_db')
 def file_db(uuid, f_name, size, format, filepath):
         data = dict()
         data['file_name'] = f_name
@@ -303,9 +315,9 @@ def file_db(uuid, f_name, size, format, filepath):
         mydb = DB()
         if mydb.file_upload(data):
             del mydb
-            return
+            return True
         else:
             del mydb
-            return render_template("alert_msg.html", msg="파일저장에 실패하였습니다.")
+            return False
         
         

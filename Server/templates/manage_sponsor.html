@@ -58,7 +58,16 @@
 		{% endfor %}
       </tbody>
     </table>
-
+	<form  class="col-md-4 col-md-offset-4	 col-sm-4 col-sm-offset-4" action="{{url_for('.ssearch_get_keyword')}}" method="POST">
+      	<div class="input-group">
+        	<input type="text" class="form-control" placeholder="Search" id="keyword" name="keyword">
+   			<div class="input-group-btn">
+          		<button class="btn btn-default" id="search_btn" style="margin-top: 0px;padding-top: 10px;padding-left: 20px;padding-right: 20px;padding-bottom: 10px;" type="submit">
+            	<i class="glyphicon glyphicon-search"></i>
+          		</button>
+        	</div>
+      	</div>
+    </form>
 {% if pagination %}
 <div class="row" align="center">
 	<div class="col-md-12">

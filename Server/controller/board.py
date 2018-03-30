@@ -15,15 +15,29 @@ from MySQLdb.constants.FLAG import NOT_NULL
 from symbol import except_clause
 
 
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+IMAGE_ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+FILES_ALLOWED_EXTENSIONS = set(['php', 'jsp', 'asp', 'PHP', 'JSP', 'ASP'])
 
 def gen_rnd_filename():
     filename_prefix = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
     return '%s%s' % (filename_prefix, str(random.randrange(1000, 10000)))
 
-def allowed_file(filename):
+def allowed_imagefile(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+           filename.rsplit('.', 1)[1] in IMAGE_ALLOWED_EXTENSIONS
+
+def get_file_Extension(f_name):
+    filename , extension = f_name.rsplit('.', 1)
+    return filename , extension
+
+def allowed_file(filename):
+    if '.' in filename and\
+        get_file_Extension(filename)[1] in FILES_ALLOWED_EXTENSIONS :
+        return False
+    else :
+        return True
+        
+           
 
 @app.route('/Board/<category>/', defaults={'page':1})
 @app.route('/Board/<category>/<int:page>')
@@ -241,7 +255,7 @@ def ckupload():
     callback = request.args.get("CKEditorFuncNum")
     if request.method == 'POST' and 'upload' in request.files:
         fileobj = request.files['upload']
-        if fileobj and allowed_file(fileobj.filename):
+        if fileobj and allowed_imagefile(fileobj.filename):
             fname, fext = os.path.splitext(fileobj.filename)
             rnd_name = '%s%s' % (gen_rnd_filename(), fext)
             filepath = os.path.join(current_app.static_folder, 'upload', rnd_name)
@@ -252,7 +266,7 @@ def ckupload():
                 except:
                     error = 'ERROR_CREATE_DIR'
             elif not os.access(dirname, os.W_OK):
-                error = 'ERROR_DIR_NOT_WRITEABLE'
+                error = 'ERROR_DIR_NOT_WRITEABLE(permission denied)'
             if not error:
                 fileobj.save(filepath)
                 url = url_for('static', filename='%s/%s' % ('upload', rnd_name))
@@ -273,37 +287,41 @@ def f_upload(uid):
     if request.method == 'POST':
         if 'file' not in request.files:
             return error
-        file = request.files['file']
-        try:
-            pos = file.tell()
-            file.seek(0, 2)  #seek to end
-            size = file.tell()
-            file.seek(pos) 
-        except:
-            pass
-        limit_size = 50*1024*1024
-        if size >= limit_size :
-            error = "파일크기가 너무 큽니다 #max size = 50MB"
-        extension = os.path.splitext(file.filename)[1]
-        f_name = str(uuid.uuid4()) + file.filename
-        o_name = secure_filename(file.filename)
-        filepath = os.path.join(current_app.static_folder, 'upload', f_name)
-        dirname = os.path.dirname(filepath)
-        if not os.path.exists(dirname):
+        fileobj = request.files['file']
+        
+        if fileobj and allowed_file(fileobj.filename):
             try:
-                os.makedirs(dirname)
+                pos = fileobj.tell()
+                fileobj.seek(0, 2)  #seek to end
+                size = fileobj.tell()
+                fileobj.seek(pos) 
             except:
-                error = 'ERROR_CREATE_DIR'
-        elif not os.access(dirname, os.W_OK):
-            error = 'ERROR_DIR_NOT_WRITEABLE'
+                pass
+        
+            limit_size = 50*1024*1024
+            if size >= limit_size :
+                error = "파일크기가 너무 큽니다 #max size = 50MB"
+            f_name = secure_filename(str(uuid.uuid4()) + fileobj.filename)
+            o_name = secure_filename(fileobj.filename)
+            filepath = os.path.join(current_app.static_folder, 'repository', f_name)
+            dirname = os.path.dirname(filepath)
+            if not os.path.exists(dirname):
+                try:
+                    os.makedirs(dirname)
+                except:
+                    error = 'ERROR_CREATE_DIR'
+            elif not os.access(dirname, os.W_OK):
+                error = 'ERROR_DIR_NOT_WRITEABLE(permission denied)'
+            if not error:
+                if file_db( uuid=uid, f_name=f_name, o_name=o_name, size=size, format=get_file_Extension(f_name)[1], filepath=filepath):
+                    fileobj.save(filepath)
+                else:
+                    error = 'file upload DB save Error'
         else:
-            if file_db( uuid=uid, f_name=f_name, o_name=o_name, size=size, format=f_name.split('.')[1], filepath=filepath):
-                file.save(filepath)
-            else:
-                error = 'file upload DB save Error'
+            error = "File formatter ERROR ('jsp, asp, php')"
     else:
         error = 'post error'
-    return error 
+    return error
 
 def file_db(uuid, f_name, o_name, size, format, filepath):
         data = dict()

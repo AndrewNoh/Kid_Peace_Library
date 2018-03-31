@@ -273,34 +273,35 @@ def f_upload(uid):
     if request.method == 'POST':
         if 'file' not in request.files:
             return error
-        file = request.files['file']
-        try:
-            pos = file.tell()
-            file.seek(0, 2)  #seek to end
-            size = file.tell()
-            file.seek(pos) 
-        except:
-            pass
-        limit_size = 50*1024*1024
-        if size >= limit_size :
-            error = "파일크기가 너무 큽니다 #max size = 50MB"
-        extension = os.path.splitext(file.filename)[1]
-        f_name = str(uuid.uuid4()) + file.filename
-        o_name = secure_filename(file.filename)
-        filepath = os.path.join(current_app.static_folder, 'upload', f_name)
-        dirname = os.path.dirname(filepath)
-        if not os.path.exists(dirname):
+        files = request.files.getlist('file')
+        for file in files :
             try:
-                os.makedirs(dirname)
+                pos = file.tell()
+                file.seek(0, 2)  #seek to end
+                size = file.tell()
+                file.seek(pos) 
             except:
-                error = 'ERROR_CREATE_DIR'
-        elif not os.access(dirname, os.W_OK):
-            error = 'ERROR_DIR_NOT_WRITEABLE'
-        else:
-            if file_db( uuid=uid, f_name=f_name, o_name=o_name, size=size, format=f_name.split('.')[1], filepath=filepath):
-                file.save(filepath)
+                pass
+            limit_size = 50*1024*1024
+            if size >= limit_size :
+                error = "파일크기가 너무 큽니다 #max size = 50MB"
+            extension = os.path.splitext(file.filename)[1]
+            f_name = str(uuid.uuid4()) + file.filename
+            o_name = secure_filename(file.filename)
+            filepath = os.path.join(current_app.static_folder, 'upload', f_name)
+            dirname = os.path.dirname(filepath)
+            if not os.path.exists(dirname):
+                try:
+                    os.makedirs(dirname)
+                except:
+                    error = 'ERROR_CREATE_DIR'
+            elif not os.access(dirname, os.W_OK):
+                error = 'ERROR_DIR_NOT_WRITEABLE'
             else:
-                error = 'file upload DB save Error'
+                if file_db( uuid=uid, f_name=f_name, o_name=o_name, size=size, format=f_name.split('.')[1], filepath=filepath):
+                    file.save(filepath)
+                else:
+                    error = 'file upload DB save Error'
     else:
         error = 'post error'
     return error 

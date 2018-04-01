@@ -155,8 +155,11 @@ def write_form(category):
                 return render_template("alert_msg.html", msg="권한이 없습니다.")
     return render_template("alert_msg.html", msg="로그인을 해주세요.")
 
-@app.route('/Write/create/<category>', methods =['POST'])
+@app.route('/Write/create/<category>', methods =['GET', 'POST'])
 def create(category):
+    return_data = dict()
+    return_data['status'] = "error"
+    return_data['msg'] = ''
     if request.method=="POST":
         if session:
             data = dict()
@@ -172,16 +175,24 @@ def create(category):
             data['uuid'] = str(uuid.uuid4())            
             mydb = DB()
             if mydb.create_board(data):
-                error = f_upload(data['uuid'])
-                if error:
-                    mydb.delete_board(data['uuid'])
-                    return render_template('alert_msg.html', msg=error)
-                del mydb
-                return render_template('write_next_page.html', board_name=category, status="ok")
+                files = request.files.getlist('file')
+                if files:
+                    error = f_upload(data['uuid'], files)
+                    if error:
+                        mydb.delete_board(data['uuid'])
+                        return_data['msg'] = error
+                    else : 
+                        return_data['status'] = "ok"
+                    del mydb
+                else:
+                    del mydb
+                    return_data['status'] = "ok"
             else:
                 del mydb
-                return render_template('write_next_page.html', board_name=category, status="fail")
-    return render_template('write_next_page.html', board_name=category, status="error")
+                return_data['status'] = "error"
+        else:
+            return_data['status'] = "permission error"
+    return jsonify(return_data)
 
 @app.route('/Board/Modify_form/<uuid>')
 def board_modify_form(uuid):
@@ -281,45 +292,39 @@ def ckupload():
     response.headers["Content-Type"] = "text/html"
     return response
 
-@app.route('/uploader', methods=['GET', 'POST'])
-def f_upload(uid):
+def f_upload(uid, files_obj):
     error = None
-    if request.method == 'POST':
-        if 'file' not in request.files:
-            return error
-        fileobj_o = request.files.getlist('file')
-        for fileobj in fileobj_o :
-            if fileobj and allowed_file(fileobj.filename):
+    fileobj_o = files_obj
+    for fileobj in fileobj_o :
+        if fileobj and allowed_file(fileobj.filename):
+            try:
+                pos = fileobj.tell()
+                fileobj.seek(0, 2)  #seek to end
+                size = fileobj.tell()
+                fileobj.seek(pos) 
+            except:
+                pass
+            limit_size = 50*1024*1024
+            if size >= limit_size :
+                error = "파일크기가 너무 큽니다 #max size = 50MB"
+            f_name = secure_filename(str(uuid.uuid4()) + fileobj.filename)
+            o_name = secure_filename(fileobj.filename)
+            filepath = os.path.join(current_app.static_folder, 'repository', f_name)
+            dirname = os.path.dirname(filepath)
+            if not os.path.exists(dirname):
                 try:
-                    pos = fileobj.tell()
-                    fileobj.seek(0, 2)  #seek to end
-                    size = fileobj.tell()
-                    fileobj.seek(pos) 
+                    os.makedirs(dirname)
                 except:
-                    pass
-                limit_size = 50*1024*1024
-                if size >= limit_size :
-                    error = "파일크기가 너무 큽니다 #max size = 50MB"
-                f_name = secure_filename(str(uuid.uuid4()) + fileobj.filename)
-                o_name = secure_filename(fileobj.filename)
-                filepath = os.path.join(current_app.static_folder, 'repository', f_name)
-                dirname = os.path.dirname(filepath)
-                if not os.path.exists(dirname):
-                    try:
-                        os.makedirs(dirname)
-                    except:
-                        error = 'ERROR_CREATE_DIR'
-                elif not os.access(dirname, os.W_OK):
-                    error = 'ERROR_DIR_NOT_WRITEABLE(permission denied)'
-                if not error:
-                    if file_db( uuid=uid, f_name=f_name, o_name=o_name, size=size, format=get_file_Extension(f_name)[1], filepath=filepath):
-                        fileobj.save(filepath)
-                    else:
-                        error = 'file upload DB save Error'
-            else:
-                error = "File formatter ERROR ('jsp, asp, php')"
-    else:
-        error = 'post error'
+                    error = 'ERROR_CREATE_DIR'
+            elif not os.access(dirname, os.W_OK):
+                error = 'ERROR_DIR_NOT_WRITEABLE(permission denied)'
+            if not error:
+                if file_db( uuid=uid, f_name=f_name, o_name=o_name, size=size, format=get_file_Extension(f_name)[1], filepath=filepath):
+                    fileobj.save(filepath)
+                else:
+                    error = 'file upload DB save Error'
+        else:
+            error = "File formatter ERROR ('jsp, asp, php')"
     return error
 
 def file_db(uuid, f_name, o_name, size, format, filepath):

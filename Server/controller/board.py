@@ -343,5 +343,3 @@ def file_db(uuid, f_name, o_name, size, format, filepath):
         else:
             del mydb
             return False
-        
-        

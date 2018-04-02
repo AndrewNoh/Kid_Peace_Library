@@ -29,20 +29,21 @@
 		      <textarea id="editor1" name="editor1"  onchange="title_spaceCheck()" placeholder="Describe yourself here..."></textarea>
 		    </div>
 		    <div class="form-group">	
-		      <input type="file" class="btn btn-default pull-left col-md-3" name="file" id="file" onchange="setFilename();" multiple ="multiple">
-		      <a href="#" class="col-md-1" onclick="fileReset();">
-					<span class="glyphicon glyphicon-remove"></span>
+		      <input type="file" class="btn btn-default col-md-2" name="file" id="file" onchange="setFilename();" multiple ="multiple">
+		      <a href="#" class="btn btn-default btn-lg col-md-2" onclick="fileReset();">
+					<span class="glyphicon glyphicon-remove"></span>파일목록 초기화
 				</a>
-				<button type="submit" id="board_write" class="btn btn-primary pull-right" disabled="disabled">Submit</button> 	
+				<button type="submit" id="board_write" class="btn btn-primary col-md-offset-6 col-md-2" disabled="disabled">Submit</button>
+				<br>
 		    </div>
 		    <div class="form-group">
-		    	<div id="files_preview" class="col-md-12">
-		    	<div class="progress">
-					<div id="progressBar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">0%
+		    	<ul id="file_list" class="col-md-12"></ul>
+		    </div>
+		    <div class="form-group">
+		    	<div id="files_preview" class="col-md-6">
+			    	<div id="uplaod_progress" class="">
+						<div id="progressBar"></div>
 					</div>
-				</div>
-				    <ul id="file_list">
-				    </ul>
 		    	</div>
 		    </div>
 		</form>
@@ -59,17 +60,18 @@
 	<script type="text/javascript" >
 	 
 	 var $file_list = $('#file_list');
-	 
+
     CKEDITOR.replace( 'editor1', {
         filebrowserImageUploadUrl: '/ckupload/'
     });
     
     $(document).ready(function(){
-    	$('form').on('submit', function(event){
+    	$('#board_write').click(function(event){
 	    		event.preventDefault();
 	    		
 	    		var formData = new FormData($('form')[1]);
 	    		
+	    		formData.append('content', CKEDITOR.instances.editor1.getData());
 	    		$.ajax({
 	    			xhr : function() {
 	    				var xhr = new window.XMLHttpRequest();
@@ -121,10 +123,13 @@
     function fileReset(){
     	 var controlInput = $("#file");
     	 $file_list.html('');
+    	 $('#uplaod_progress').attr('class','');
          controlInput.replaceWith(controlInput = controlInput.val('').clone(true)); 	
     }
     
     function setFilename(){
+    	$('#uplaod_progress').attr('class','progress');
+    	$('#progressBar').attr('aria-valuemax', 100).attr('class','progress-bar').attr('role','progressbar').attr('aria-valuenow',0).attr('aria-valuemin',0).css('width', '0%');
     	var files = $('#file').get(0).files;
     	var all_size = 0;
     	
@@ -135,7 +140,7 @@
     		$file_list.html($file_list.html()+"<li>"+files[i].name+"  "+size+"Mb</li>");
     		all_size +=size;
     	}
-    	$file_list.html($file_list.html()+"</ul>총 크기 : "+all_size+"Mb");
+    	$file_list.html($file_list.html()+"</ul>총 크기 : "+all_size.toFixed(2)+"Mb");
     }
     
     

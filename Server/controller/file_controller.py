@@ -118,5 +118,15 @@ def f_upload(uid, files_obj):
             error = "File formatter ERROR ('jsp, asp, php')"
     return error
 
+def files_delete(rows):
+    for row in rows:
+        file_delete(row['path'])
 
-    
+def file_delete(path):
+    error = None
+    try:
+        os.remove(path)
+    except:
+        error = "remove error"
+    return error
+

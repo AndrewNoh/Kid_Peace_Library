@@ -17,20 +17,39 @@
 			<div class="panel-title" style="font-size:20px; text-align:center;">글 수정</div>
 	   	</div>
 		<label>Category: {{data['category']}}</label><br>
-		<label for="subject">Title:</label><br>
-		<input type="text" class="form-control" name ="subject" id="subject" oninput="title_spaceCheck()" value="{{data['title']}}"><br>
+		<form method="POST" enctype="multipart/form-data" action="{{url_for('.board_modify')}}">
+		<div class="form-group">
+			<label for="subject">Title:</label>
+			<input type="text" class="form-control" name ="subject" id="subject" oninput="title_spaceCheck()" value="{{data['title']}}">
+			<input type="hidden" name="uuid" value="{{data['uuid']}}">
+		</div>
 		{% endif %}
-	
-		<label for="content">Contents:</label>
-		<textarea id="editor1" name="editor1" >
-			{% autoescape false %}
-				{{data['contents']}}
-			{% endautoescape %}
-		</textarea>
-		<br>
-		<input type="file" class="btn btn-default pull-left" id="File">
-		<br>
-		<button id="board_modify" class="btn btn-primary pull-right">수 정</button>
+		<div class="form-group">
+			<label for="content">Contents:</label>
+			<textarea id="editor1" name="editor1" >
+				{% autoescape false %}
+					{{data['contents']}}
+				{% endautoescape %}
+			</textarea>
+		</div>
+		<div class="form-group">	
+		      <input type="file" class="btn btn-default col-md-2" name="file" id="file" onchange="setFilename();" multiple ="multiple">
+		      <a href="#" class="btn btn-default btn-lg col-md-2" onclick="fileReset();">
+					<span class="glyphicon glyphicon-remove"></span>파일목록 초기화
+				</a>
+				<button type="submit" id="board_modify" class="btn btn-primary pull-right">수 정</button>
+		</div>
+		<div class="form-group">
+		    	<ul id="file_list" class="col-md-12"></ul>
+		</div>
+		<div class="form-group">
+		    	<div id="files_preview" class="col-md-6">
+			    	<div id="uplaod_progress" class="">
+						<div id="progressBar"></div>
+					</div>
+		    	</div>
+		</div>
+		</form>
 	</div>
 </section>
 	{% block Footer %} 
@@ -48,6 +67,10 @@
 	$(function() {
 		
 		$('#board_modify').click(function(){
+			event.preventDefault();
+    		
+    		var formData = new FormData($('form')[1]);
+    		
 			var subject = $('#subject').val();
 			var editor1 = CKEDITOR.instances.editor1.getData();
 			var uuid = "{{data['uuid']}}";
@@ -61,13 +84,30 @@
 				$('#editor1').focus();
 				return;
 			}
-				
+			formData.append('content', editor1);
 			$.ajax({
+				xhr : function() {
+    				var xhr = new window.XMLHttpRequest();
+    				
+    				xhr.upload.addEventListener('progress', function(e){
+    					
+    					if(e.lengthComputable){
+    						console.log('Bytes Loaded: ' + e.loaded);
+    						console.log('Total Size:'+e.total);
+    						console.log('Percentage uploaded: '+(e.loaded / e.total));
+    						
+    						var percent = Math.round((e.loaded / e.total)*100);
+    						
+    						$('#progressBar').attr('aria-valuenow', percent).css('width', percent+'%').text(percent+'%');
+    					}
+    				});
+    				return xhr;
+    			},
 				url : "{{url_for('.board_modify')}}",
 				type : 'POST',
-				dataType : "json",
-				data : {uuid:uuid ,subject:$('#subject').val(), editor1:editor1},
-				async: false,
+				data : formData,
+    			processData : false,
+    			contentType : false,
 				success : function(return_data) {
 					status = $.trim(return_data.status);
 					if (status == 'fail') {
@@ -87,6 +127,29 @@
 			});
 		});
 	});
+	
+	function fileReset(){
+   	 var controlInput = $("#file");
+   	 $file_list.html('');
+   	 $('#uplaod_progress').attr('class','');
+        controlInput.replaceWith(controlInput = controlInput.val('').clone(true)); 	
+   }
+   
+   function setFilename(){
+   	$('#uplaod_progress').attr('class','progress');
+   	$('#progressBar').attr('aria-valuemax', 100).attr('class','progress-bar').attr('role','progressbar').attr('aria-valuenow',0).attr('aria-valuemin',0).css('width', '0%');
+   	var files = $('#file').get(0).files;
+   	var all_size = 0;
+   	
+   	$file_list.html("<a>Files:</a> <ul>");
+   	for(i=0; i<files.length;i++){
+   		var size = (Math.round(((files[i].size/1024) / 1024) * 100) / 100);
+   		
+   		$file_list.html($file_list.html()+"<li>"+files[i].name+"  "+size+"Mb</li>");
+   		all_size +=size;
+   	}
+   	$file_list.html($file_list.html()+"</ul>총 크기 : "+all_size.toFixed(2)+"Mb");
+   }
 	
 	function null_check(str) {
 		if (str.length == 0 || !str.trim()) {

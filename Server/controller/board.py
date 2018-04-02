@@ -141,7 +141,7 @@ def create(category):
                 data['notice'] = False
             data['id'] = session['id']
             data['title'] =  request.form['subject']
-            data['contents'] = request.form['editor1']
+            data['contents'] = request.form['content']
             data['category'] = category
             data['hits'] = 0
             data['uuid'] = str(uuid.uuid4())            
@@ -182,7 +182,7 @@ def board_modify():
     if request.method=="POST":
         data['uuid'] = request.form['uuid']
         data['title'] = request.form['subject']
-        data['contents'] = request.form['editor1']
+        data['contents'] = request.form['content']
         send_data['status'] = 'error'
         db = DB()
         rows = db.get_board(data['uuid'])

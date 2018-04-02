@@ -2,9 +2,10 @@
 
 import os
 import random
-from flask import url_for, request, current_app, make_response
+from flask import url_for, request, current_app, make_response, send_from_directory, render_template
 from Server.app_blueprint import app
 from Server.database import DB
+from Server.databases.files_db import files_db
 from werkzeug import secure_filename
 import uuid, datetime
 
@@ -30,6 +31,19 @@ def allowed_file(filename):
         return False
     else :
         return True
+    
+
+def files_delete(rows):
+    for row in rows:
+        file_delete(row['path'])
+
+def file_delete(path):
+    error = None
+    try:
+        os.remove(path)
+    except:
+        error = "remove error"
+    return error
 
 def file_db(uuid, f_name, o_name, size, format, filepath):
         data = dict()
@@ -40,7 +54,7 @@ def file_db(uuid, f_name, o_name, size, format, filepath):
         data['format'] = format
         data['uuid'] = uuid
             
-        mydb = DB()
+        mydb = files_db()
         if mydb.file_upload(data):
             del mydb
             return True
@@ -104,7 +118,7 @@ def f_upload(uid, files_obj):
             dirname = os.path.dirname(filepath)
             if not os.path.exists(dirname):
                 try:
-                    os.makedirs(dirname)
+                    os.makedirs(dirname)    
                 except:
                     error = 'ERROR_CREATE_DIR'
             elif not os.access(dirname, os.W_OK):
@@ -118,15 +132,12 @@ def f_upload(uid, files_obj):
             error = "File formatter ERROR ('jsp, asp, php')"
     return error
 
-def files_delete(rows):
-    for row in rows:
-        file_delete(row['path'])
 
-def file_delete(path):
+@app.route('/download/<filename>')
+def download_file(filename):
     error = None
-    try:
-        os.remove(path)
-    except:
-        error = "remove error"
-    return error
+    filepath = os.path.join(current_app.static_folder, 'repository', filename)
+    if not os.path.exists(filepath):
+        return render_template('alert_msg.html', msg="파일을 찾을 수 없습니다.")
+    return send_from_directory(filepath, as_attachment=True), error
 

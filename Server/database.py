@@ -232,19 +232,7 @@ class DB():
             return None
         return total_cnt['cnt']
     
-    def file_upload(self, data):
-        sql =\
-        "INSERT INTO FILES VALUES( %s, %s, %s, %s, %s, %s)"
-        try:
-            self.cur.execute(sql, (data['file_name'], data['origin_name'], data['path'], data['size'], data['format'], data['uuid']))
-            self.conn.commit()
-        except MySQLError as e:
-            print('Got error {!r}, errno is {}'.format(e, e.args[0]))
-            return None
-        
-        return True    
 
-    
 if __name__ == '__main__':
     mydb = DB()
     rows = mydb.get_Page_list(10, 0, '자유 게시판')

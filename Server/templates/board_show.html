@@ -33,36 +33,49 @@
 		    	<div class="panel-heading">
 		    		<div class="panel-title">
 						<div class="panel-heading">
-						{% if rows['user_delete']: %}
-			    			<label class="col-xs-4 col-md-4 col-sm-4">-</label>
-			    		{% else: %}
-			    			<label class="col-xs-4 col-md-4 col-sm-4">{{rows['id']}}</label>
-			    		{% endif %}
-			    			<label class="col-xs-4 col-md-4 col-sm-4 text-center">{{rows['write_time']}}</label>
-			    			<label class="col-xs-4 col-md-4 col-sm-4 text-right">조회수 : {{rows['hits']}}</label><br>
+				    			{% if rows['notice']: %}
+				    				<h2 style="margin:0px;" class="notice_h2" ><span class="glyphicon glyphicon-bullhorn"></span>{{rows['title']}}</h2>
+				    			{% else: %}
+				    				<h2 style="margin:0px;" class="text-muted" style="font-weight:bold;">{{rows['title']}}</h2>
+				    			{% endif %}
 						</div>
 		    		</div>
 		    	</div>
 		    	
 			    <div class="panel-body">
 			    	<table class="table">
-			    		<thread>
+			    		<thead>
 			    			<tr>
-			    			{% if rows['notice']: %}
-			    				<th><h3 class="notice_h3" ><span class="glyphicon glyphicon-bullhorn"></span> Title : {{rows['title']}}</h3></th>
-			    			{% else: %}
-			    				<th><h3 class="text-muted" style="font-weight:bold;">Title : {{rows['title']}}</h3></th>
-			    			{% endif %}
+			    				<th>
+					    		{% if rows['user_delete']: %}
+					    			<label class="col-xs-4 col-md-4 col-sm-4">-</label>
+					    		{% else: %}
+					    			<label class="col-xs-4 col-md-4 col-sm-4">{{rows['id']}}</label>
+					    		{% endif %}
+					    			<label class="col-xs-4 col-md-4 col-sm-4 text-center">{{rows['write_time']}}</label>
+					    			<label class="col-xs-4 col-md-4 col-sm-4 text-right">조회수 : {{rows['hits']}}</label><br>
+			    				</th>
 			    			</tr>
-			    		</thread>
+			    		</thead>
 			    		<tbody>
-			    			<td>
-			    				<div>
-								{% autoescape false %}
-									{{rows['contents']}}
-								{% endautoescape %}
-								</div>
-			    			</td>
+			    			<tr>
+			    				<td>
+			    					<div>
+										{% autoescape false %}
+											{{rows['contents']}}
+										{% endautoescape %}
+									</div>
+			    				</td>
+			    			</tr>
+			    			<tr>
+			    				<td>
+			    					<p>파일 다운로드 : 
+						    			{% for down in downs : %}
+						    				<a href="{{url_for('.download_file', filename=down['file_name'])}}">{{down['origin_name']}}</a>
+						    			{% endfor %}
+			    					</p>
+			    				</td>
+			    			</tr>
 			    		</tbody>
 			    	</table>
 					

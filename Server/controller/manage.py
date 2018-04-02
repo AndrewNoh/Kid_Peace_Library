@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, url_for, redirect, session, request, send_from_directory
+from flask import render_template, url_for, redirect, session, request
 from Server.controller.pagination_class import Pagination
 from Server.app_blueprint import app
 from Server.database import DB
 from Server.databases.Search_db import search_db
 from Server.databases.manage import Manage_DB
-import os
 
 
 @app.route('/manage')
@@ -171,9 +170,4 @@ def Search_sponsors(keyword, page):
             return render_template("manage_sponsor.html", session = session, keyword=keyword, search_list = result, pagination=pagination)
         else:
             return render_template("manage_sponposr.html", keyword=keyword, search_list = result, pagination=pagination)
-    
-@app.route('/uploads/<path:filename>')
-def download_file(filename):
-    return send_from_directory(app.static_folder,
-                               filename, as_attachment=True)
     

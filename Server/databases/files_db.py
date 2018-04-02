@@ -2,7 +2,7 @@ from Server.database import DB
 from pymysql.err import MySQLError
 
 
-class file_db(DB):
+class files_db(DB):
     def __init__(self):
         super().__init__()
     def __del__(self):
@@ -17,5 +17,14 @@ class file_db(DB):
         except MySQLError as e:
             print('Got error {!r}, errno is {}'.format(e, e.args[0]))
             return None
-        
         return True
+    
+    def files_download(self, uuid):
+        sql = "SELECT * FROM FILES where uuid=%s"
+        try:
+            self.cur.execute(sql, (uuid))
+            rows = self.cur.fetchall()
+        except MySQLError as e:
+            print('Got error {!r}, errno is {}'.format(e, e.args[0]))
+            return None
+        return rows

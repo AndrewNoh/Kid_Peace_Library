@@ -5,6 +5,7 @@ from Server.app_blueprint import app
 from Server.database import DB
 from Server.databases.comments import Comments_DB
 from Server.databases.Search_db import search_db
+from Server.databases.files_db import files_db
 from Server.controller.pagination_class import Pagination
 from collections import OrderedDict
 from Server.controller.file_controller import f_upload
@@ -75,6 +76,9 @@ def board_show(uuid, page):
     db = DB()
     rows = db.get_board(uuid)
     del db
+    mydb = files_db()
+    downs = mydb.files_download(uuid)
+    del mydb
     db = Comments_DB()
     total_cnt = db.get_comment_cnt(uuid)
         
@@ -96,8 +100,8 @@ def board_show(uuid, page):
         
         if session:
             if session['id'] == rows['id']:
-                return render_template("board_show.html",session = session, rows=rows, pagination=pagination, comments=comments, user_check=True)
-    return render_template("board_show.html", rows=rows, pagination=pagination, comments=comments)
+                return render_template("board_show.html",session = session, downs=downs, rows=rows, pagination=pagination, comments=comments, user_check=True)
+    return render_template("board_show.html", rows=rows, pagination=pagination, downs=downs, comments=comments)
         
 @app.route('/Board/delete', methods=['POST'])
 def board_delete():

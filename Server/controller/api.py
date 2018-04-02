@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, url_for, redirect, session, request, jsonify
+from flask import request, jsonify
 from Server.app_blueprint import app
-from Server.model.user import user
 from Server.database import DB
 from collections import OrderedDict
 

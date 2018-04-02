@@ -4,6 +4,7 @@ encoding//Server/app_blueprint.py=utf-8
 encoding//Server/controller/__init__.py=utf-8
 encoding//Server/controller/api.py=utf-8
 encoding//Server/controller/board.py=utf-8
+encoding//Server/controller/file_controller.py=utf-8
 encoding//Server/controller/login.py=utf-8
 encoding//Server/controller/manage.py=utf-8
 encoding//Server/controller/register_user.py=utf-8

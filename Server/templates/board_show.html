@@ -70,8 +70,9 @@
 			    			<tr>
 			    				<td>
 			    					<p>파일 다운로드 : 
+			    					<br>
 						    			{% for down in downs : %}
-						    				<a href="{{url_for('.download_file', filename=down['file_name'])}}">{{down['origin_name']}}</a>
+						    				<a href="{{url_for('.download_file', filename=down['file_name'])}}">{{down['origin_name']}}</a><br>
 						    			{% endfor %}
 			    					</p>
 			    				</td>

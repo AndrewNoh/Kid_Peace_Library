@@ -13,6 +13,8 @@
 	   	<div class="panel-heading">
 			<div class="panel-title" style="font-size:20px; text-align:center;">글 수정</div>
 	   	</div>
+	   	
+	   	{% if not(data['category']=="후원 마당" or data['category']=="소개 마당") %}
 		<label>Category: {{data['category']}}</label><br>
 		<form method="POST" enctype="multipart/form-data" action="{{url_for('.board_modify')}}">
 		<div class="form-group">
@@ -20,33 +22,59 @@
 			<input type="text" class="form-control" name ="subject" id="subject" oninput="title_spaceCheck()" value="{{data['title']}}">
 			<input type="hidden" name="uuid" value="{{data['uuid']}}">
 		</div>
+		{% else %}
+		<form method="POST" enctype="multipart/form-data" action="{{url_for('.board_modify')}}">
+		<div class="form-group">
+			<input type="hidden" class="form-control" name ="subject" id="subject" oninput="title_spaceCheck()" value="admin_baord">
+			<input type="hidden" name="uuid" value="{{data['uuid']}}">
+		</div>
 		{% endif %}
 		<div class="form-group">
 			<label for="content">Contents:</label>
-			<textarea id="editor1" name="editor1" >
+			<textarea id="editor1">
 				{% autoescape false %}
 					{{data['contents']}}
 				{% endautoescape %}
 			</textarea>
 		</div>
 		<div class="form-group">	
-		      <input type="file" class="btn btn-default col-md-2" name="file" id="file" onchange="setFilename();" multiple ="multiple">
+		      <input type="file" class="btn btn-default col-md-2" name="file" id="file" onchange="setFilename();" multiple>
 		      <a href="#" class="btn btn-default btn-lg col-md-2" onclick="fileReset();">
 					<span class="glyphicon glyphicon-remove"></span>파일목록 초기화
 				</a>
-				<button type="submit" id="board_modify" class="btn btn-primary pull-right">수 정</button>
 		</div>
 		<div class="form-group">
 		    	<ul id="file_list" class="col-md-12"></ul>
 		</div>
 		<div class="form-group">
 		    	<div id="files_preview" class="col-md-6">
-			    	<div id="uplaod_progress" class="">
+			    	<div id="uplaod_progress">
 						<div id="progressBar"></div>
 					</div>
 		    	</div>
+		    	<input type="submit" id="board_modify" class="btn btn-primary pull-right" value="수 정">
 		</div>
 		</form>
+		{% if files: %}
+		<div class="rows">
+			<div class="panel col-md-12">
+				<div class="panel-body col-md-12">
+					<ul>
+					<a> 첨부파일 목록 : </a>
+					{% for file in files %}
+					<li id="file_list{{loop.index}}">{{file['origin_name']}}
+						<button class="btn btn-default fileremove_btn">
+							Remove<a><span class="glyphicon glyphicon-remove"></span></a>
+						</button>
+						<div id="filename{{loop.index}}" style="display:none;">{{file['file_name']}}</div>
+						<div id="filepath{{loop.index}}" style="display:none;">{{file['path']}}</div>
+					</li>
+					{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</div>
+		{% endif %}
 	</div>
 </section>
 	{% block Footer %} 
@@ -55,22 +83,22 @@
 	{% block jquery %}
 		{{super()}} 
 	{% endblock %}
-<script>
+<script type="text/javascript" >
 
 	CKEDITOR.replace('editor1', {
 		filebrowserImageUploadUrl : '/ckupload/'
 	});
+	
 
 	$(function() {
-		
-		$('#board_modify').click(function(){
+		$("#board_modify").click(function(e){
 			event.preventDefault();
     		
     		var formData = new FormData($('form')[1]);
     		
 			var subject = $('#subject').val();
 			var editor1 = CKEDITOR.instances.editor1.getData();
-			var uuid = "{{data['uuid']}}";
+
 			if (null_check(subject)) {
 				alert("'제목'이 비어있습니다.");
 				$('#subject').focus();
@@ -106,14 +134,15 @@
     			processData : false,
     			contentType : false,
 				success : function(return_data) {
-					status = $.trim(return_data.status);
+					var status = $.trim(return_data.status);
+					var msg = $.trim(return_data.msg);
 					if (status == 'fail') {
-						alert('Error! 글 수정 실패!');
+						alert('Error! 글 수정 실패!'+msg);
 					} else if (status == 'ok') {
 						alert('글 수정 완료');
 						window.location.replace("{{url_for('.board_list', category=data['category'])}}")
 					} else if (status == 'error') {
-						alert('Error!');
+						alert('Error!'+msg);
 					}else if(status == 'permission error'){
 						alert('잘못된 접근입니다.!');
 					}
@@ -123,13 +152,38 @@
 				}
 			});
 		});
+		
+		$('.fileremove_btn').click(function (e2){
+			var index = $('.fileremove_btn').index(this)+1;
+			var file_list_id = "#file_list"+index
+			var filename = $("#filename"+index).text();
+			var path = $("#filepath"+index).text();
+			$.ajax({
+				url : "{{url_for('.board_file_delete')}}",
+				type : 'POST',
+				dataType : "json",
+				data : {filename: filename, path:path},
+				success : function(return_data) {
+					var status = $.trim(return_data.status);
+					var msg = $.trim(return_data.msg);
+					if (status == 'ok') {
+						$(file_list_id).hide();
+					} else if(status == 'error'){
+						alert('Error! :'+msg)
+					}
+				}
+			});
+		});
 	});
+	
+	function file_delete_ajax(index, filename, path){
+	}
 	
 	function fileReset(){
    	 var controlInput = $("#file");
-   	 $file_list.html('');
+   	 $('#file_list').html('');
    	 $('#uplaod_progress').attr('class','');
-        controlInput.replaceWith(controlInput = controlInput.val('').clone(true)); 	
+     controlInput.replaceWith(controlInput = controlInput.val('').clone(true)); 	
    }
    
    function setFilename(){
@@ -138,14 +192,14 @@
    	var files = $('#file').get(0).files;
    	var all_size = 0;
    	
-   	$file_list.html("<a>Files:</a> <ul>");
+   	$('#file_list').html("<a>Files:</a> <ul>");
    	for(i=0; i<files.length;i++){
    		var size = (Math.round(((files[i].size/1024) / 1024) * 100) / 100);
    		
-   		$file_list.html($file_list.html()+"<li>"+files[i].name+"  "+size+"Mb</li>");
+   		$('#file_list').html($('#file_list').html()+"<li>"+files[i].name+"  "+size+"Mb</li>");
    		all_size +=size;
    	}
-   	$file_list.html($file_list.html()+"</ul>총 크기 : "+all_size.toFixed(2)+"Mb");
+   	$('#file_list').html($('#file_list').html()+"</ul>총 크기 : "+all_size.toFixed(2)+"Mb");
    }
 	
 	function null_check(str) {

@@ -2,9 +2,8 @@
 
 import os
 import random
-from flask import url_for, request, current_app, make_response, send_from_directory, render_template
+from flask import url_for, request, current_app, make_response, send_from_directory, render_template, session, jsonify
 from Server.app_blueprint import app
-from Server.database import DB
 from Server.databases.files_db import files_db
 from werkzeug import secure_filename
 import uuid, datetime
@@ -135,9 +134,24 @@ def f_upload(uid, files_obj):
 
 @app.route('/download/<filename>')
 def download_file(filename):
-    error = None
+    repopath = os.path.join(current_app.static_folder, 'repository')
     filepath = os.path.join(current_app.static_folder, 'repository', filename)
     if not os.path.exists(filepath):
         return render_template('alert_msg.html', msg="파일을 찾을 수 없습니다.")
-    return send_from_directory(filepath, as_attachment=True), error
+    return send_from_directory(repopath, filename,as_attachment=True)
+
+@app.route('/File/Delete', methods=['GET','POST'])
+def board_file_delete():
+    push_data = dict()
+    push_data['status'] = 'error'
+    if request.method == 'POST' :
+        filename = request.form['filename']
+        path = request.form['path']
+        db = files_db()
+        if db.del_file(filename):
+            file_delete(path)
+            push_data['status'] = 'ok'
+        else:
+            push_data['msg'] = "db Error"
+    return jsonify(push_data)
 

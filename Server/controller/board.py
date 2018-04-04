@@ -8,7 +8,7 @@ from Server.databases.Search_db import search_db
 from Server.databases.files_db import files_db
 from Server.controller.pagination_class import Pagination
 from collections import OrderedDict
-from Server.controller.file_controller import f_upload
+from Server.controller.file_controller import f_upload, files_delete
 import uuid
 
 
@@ -77,7 +77,7 @@ def board_show(uuid, page):
     rows = db.get_board(uuid)
     del db
     mydb = files_db()
-    downs = mydb.files_download(uuid)
+    downs = mydb.get_files(uuid)
     del mydb
     db = Comments_DB()
     total_cnt = db.get_comment_cnt(uuid)
@@ -105,14 +105,16 @@ def board_show(uuid, page):
         
 @app.route('/Board/delete', methods=['POST'])
 def board_delete():
-    uuid = request.form['uuid']
-    db = DB()
-    rows = db.get_board(uuid)
     data = OrderedDict()
     data['status'] = 'error'
-    if session:
+    if session :
+        uuid = request.form['uuid']
+        db = files_db()
+        rows = db.get_board(uuid)
+        files = db.get_files(uuid)
         if session['id'] == rows['id']:
             if db.delete_board(uuid):
+                files_delete(files)
                 data['status'] = 'ok'
             else:
                 data['status'] = 'fail'
@@ -176,7 +178,12 @@ def board_modify_form(uuid):
     rows = db.get_board(uuid)
     if session:
         if session['id'] == rows['id']:
-            return render_template('board_modify.html', session = session, data = rows)
+            
+            db = DB()
+            rows = db.get_board(uuid)
+            db = files_db()
+            files = db.get_files(uuid)
+            return render_template('board_modify.html', session = session, data = rows, files = files)
     return render_template("alert_msg.html", msg="잘못된 접근 입니다.")
 
 @app.route('/Board/Modify/', methods=['POST'])
@@ -193,7 +200,13 @@ def board_modify():
         if session:
             if session['id'] == rows['id']:
                 if db.modify_board(data):
-                        send_data['status'] = 'ok'
+                    send_data['status'] = 'ok'
+                    files = request.files.getlist('file')
+                    if files:
+                        error = f_upload(data['uuid'], files)
+                        if error:
+                                db.delete_board(data['uuid'])
+                                send_data['msg'] = error
                 else :
                     send_data['status'] = 'fail'
         else :

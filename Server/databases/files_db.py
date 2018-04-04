@@ -19,8 +19,8 @@ class files_db(DB):
             return None
         return True
     
-    def files_download(self, uuid):
-        sql = "SELECT * FROM FILES where uuid=%s"
+    def get_files(self, uuid):
+        sql = "SELECT * FROM FILES where uuid=%s ORDER BY origin_name DESC"
         try:
             self.cur.execute(sql, (uuid))
             rows = self.cur.fetchall()
@@ -28,3 +28,16 @@ class files_db(DB):
             print('Got error {!r}, errno is {}'.format(e, e.args[0]))
             return None
         return rows
+    
+    def del_file(self, filename):
+        sql = "DELETE FROM FILES WHERE file_name = %s"
+        try:
+            self.cur.execute(sql, (filename))
+            self.conn.commit()
+        except MySQLError as e:
+            print('Got error {!r}, errno is {}'.format(e, e.args[0]))
+            return False
+        return True
+            
+        
+        

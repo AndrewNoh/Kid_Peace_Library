@@ -83,6 +83,7 @@ def ckupload():
             elif not os.access(dirname, os.W_OK):
                 error = 'ERROR_DIR_NOT_WRITEABLE(permission denied)'
             if not error:
+                error = ""
                 fileobj.save(filepath)
                 url = url_for('static', filename='%s/%s' % ('upload', rnd_name))
         else:
@@ -112,7 +113,7 @@ def f_upload(uid, files_obj):
             if size >= limit_size :
                 error = "파일크기가 너무 큽니다 #max size = 50MB"
             f_name = secure_filename(str(uuid.uuid4()) + fileobj.filename)
-            o_name = secure_filename(fileobj.filename)
+            o_name = fileobj.filename
             filepath = os.path.join(current_app.static_folder, 'repository', f_name)
             dirname = os.path.dirname(filepath)
             if not os.path.exists(dirname):

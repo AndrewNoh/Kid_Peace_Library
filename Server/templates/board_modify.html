@@ -16,14 +16,14 @@
 	   	
 	   	{% if not(data['category']=="후원 마당" or data['category']=="소개 마당") %}
 		<label>Category: {{data['category']}}</label><br>
-		<form method="POST" enctype="multipart/form-data" action="{{url_for('.board_modify')}}">
+		<form enctype="multipart/form-data">
 		<div class="form-group">
 			<label for="subject">Title:</label>
 			<input type="text" class="form-control" name ="subject" id="subject" oninput="title_spaceCheck()" value="{{data['title']}}">
 			<input type="hidden" name="uuid" value="{{data['uuid']}}">
 		</div>
 		{% else %}
-		<form method="POST" enctype="multipart/form-data" action="{{url_for('.board_modify')}}">
+		<form enctype="multipart/form-data">
 		<div class="form-group">
 			<input type="hidden" class="form-control" name ="subject" id="subject" oninput="title_spaceCheck()" value="admin_baord">
 			<input type="hidden" name="uuid" value="{{data['uuid']}}">
@@ -52,7 +52,7 @@
 						<div id="progressBar"></div>
 					</div>
 		    	</div>
-		    	<input type="submit" id="board_modify" class="btn btn-primary pull-right" value="수 정">
+		    	<input type="button" id="board_modify" class="btn btn-primary pull-right" value="수 정">
 		</div>
 		</form>
 		{% if files: %}
@@ -91,8 +91,7 @@
 	
 
 	$(function() {
-		$("#board_modify").click(function(e){
-			event.preventDefault();
+		$("#board_modify").click(function(){
     		
     		var formData = new FormData($('form')[1]);
     		
@@ -153,7 +152,7 @@
 			});
 		});
 		
-		$('.fileremove_btn').click(function (e2){
+		$('.fileremove_btn').click(function (){
 			var index = $('.fileremove_btn').index(this)+1;
 			var file_list_id = "#file_list"+index
 			var filename = $("#filename"+index).text();

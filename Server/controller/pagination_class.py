@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """ 출처 : http://flask.pocoo.org/snippets/44/ """
 from math import ceil
 

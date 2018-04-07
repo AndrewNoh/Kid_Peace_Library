@@ -6,6 +6,7 @@ from Server.app_blueprint import app
 from Server.database import DB
 from Server.databases.Search_db import search_db
 from Server.databases.manage import Manage_DB
+from Server.databases.files_db import files_db
 
 
 @app.route('/manage')
@@ -97,7 +98,10 @@ def introduce(uuid):
     db = Manage_DB()
     rows = db.introduce(uuid)
     del db
-    return render_template('introduce.html', rows=rows, session = session)
+    mydb = files_db()
+    downs = mydb.get_files(uuid)
+    del mydb
+    return render_template('introduce.html', rows=rows, downs=downs, session = session)
     
 @app.route('/Search/get_keyword_user', methods=['POST'])
 def usearch_get_keyword():

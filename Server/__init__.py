@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask, render_template, request, url_for
-from flask_jsglue import JSGlue
+#from flask_jsglue import JSGlue
 """
     Server 패키지 초기화 모듈
 """
@@ -13,10 +13,10 @@ def url_for_other_page(page):
     return url_for(request.endpoint, **args)
 
 def create_app():
-    jsglue = JSGlue()
+    #jsglue = JSGlue()
     application = Flask(__name__);
     
-    jsglue.init_app(application)
+    #jsglue.init_app(application)
     # 비밀키 등록
     application.secret_key = 'any random string'
 

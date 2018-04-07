@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from Server.database import DB
 from pymysql.err import MySQLError
 

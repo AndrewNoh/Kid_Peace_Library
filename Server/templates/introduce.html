@@ -26,46 +26,47 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">
 		    	<div class="panel-title">
+		    		<div class="panel-heading">
   					{% if rows: %}
   						<h3 style="margin:2px;">{{rows['category']}}</h3>
+  					</div>
 	    		</div>
 	    	</div>
 	    	<div class="panel-body">
-	    		<div class="container">
-	    			<table class="table">
-	    				<thead>
-	    					<tr>
-	    						<td>
-									<div>
-										{% autoescape false %}	
-											{{rows['contents']}}
-										{% endautoescape %}
-									</div>
-								</td>
-							</tr>
-						</thead>
-						<div>
-							{% if rows['uuid'] == '후원' : %}
-								{% if downs %}
-									<tbody>
-										<tr>
-						    				<td>
-						    					<p>파일 다운로드 : 
-											    	{% for down in downs : %}
-											    		<a href="{{url_for('.download_file', filename=down['file_name'])}}">{{down['origin_name']}}</a><br>
-											    	{% endfor %}
-						    					</p>
-						    				</td>
-						    			</tr>
-			    					</tbody>
-			    				{% endif %}
-							{% else : %}
-							{% endif %}
-						</div>
-					</table>
-				</div>
-		 	</div>
- 		 </div>
+	    		<table class="table">
+	    			<thead>
+	    				<tr>
+	    					<td>
+								<div>
+									{% autoescape false %}	
+										{{rows['contents']}}
+									{% endautoescape %}
+								</div>
+							</td>
+						</tr>
+					</thead>
+					<div>
+						{% if rows['uuid'] == '후원' : %}
+							{% if downs %}
+								<tbody>
+									<tr>
+						    			<td>
+						    				<p>파일 다운로드 : 
+											    {% for down in downs : %}
+											    	<a href="{{url_for('.download_file', filename=down['file_name'])}}">{{down['origin_name']}}</a><br>
+											    {% endfor %}
+						    				</p>
+						    			</td>
+						    		</tr>
+			    				</tbody>
+			    			{% endif %}
+						{% else : %}
+						{% endif %}
+					</div>
+				</table>
+			</div>
+		 </div>
+ 		</div>
 					{% endif %}
  	</div>
 </section>

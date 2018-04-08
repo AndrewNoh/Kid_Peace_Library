@@ -174,4 +174,7 @@ def Search_sponsors(keyword, page):
             return render_template("manage_sponsor.html", session = session, keyword=keyword, search_list = result, pagination=pagination)
         else:
             return render_template("manage_sponposr.html", keyword=keyword, search_list = result, pagination=pagination)
-    
+        
+@app.route('/gmd')
+def developer():
+    return render_template("gmd.html")

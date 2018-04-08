@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block head %}
+{% block title %}Show{% endblock %}
+	{{super()}}
+	<style>
+		.name {
+			font-size:26px;
+			font-family:Lucida Sans Unicode,Lucida Grande,sans-serif;
+		}
+		.hnl {
+			font-size:20px;
+			font-family:Times New Roman,Times,serif;
+		}
+	</style>
+{% endblock %}
+{% block body %}
+	{% block Nav %}
+		{{super()}}
+	{% endblock %}
+	
+	<section>
+		<div class="container">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="panel-title">
+			    		<div class="panel-heading">
+	  						<h2>License</h2>
+	  					</div>
+		    		</div>
+		    	</div>
+		    	<div class="panel-body">
+						    	<h3>Credits</h3><br>
+						    	<strong><span class="name">Python3</span></strong><br>
+						    	<span class="hnl"><a href="https://www.python.org/">homepage</a> 
+						    	<a href="https://docs.python.org/3/license.html">license</a></span><br><br>
+						    	
+						    	<strong><span class="name">Flask</span></strong><br>
+						    	<span class="hnl"><a href="http://flask.pocoo.org/">homepage</a> 
+						    	<a href="http://flask.pocoo.org/docs/0.12/license/">license</a></span><br><br>
+						    	
+						    	<strong><span class="name">Bootstrap</span></strong><br>
+						    	<span class="hnl"><a href="https://getbootstrap.com/">homepage</a> 
+						    	<a href="https://getbootstrap.com/docs/4.0/about/license/">license</a></span><br><br>
+						    	
+						    	<strong><span class="name">MariaDB</span></strong><br>
+						    	<span class="hnl"><a href="https://mariadb.com/">homepage</a> 
+						    	<a href="https://mariadb.com/kb/en/library/mariadb-license/">license</a></span><br><br>
+						    	
+						    	<strong><span class="name">Nginx</span></strong><br>
+						    	<span class="hnl"><a href="https://http://nginx.org/">homepage</a> 
+						    	<a href="http://nginx.org/LICENSE">license</a></span><br><br>
+						    	
+						    	<h3>Open source license</h3></br>
+						    	<strong><span class="name">GNU General Public License</span></strong><br>
+						    	<span class="hnl"><a href="https://opensource.org/licenses/gpl-3.0.html">license</a></span><br><br>
+						    	
+						    	<strong><span class="name">Eclipse Public License</span></strong><br>
+						    	<span class="hnl"><a href="http://www.eclipse.org/">homepage</a> 
+						    	<a href="http://www.eclipse.org/legal/epl-2.0/">license</a></span><br><br>
+						    	
+						    	<strong><span class="name">The MIT License</span></strong><br>
+						    	<span class="hnl"><a href="https://opensource.org/licenses/MIT">license</a></span><br><br>
+						    	
+						    	<strong><span class="name">Berkeley Software Distribution(BSD) License</span></strong><br>
+						    	<span class="hnl"><a href="https://opensource.org/licenses/BSD-2-Clause">license</a></span><br><br>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	{% block Footer %}
+		{{super()}}
+	{% endblock %}
+
+	{% block jquery %}
+		{{super()}}
+	{% endblock %}
+{% endblock %}

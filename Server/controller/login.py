@@ -27,8 +27,6 @@ def session_refresh(id):
 
 @app.route('/')
 def index():
-    if session:
-        return render_template("index.html", session=session)
     return render_template("index.html")
 
 @app.route('/Login_from')

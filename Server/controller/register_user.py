@@ -140,10 +140,11 @@ def modify():
 
 @app.route('/user/Withdrawal', methods=['POST'])
 def withdrawal():
+    data = OrderedDict()
+    data['status'] = 'error'
     if request.method == 'POST':
         if session:
-            password = request.form['password']
-            data = OrderedDict()
+            password = request.form['PASSWORD']
             
             db = DB()
             user_buf = db.login(session['id'], password)
@@ -166,5 +167,4 @@ def withdrawal():
                     data['status'] = 'ok'
                     return jsonify(data)
             del db 
-    data['status'] = 'error'
     return jsonify(data) 

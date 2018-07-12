@@ -42,25 +42,25 @@ def login():
         id = request.form['id']
         password = request.form['password']
         mydb = DB()
-        user_buffer = mydb.user_info(id)
+        user_buffer = mydb.login(id, password)
         del mydb
         
         session.clear()
         
         if user_buffer:
-            session['id'] = user_buffer.id
-            session['permission'] = user_buffer.permission
-            session['cell_phone'] = user_buffer.cell_phone
-            session['email'] = user_buffer.email
-            session['name'] = user_buffer.name
-            session['sponsor_status'] = user_buffer.sponsor_status
-            session['m_delete'] = user_buffer.m_delete
-            
             if user_buffer.m_delete:
                 return render_template('alert_msg.html', msg="탈퇴한 회원입니다.")
-            return redirect(url_for('app.index'))
+            else:
+                session['id'] = user_buffer.id
+                session['permission'] = user_buffer.permission
+                session['cell_phone'] = user_buffer.cell_phone
+                session['email'] = user_buffer.email
+                session['name'] = user_buffer.name
+                session['sponsor_status'] = user_buffer.sponsor_status
+                session['m_delete'] = user_buffer.m_delete
+                return redirect(url_for('app.index'))
         else:
-            return render_template('alert_msg.html', msg="Login Fail! 등록되지 않았거나 아이디 혹은 비밀번호가 다릅니다.")
+            return render_template('alert_msg.html', msg="Login Fail! 등록되지 않은 아이디거나 비밀번호가 다릅니다!")
     else:
         return render_template('alert_msg.html', msg="POST Error!")
 

@@ -216,7 +216,7 @@
 				url : "{{ url_for('.withdrawal') }}",
 				type : 'POST',
 				dataType : "json",
-				data : {password:input_password},
+				data : {PASSWORD:input_password},
 				async: false,
 				success : function(data) {
 					status = $.trim(data.status);

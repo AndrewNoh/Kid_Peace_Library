@@ -136,7 +136,7 @@
 	<!-- Wrapper for slides -->
 	<div class="carousel-inner" role="listbox">
 		<!-- First slide -->
-		<div class="item active" style="background-image:url({{url_for('app.backgroundimg1')}})">
+		<div class="item active" id="backgroundimg1">
 			<div class="carousel-caption">
 				<h2 data-animation="animated bounceInDown">
 				꼬마 평화 도서관 </h2>
@@ -146,7 +146,7 @@
 		</div>
 		<!-- /.item -->
 		<!-- Second slide -->
-		<div class="item" style="background-image:url({{url_for('app.backgroundimg2')}})">
+		<div class="item" id="backgroundimg2">
 			<div class="carousel-caption">
 				<h2 data-animation="animated zoomInLeft">
 				오랫동안 꿈을 그리는 사람은 그 꿈을 닮아간다 </h2>
@@ -156,7 +156,7 @@
 		</div>
 		<!-- /.item -->
 		<!-- Third slide -->
-		<div class="item" style="background-image:url({{url_for('app.backgroundimg3')}})">
+		<div class="item" id="backgroundimg3">
 			<div class="carousel-caption">
 				<h2 data-animation="animated bounceInLeft">
 				그 햇살이 고맙고 바람이 고맙고</h2>
@@ -211,7 +211,13 @@
 		<!-- 폼 유효성 마스크 -->
 		<script type="text/javascript" src="{{url_for('static', filename='js/form_mask.js')}}" charset="utf-8"></script>
 		<!-- 회원가입 폼 유효성 검사, ajax -->
-		
+		<script type="text/javascript">
+			$(function(){
+				$('#backgroundimg1').css({"background-image":"url({{url_for('app.backgroundimg1')}})"});
+				$('#backgroundimg2').css({"background-image":"url({{url_for('app.backgroundimg2')}})"});
+				$('#backgroundimg3').css({"background-image":"url({{url_for('app.backgroundimg3')}})"});
+			});
+		</script>
 	{% endblock %}
 {% endblock %}
 </body>

@@ -14,7 +14,7 @@ def url_for_other_page(page):
 
 def create_app():
     #jsglue = JSGlue()
-    application = Flask(__name__);
+    application = Flask(__name__)
     
     #jsglue.init_app(application)
     # 비밀키 등록
